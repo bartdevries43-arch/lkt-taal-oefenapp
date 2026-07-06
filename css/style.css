@@ -1,0 +1,185 @@
+/* ============================================================
+   LKT Taal – Oefenapp  ·  STIJL
+   Schone, rustige leeromgeving met witte kaarten.
+   ============================================================ */
+:root{
+  --bg:#f4f6f5;
+  --surface:#ffffff;
+  --ink:#1b2a2e;
+  --muted:#6b7c82;
+  --line:#e6eae9;
+  --brand:#2f8f7d;
+  --brand-d:#237063;
+  --accent:#e0863c;
+  --tint-a:#e3f3ef;   /* zacht groen (illustraties) */
+  --tint-b:#fdeede;   /* zacht oranje (illustraties) */
+  --ok:#2f9e6b; --ok-bg:#e8f6ee; --ok-line:#b6e2c8;
+  --no:#d8543f; --no-bg:#fbeae6; --no-line:#f2c4ba;
+  --shadow:0 1px 2px rgba(20,40,45,.05),0 6px 20px rgba(20,40,45,.05);
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.55;
+  min-height:100vh;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:1.25rem 1rem 5rem}
+
+/* ---- Header ---- */
+header.top{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+header.top .logo{font-size:26px;line-height:1}
+header.top h1{font-size:19px;font-weight:700;letter-spacing:-.2px}
+header.top p{font-size:12.5px;color:var(--muted)}
+
+/* ---- Tabbladen ---- */
+.tabs{display:flex;gap:.4rem;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:.4rem;margin-bottom:1.1rem;box-shadow:var(--shadow);overflow-x:auto}
+.tab{flex:1 0 auto;border:none;background:transparent;color:var(--muted);
+  font:inherit;font-size:13px;font-weight:600;padding:.55rem .7rem;border-radius:10px;
+  cursor:pointer;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:.35rem;justify-content:center}
+.tab:hover{background:var(--bg)}
+.tab.active{background:var(--brand);color:#fff}
+
+/* ---- Kaarten ---- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.25rem 1.4rem;box-shadow:var(--shadow);margin-bottom:1rem}
+h2{font-size:18px;font-weight:700;letter-spacing:-.2px;margin-bottom:.2rem}
+h3{font-size:14px;font-weight:700;margin:1.1rem 0 .5rem}
+.sub{font-size:13px;color:var(--muted);margin-bottom:1rem}
+.lead{font-size:14px;color:#3a4a4f;margin-bottom:.5rem}
+.screen{display:none;animation:fade .25s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---- Startscherm: keuzetegels ---- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.75rem}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:1.05rem 1.15rem;cursor:pointer;transition:.15s;text-align:left;font:inherit;color:inherit;
+  display:flex;gap:.85rem;align-items:flex-start}
+.tile:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:var(--shadow)}
+.tile .ti{font-size:26px;line-height:1}
+.tile .tt{font-size:15px;font-weight:700;margin-bottom:.15rem}
+.tile .td{font-size:12.5px;color:var(--muted)}
+
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:1rem}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.9rem;text-align:center}
+.stat b{display:block;font-size:24px;font-weight:800;letter-spacing:-.5px}
+.stat span{font-size:11.5px;color:var(--muted)}
+
+.tip{border-left:3px solid var(--accent);background:#fff9f2;border-radius:0 10px 10px 0;
+  padding:.7rem .9rem;font-size:13px;color:#8a5a1e;margin:.25rem 0 1rem;line-height:1.5}
+.tip.ok{border-color:var(--ok);background:var(--ok-bg);color:#1f6d47}
+.tip.no{border-color:var(--no);background:var(--no-bg);color:#a2311f}
+
+/* ---- Knoppen ---- */
+.btn{display:inline-flex;align-items:center;gap:.4rem;justify-content:center;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  font:inherit;font-size:14px;font-weight:600;padding:.6rem 1.05rem;border-radius:11px;
+  cursor:pointer;transition:.15s}
+.btn:hover{background:var(--bg)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-d)}
+.btn.ghost{border-color:transparent;color:var(--muted)}
+.btn.wide{width:100%}
+.row{display:flex;gap:.55rem;flex-wrap:wrap}
+.row.between{justify-content:space-between;align-items:center}
+.back{background:none;border:none;color:var(--muted);font:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;padding:.2rem 0;margin-bottom:.6rem;display:inline-flex;align-items:center;gap:.3rem}
+.back:hover{color:var(--ink)}
+
+/* ---- Voortgangsbalk ---- */
+.pbar{height:7px;background:#eceeed;border-radius:99px;overflow:hidden;margin-bottom:.9rem}
+.pbar>i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .35s}
+.counter{font-size:12px;color:var(--muted);margin-bottom:.7rem;font-weight:600}
+
+/* ---- Illustraties (SVG) ---- */
+.art{display:flex;justify-content:center;padding:.4rem 0 .2rem}
+.art svg{width:100%;max-width:280px;height:auto}
+.art-b{font:700 15px sans-serif;fill:var(--ink)}
+.art-t{font:600 11px sans-serif;fill:var(--ink)}
+.art-s{font:600 10px sans-serif;fill:var(--muted)}
+.art-e{font-size:22px}
+.art-eq{font:800 22px sans-serif;fill:var(--accent)}
+.art-leaf rect,.art-leaf circle{stroke:var(--line);stroke-width:1}
+
+/* ================= FLASHCARDS ================= */
+.flash-wrap{perspective:1400px;margin-bottom:.9rem}
+.flash{position:relative;width:100%;min-height:300px;cursor:pointer;
+  transform-style:preserve-3d;transition:transform .5s}
+.flash.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:1.4rem;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center}
+.face.back{transform:rotateY(180deg);justify-content:flex-start;align-items:stretch}
+.face .emoji{font-size:46px;margin-bottom:.5rem}
+.face .term{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.face .hint{position:absolute;bottom:.9rem;font-size:11.5px;color:var(--muted)}
+.face.back .term{font-size:17px;color:var(--brand-d);margin-bottom:.4rem;text-align:left}
+.face.back .def{font-size:14px;color:#33454a;text-align:left;margin-bottom:.7rem}
+.face.back .ex{font-size:12.5px;color:var(--muted);text-align:left;
+  border-left:3px solid var(--tint-a);padding-left:.7rem;background:#fafcfb}
+.face.back .ex b{color:var(--brand-d)}
+.self-rate{display:flex;gap:.55rem;margin-bottom:.7rem}
+.self-rate .btn{flex:1}
+
+/* ================= MEERKEUZE ================= */
+.q{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:1rem}
+.opts{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1rem}
+.opt{border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:12px;padding:.8rem 1rem;font:inherit;font-size:14.5px;text-align:left;
+  cursor:pointer;transition:.12s;display:flex;gap:.6rem;align-items:flex-start}
+.opt:hover:not(:disabled){background:var(--bg);border-color:#cfd6d4}
+.opt .k{font-weight:800;color:var(--muted)}
+.opt.correct{background:var(--ok-bg);border-color:var(--ok-line);color:#1f6d47;font-weight:600}
+.opt.correct .k{color:var(--ok)}
+.opt.wrong{background:var(--no-bg);border-color:var(--no-line);color:#a2311f}
+.opt.wrong .k{color:var(--no)}
+.feedback{font-size:13.5px;border-radius:12px;padding:.8rem 1rem;margin-bottom:1rem;
+  line-height:1.5;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:var(--ok-bg);color:#1f6d47;border:1px solid var(--ok-line)}
+.feedback.no{background:var(--no-bg);color:#a2311f;border:1px solid var(--no-line)}
+
+/* ================= MATCH / COMBINEREN ================= */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.match-col{display:flex;flex-direction:column;gap:.55rem}
+.match-col h4{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;
+  font-weight:700;margin-bottom:.1rem}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:11px;
+  padding:.7rem .85rem;font-size:13.5px;cursor:pointer;transition:.12s;text-align:left;
+  font:inherit;color:inherit;line-height:1.4}
+.chip.term{font-weight:700}
+.chip:hover:not(.done){border-color:var(--brand);background:var(--bg)}
+.chip.sel{border-color:var(--brand);background:var(--tint-a);box-shadow:0 0 0 2px rgba(47,143,125,.18)}
+.chip.done{background:var(--ok-bg);border-color:var(--ok-line);color:#1f6d47;cursor:default;opacity:.9}
+.chip.bad{border-color:var(--no-line);background:var(--no-bg);animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* ================= RESULTAAT ================= */
+.score-box{text-align:center;padding:1.6rem;background:var(--bg);border-radius:14px;margin-bottom:1rem}
+.score-box .big{font-size:42px;font-weight:800;letter-spacing:-1px}
+.score-box .lbl{font-size:14px;color:var(--muted);margin-top:.2rem}
+.ring{--p:0;width:120px;height:120px;border-radius:50%;margin:0 auto 1rem;
+  background:conic-gradient(var(--brand) calc(var(--p)*1%),#eceeed 0);
+  display:grid;place-items:center}
+.ring>span{width:88px;height:88px;background:var(--surface);border-radius:50%;
+  display:grid;place-items:center;font-size:24px;font-weight:800}
+
+/* ---- Voortgang per hoofdstuk ---- */
+.bar-row{display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem}
+.bar-row .bl{font-size:13px;width:150px;flex-shrink:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-row .bt{flex:1;height:8px;background:#eceeed;border-radius:99px;overflow:hidden}
+.bar-row .bt>i{display:block;height:100%;border-radius:99px}
+.bar-row .bp{font-size:12.5px;font-weight:700;width:38px;text-align:right}
+
+.note{font-size:11.5px;color:var(--muted);text-align:center;margin-top:1.5rem}
+.hidden{display:none!important}
+@media(max-width:520px){
+  .match-grid{gap:.5rem}
+  .chip{padding:.6rem .65rem;font-size:12.5px}
+  .face .term{font-size:20px}
+}
