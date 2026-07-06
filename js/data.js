@@ -261,5 +261,4 @@ const CH_WOORDENSCHAT = {
   ]
 };
 
-/* Alle hoofdstukken. Nieuwe hoofdstukken hier toevoegen. */
-const CHAPTERS = [ CH_WOORDENSCHAT ];
+/* De volledige hoofdstuklijst wordt in chapters.generated.js samengesteld. */

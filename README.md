@@ -1,6 +1,6 @@
 # 📚 LKT Taal – Oefenapp
 
-Een oefenapp om te leren voor de **LKT Taaltoets** (Kennisbasis Taal, Pabo). Gebaseerd op de samenvatting "Kennisbasis Taal" en in de stijl van een woordenschat-oefenapp.
+Een oefenapp om te leren voor de **LKT Taaltoets** (Kennisbasis Taal, Pabo). Gebaseerd op `SAMENVATTING TAAL.docx` en vormgegeven in dezelfde paarse, groene en oranje stijl als de woordenschat-app voor groep 7/8.
 
 De app draait volledig in de browser (HTML/CSS/JavaScript, geen server nodig) en wordt gehost via **GitHub Pages**. Je voortgang wordt lokaal op je eigen apparaat bewaard.
 
@@ -14,17 +14,19 @@ De app draait volledig in de browser (HTML/CSS/JavaScript, geen server nodig) en
 
 ## 📖 Inhoud
 
-Op dit moment is **Hoofdstuk 3: Woordenschat** volledig uitgewerkt (28 begrippen) als proefhoofdstuk. De overige hoofdstukken uit de samenvatting worden hierna toegevoegd:
+Alle hoofdstukken uit de samenvatting zijn beschikbaar. Samen bevatten ze **375 begrippen**:
 
-1. Taalonderwijs, taalfuncties en taalniveaus
-2. Mondelinge taalvaardigheid en taalverwerving
-3. **Woordenschat** ✅
-4. Beginnende geletterdheid
-5. Voortgezet technisch lezen
-6. Begrijpend lezen
-7. Stellen
-8. Jeugdliteratuur
-9. Taalbeschouwing en spelling
+1. **Taalonderwijs en taal** – 26 begrippen
+2. **Mondelinge taalvaardigheid** – 48 begrippen
+3. **Woordenschat** – 28 begrippen en 18 extra toepassingsvragen
+4. **Beginnende geletterdheid** – 39 begrippen
+5. **Voortgezet technisch lezen** – 36 begrippen
+6. **Begrijpend lezen** – 42 begrippen
+7. **Stellen** – 30 begrippen
+8. **Jeugdliteratuur** – 43 begrippen
+9. **Taalbeschouwing en spelling** – 83 begrippen
+
+Elk begrip wordt automatisch gebruikt voor flashcards, meerkeuzevragen en combineeropgaven. Elk hoofdstuk heeft daarnaast een eigen examensimulatie van 15 vragen en een eigen voortgangsoverzicht.
 
 ## 🗂️ Structuur
 
@@ -32,24 +34,20 @@ Op dit moment is **Hoofdstuk 3: Woordenschat** volledig uitgewerkt (28 begrippen
 index.html        – opbouw van de app (schermen + tabbladen)
 css/style.css     – vormgeving
 js/data.js        – de leerstof: begrippen, illustraties en vragen per hoofdstuk
+js/chapters.generated.js – hoofdstukken die uit de samenvatting zijn gegenereerd
 js/app.js         – de logica van de vier oefenvormen + voortgang
+scripts/generate-chapters.mjs – werkt de leerstof bij vanuit het Word-document
 ```
 
-## ➕ Een hoofdstuk toevoegen
+## 🔄 Leerstof opnieuw genereren
 
-Alle leerstof staat in `js/data.js`. Een nieuw hoofdstuk voeg je toe door een object te maken zoals `CH_WOORDENSCHAT` en dat aan de lijst `CHAPTERS` toe te voegen:
+De hoofdstukken 1, 2 en 4 t/m 9 worden gegenereerd uit de tabel **Begrippen per domein** in `SAMENVATTING TAAL.docx`. Na een wijziging in dat document kun je de leerstof opnieuw opbouwen met:
 
-```js
-const CH_SPELLING = {
-  id: "spelling", nr: 9, title: "Spelling", subtitle: "…", icon: "✏️",
-  intro: "…",
-  concepts: [ { t:"…", icon:"…", d:"…", ex:"…", art:"…" }, … ],
-  mc: [ { q:"…", opts:["…","…","…","…"], ans:0, leg:"…" }, … ]
-};
-const CHAPTERS = [ CH_WOORDENSCHAT, CH_SPELLING ];
+```bash
+node scripts/generate-chapters.mjs
 ```
 
-Meerkeuzevragen voor de examen-simulatie worden deels automatisch uit de begrippen gegenereerd, dus met alleen `concepts` heb je al flashcards, combineren én examenvragen.
+Hoofdstuk 3 bevat extra handgemaakte illustraties en toepassingsvragen en staat daarom apart in `js/data.js`.
 
 ## 🚀 Hosten via GitHub Pages
 

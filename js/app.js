@@ -14,17 +14,37 @@ const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 
 /* ---------- Voortgang ---------- */
 const PKEY = "lkt_taal_progress_v1";
+const CKEY = "lkt_taal_current_chapter_v1";
 function loadP(){ try{ return JSON.parse(localStorage.getItem(PKEY)) || {}; }catch(e){ return {}; } }
 function saveP(){ try{ localStorage.setItem(PKEY, JSON.stringify(P)); }catch(e){} }
 let P = loadP();
 function chP(id){
-  if(!P[id]) P[id] = { mcSeen:0, mcCorrect:0, matchRounds:0, flashKnown:{}, examBest:0, examAttempts:0, examLastGrade:0 };
+  const empty = { mcSeen:0, mcCorrect:0, matchRounds:0, flashKnown:{}, examBest:0, examAttempts:0, examLastGrade:0 };
+  if(!P[id]) P[id] = empty;
+  else P[id] = {...empty, ...P[id], flashKnown:P[id].flashKnown || {}};
   return P[id];
 }
 
+function chapterKnown(ch){
+  return Object.values(chP(ch.id).flashKnown).filter(Boolean).length;
+}
+function chapterPct(ch){
+  return Math.round(chapterKnown(ch) / ch.concepts.length * 100) || 0;
+}
+
 /* ---------- Toestand ---------- */
-let CH = CHAPTERS[0];               // huidig hoofdstuk (proef: Woordenschat)
+const savedChapter = (()=>{ try{return localStorage.getItem(CKEY);}catch(e){return null;} })();
+let CH = CHAPTERS.find(ch=>ch.id===savedChapter) || CHAPTERS[0];
 let flash = null, mc = null, match = null, exam = null;
+
+function selectChapter(id){
+  const selected = CHAPTERS.find(ch=>ch.id===id);
+  if(!selected) return;
+  CH = selected;
+  try{ localStorage.setItem(CKEY, CH.id); }catch(e){}
+  renderStart();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
 
 /* ---------- Navigatie ---------- */
 function go(id){
@@ -47,15 +67,22 @@ function renderStart(){
   const p = chP(CH.id);
   const totQ = p.mcSeen, totC = p.mcCorrect;
   const pct = totQ ? Math.round(totC/totQ*100) : null;
+  $("#chapter-tabs").innerHTML = CHAPTERS.map(ch=>`
+    <button class="chapter-tab ${ch.id===CH.id?'active':''}" onclick="selectChapter('${ch.id}')" aria-pressed="${ch.id===CH.id}">
+      <span>H${ch.nr}</span><b>${esc(ch.title)}</b><small>${chapterPct(ch)}% bekend</small>
+    </button>`).join("");
+  $("#chapter-heading").innerHTML = `
+    <div><span class="eyebrow">HOOFDSTUK ${CH.nr}</span><h2>${CH.icon} ${esc(CH.title)}</h2><p>${esc(CH.subtitle)}</p></div>
+    <div class="chapter-score"><b>${chapterKnown(CH)}/${CH.concepts.length}</b><span>begrippen bekend</span></div>`;
   $("#start-stats").innerHTML = `
-    <div class="stat"><b>${totQ}</b><span>vragen geoefend</span></div>
+    <div class="stat"><b>${CH.concepts.length}</b><span>begrippen in dit hoofdstuk</span></div>
     <div class="stat"><b>${pct===null?"–":pct+"%"}</b><span>meerkeuze goed</span></div>
     <div class="stat"><b>${p.examLastGrade?p.examLastGrade.toFixed(1):"–"}</b><span>laatste examencijfer</span></div>`;
   $("#start-chapter").innerHTML = `
-    <button class="tile" onclick="go('begrippen')">
-      <span class="ti">${CH.icon}</span>
-      <span><span class="tt">Hoofdstuk ${CH.nr}: ${esc(CH.title)}</span>
-      <span class="td">${CH.concepts.length} begrippen · ${esc(CH.subtitle)}</span></span>
+    <button class="study-button" onclick="go('begrippen')">
+      <span class="study-icon">${CH.icon}</span>
+      <span><span class="eyebrow">EERST DE STOF BEKIJKEN</span><b>Lees alle ${CH.concepts.length} begrippen</b>
+      <small>${esc(CH.subtitle)}</small></span><span class="study-arrow">›</span>
     </button>`;
 }
 
@@ -63,7 +90,9 @@ function renderStart(){
 function renderBegrippen(){
   const wrap = $("#begrippen-body");
   wrap.innerHTML = `
+    <button class="back" onclick="go('start')">‹ Ander hoofdstuk kiezen</button>
     <div class="card">
+      <span class="eyebrow">HOOFDSTUK ${CH.nr} · ${CH.concepts.length} BEGRIPPEN</span>
       <h2>${CH.icon} ${esc(CH.title)}</h2>
       <p class="sub">${esc(CH.intro)}</p>
       <div id="concept-list"></div>
@@ -162,12 +191,12 @@ function flashHardOnly(){ const h=flash.hard; flash={deck:shuffle(h),pos:0,hard:
 /* ================= MEERKEUZE ================= */
 function buildMCPool(){
   // Vaste meerkeuzevragen + automatisch gegenereerde begrip-vragen
-  const base = CH.mc.map(q=>({q:q.q, opts:q.opts, ans:q.ans, leg:q.leg}));
+  const base = (CH.mc || []).map(q=>({q:q.q, opts:q.opts, ans:q.ans, leg:q.leg}));
   const gen = CH.concepts.map(c=>{
     const wrong = sample(CH.concepts.filter(x=>x.t!==c.t),3).map(x=>x.t);
     const opts = shuffle([c.t, ...wrong]);
     return { q:`Welk begrip hoort bij deze omschrijving?<br><span style="font-weight:500;color:var(--muted)">“${esc(c.d)}”</span>`,
-             opts, ans:opts.indexOf(c.t), leg:`${esc(c.t)}: ${esc(c.d)}`, raw:true };
+             opts, ans:opts.indexOf(c.t), leg:`${c.t}: ${c.d}`, raw:true };
   });
   return shuffle([...base, ...gen]);
 }
@@ -369,28 +398,52 @@ function resultCard(title, s, t, pct, buttons){
 function renderVoortgang(){
   const p = chP(CH.id);
   const mcPct = p.mcSeen ? Math.round(p.mcCorrect/p.mcSeen*100) : 0;
-  const flashKnown = Object.values(p.flashKnown).filter(Boolean).length;
+  const flashKnown = chapterKnown(CH);
   const flashPct = Math.round(flashKnown/CH.concepts.length*100);
   const bar = (label,pct,color)=>`<div class="bar-row"><div class="bl">${label}</div>
      <div class="bt"><i style="width:${pct}%;background:${color}"></i></div><div class="bp">${pct}%</div></div>`;
   const col = pct=>pct>=70?"var(--ok)":pct>=45?"var(--accent)":"var(--no)";
+  const totalConcepts = CHAPTERS.reduce((sum,ch)=>sum+ch.concepts.length,0);
+  const totalKnown = CHAPTERS.reduce((sum,ch)=>sum+chapterKnown(ch),0);
+  const totalQuestions = CHAPTERS.reduce((sum,ch)=>sum+chP(ch.id).mcSeen,0);
+  const chapterRows = CHAPTERS.map(ch=>{
+    const known=chapterKnown(ch), pct=chapterPct(ch);
+    return `<button class="progress-chapter ${ch.id===CH.id?'active':''}" onclick="selectChapter('${ch.id}');go('voortgang')">
+      <span class="progress-icon">${ch.icon}</span><span class="progress-copy"><b>H${ch.nr} · ${esc(ch.title)}</b><small>${known}/${ch.concepts.length} begrippen bekend</small>
+      <i><em style="width:${pct}%"></em></i></span><strong>${pct}%</strong></button>`;
+  }).join("");
   $("#voortgang-body").innerHTML = `
+    <div class="hero compact">
+      <span class="eyebrow">JOUW VOORTGANG</span>
+      <h2>Blijf bouwen aan je taalbasis.</h2>
+      <p>Bekijk per hoofdstuk wat je al kent en waar nog winst te halen is.</p>
+    </div>
+    <div class="stat-grid overall-stats">
+      <div class="stat"><b>${totalKnown}/${totalConcepts}</b><span>begrippen bekend</span></div>
+      <div class="stat"><b>${totalQuestions}</b><span>vragen geoefend</span></div>
+      <div class="stat"><b>${CHAPTERS.length}</b><span>hoofdstukken beschikbaar</span></div>
+    </div>
     <div class="card">
-      <h2>📊 Mijn voortgang</h2>
-      <p class="sub">Opgeslagen op dit apparaat. Blijft bewaard als je de app sluit.</p>
+      <span class="eyebrow">GESELECTEERD HOOFDSTUK</span>
+      <h2>${CH.icon} Hoofdstuk ${CH.nr}: ${esc(CH.title)}</h2>
+      <p class="sub">Kies hieronder een ander hoofdstuk om de details te bekijken.</p>
       <div class="stat-grid">
         <div class="stat"><b>${p.mcSeen}</b><span>vragen gedaan</span></div>
         <div class="stat"><b>${flashKnown}/${CH.concepts.length}</b><span>flashcards gekend</span></div>
         <div class="stat"><b>${p.examLastGrade?p.examLastGrade.toFixed(1):"–"}</b><span>laatste cijfer</span></div>
       </div>
-      <h3>Hoofdstuk ${CH.nr}: ${esc(CH.title)}</h3>
+      <h3>Beheersing</h3>
       ${bar("Flashcards gekend",flashPct,col(flashPct))}
       ${bar("Meerkeuze goed",mcPct,col(mcPct))}
       ${bar("Beste examen",p.examBest||0,col(p.examBest||0))}
       <p class="sub" style="margin-top:1rem">Combineren afgerond: <b>${p.matchRounds||0}×</b> · Examens gemaakt: <b>${p.examAttempts||0}×</b></p>
-      <button class="btn ghost" style="margin-top:.5rem;font-size:12px" onclick="wisVoortgang()">Voortgang wissen</button>
     </div>
-    <p class="note">💾 Meer hoofdstukken volgen zodra Woordenschat goed werkt.</p>`;
+    <div class="card">
+      <span class="eyebrow">ALLE HOOFDSTUKKEN</span>
+      <div class="progress-list">${chapterRows}</div>
+      <button class="btn ghost danger" style="margin-top:1rem;font-size:12px" onclick="wisVoortgang()">Alle voortgang wissen</button>
+    </div>
+    <p class="note">💾 Opgeslagen op dit apparaat en beschikbaar wanneer je terugkomt.</p>`;
 }
 function wisVoortgang(){
   if(confirm("Weet je zeker dat je alle voortgang wilt wissen?")){
