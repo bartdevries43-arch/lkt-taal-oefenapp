@@ -9,6 +9,7 @@ De app draait volledig in de browser (HTML/CSS/JavaScript, geen server nodig) en
 - 🃏 **Flashcards** – begrip aan de voorkant, uitleg + voorbeeld + illustratie aan de achterkant. Tik om te draaien en beoordeel jezelf ("Nog lastig" / "Ik weet hem").
 - ✅ **Meerkeuze** – vragen met directe feedback en uitleg bij elk antwoord.
 - 🔗 **Combineren** – koppel elk begrip aan de juiste omschrijving.
+- 🎮 **Oefenspellen** – Voorbeeldkraker, Waar of niet waar? en een Bliksemronde van 60 seconden.
 - 🎯 **Examen-simulatie** – 15 gemengde vragen, zonder feedback tussendoor, met een eindcijfer (geslaagd vanaf 5,5).
 - 📊 **Voortgang** – overzicht van wat je al kent, per oefenvorm.
 
@@ -28,6 +29,18 @@ Alle hoofdstukken uit de samenvatting zijn beschikbaar. Samen bevatten ze **375 
 
 Elk begrip wordt automatisch gebruikt voor flashcards, meerkeuzevragen en combineeropgaven. Elk hoofdstuk heeft daarnaast een eigen examensimulatie van 15 vragen en een eigen voortgangsoverzicht.
 
+## 🔬 Inhoudelijke controle
+
+De oorspronkelijke begrippen en hoofdstukindeling uit `SAMENVATTING TAAL.docx` blijven leidend. Kernbegrippen waarbij een scherp onderscheid belangrijk is, zijn voorzichtig gecontroleerd en aangescherpt met:
+
+- de **Uitwerking Kennisbasis Nederlands pabo** van 10voordeleraar;
+- kerndoelen en materiaal voor schrijfonderwijs van **SLO**;
+- publicaties van het **Expertisecentrum Nederlands**;
+- de Brede Vakinhoudelijke Richtlijn Dyslexie via **Dyslexie Centraal**;
+- onderzoek en publicaties van **Stichting Lezen**.
+
+Deze aanvullingen staan apart in `js/research.js`, zodat de oorspronkelijke begrippenlijst herkenbaar en opnieuw genereerbaar blijft.
+
 ## 🗂️ Structuur
 
 ```
@@ -35,6 +48,7 @@ index.html        – opbouw van de app (schermen + tabbladen)
 css/style.css     – vormgeving
 js/data.js        – de leerstof: begrippen, illustraties en vragen per hoofdstuk
 js/chapters.generated.js – hoofdstukken die uit de samenvatting zijn gegenereerd
+js/research.js    – voorzichtig aangescherpte kernbegrippen en toetsfocus
 js/app.js         – de logica van de vier oefenvormen + voortgang
 scripts/generate-chapters.mjs – werkt de leerstof bij vanuit het Word-document
 ```

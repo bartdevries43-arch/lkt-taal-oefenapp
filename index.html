@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#8d6be8">
 <title>LKT Taal – Oefenapp</title>
-<meta name="description" content="Oefenapp voor de LKT Taaltoets (Kennisbasis Taal, Pabo). Flashcards, meerkeuze, combineren en examen-simulatie.">
+<meta name="description" content="Oefenapp voor de LKT Taaltoets (Kennisbasis Taal, Pabo). Begrippen, flashcards, kennisspellen en examensimulaties.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -27,22 +27,27 @@
     <button class="tab" data-go="flashcards">🃏 Flashcards</button>
     <button class="tab" data-go="meerkeuze">✅ Meerkeuze</button>
     <button class="tab" data-go="match">🔗 Combineren</button>
+    <button class="tab" data-go="spellen">🎮 Spellen</button>
     <button class="tab" data-go="examen">🎯 Examen</button>
     <button class="tab" data-go="voortgang">📊 Voortgang</button>
   </nav>
 
   <!-- START -->
   <section class="screen active" id="screen-start">
-    <div class="hero">
-      <span class="eyebrow">LKT TAAL</span>
-      <h2>Kies je hoofdstuk en oefen stap voor stap.</h2>
-      <p>Leer de begrippen, oefen met directe feedback en maak een examensimulatie wanneer je er klaar voor bent.</p>
+    <div class="hero hero-showcase">
+      <div class="hero-copy">
+        <span class="eyebrow">LKT TAAL</span>
+        <h2>Kies je hoofdstuk en oefen stap voor stap.</h2>
+        <p>Leer de begrippen, speel korte kennisgames en maak een examensimulatie wanneer je er klaar voor bent.</p>
+        <button class="hero-cta" onclick="go('spellen')"><span>Speel een oefenronde</span><b>→</b></button>
+      </div>
+      <div class="hero-visual" id="hero-visual" aria-hidden="true"></div>
     </div>
 
     <div class="step-strip" aria-label="Leerroute">
       <div class="step-item"><span>1</span>Kies hoofdstuk</div>
       <div class="step-arrow">›</div>
-      <div class="step-item"><span>2</span>Leer en oefen</div>
+      <div class="step-item"><span>2</span>Leer en speel</div>
       <div class="step-arrow">›</div>
       <div class="step-item"><span>3</span>Maak examen</div>
     </div>
@@ -68,6 +73,14 @@
         <button class="tile match" onclick="go('match')"><span class="ti">🔗</span><span><span class="tt">Combineren</span><span class="td">Koppel 5 begrippen aan hun uitleg</span></span></button>
         <button class="tile exam" onclick="go('examen')"><span class="ti">🎯</span><span><span class="tt">Examen</span><span class="td">15 vragen · ontvang een cijfer</span></span></button>
       </div>
+      <div class="game-launch">
+        <div class="game-launch-copy"><span class="eyebrow">NIEUW · OEFENSPELLEN</span><h3>Actief ophalen werkt beter dan alleen herlezen.</h3><p>Oefen voorbeelden, onderscheid begrippen en test je snelheid.</p></div>
+        <div class="game-launch-actions">
+          <button onclick="go('spellen');startExampleGame()"><span>🧠</span><b>Voorbeeldkraker</b><small>Pas begrippen toe</small></button>
+          <button onclick="go('spellen');startTrueFalseGame()"><span>⚖️</span><b>Waar of niet?</b><small>Zie het verschil</small></button>
+          <button onclick="go('spellen');startSprintGame()"><span>⚡</span><b>Bliksemronde</b><small>60 seconden</small></button>
+        </div>
+      </div>
     </div>
     <p class="note">💾 Je voortgang wordt automatisch op dit apparaat opgeslagen.</p>
   </section>
@@ -80,6 +93,8 @@
   <section class="screen" id="screen-meerkeuze"><div id="meerkeuze-body"></div></section>
   <!-- MATCH -->
   <section class="screen" id="screen-match"><div id="match-body"></div></section>
+  <!-- SPELLEN -->
+  <section class="screen" id="screen-spellen"><div id="spellen-body"></div></section>
   <!-- EXAMEN -->
   <section class="screen" id="screen-examen"><div id="examen-body"></div></section>
   <!-- VOORTGANG -->
@@ -89,6 +104,7 @@
 
 <script src="js/data.js"></script>
 <script src="js/chapters.generated.js"></script>
+<script src="js/research.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

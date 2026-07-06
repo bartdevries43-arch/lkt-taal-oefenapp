@@ -1,6 +1,6 @@
 /* ============================================================
    LKT Taal – Oefenapp  ·  LOGICA
-   Vier oefenvormen: flashcards, meerkeuze, combineren, examen.
+   Oefenvormen: flashcards, meerkeuze, combineren, spellen en examen.
    Voortgang wordt lokaal (localStorage) op dit apparaat bewaard.
    ============================================================ */
 "use strict";
@@ -19,7 +19,8 @@ function loadP(){ try{ return JSON.parse(localStorage.getItem(PKEY)) || {}; }cat
 function saveP(){ try{ localStorage.setItem(PKEY, JSON.stringify(P)); }catch(e){} }
 let P = loadP();
 function chP(id){
-  const empty = { mcSeen:0, mcCorrect:0, matchRounds:0, flashKnown:{}, examBest:0, examAttempts:0, examLastGrade:0 };
+  const empty = { mcSeen:0, mcCorrect:0, matchRounds:0, flashKnown:{}, examBest:0, examAttempts:0, examLastGrade:0,
+    gameRounds:0, gameBest:0, sprintBest:0 };
   if(!P[id]) P[id] = empty;
   else P[id] = {...empty, ...P[id], flashKnown:P[id].flashKnown || {}};
   return P[id];
@@ -35,7 +36,24 @@ function chapterPct(ch){
 /* ---------- Toestand ---------- */
 const savedChapter = (()=>{ try{return localStorage.getItem(CKEY);}catch(e){return null;} })();
 let CH = CHAPTERS.find(ch=>ch.id===savedChapter) || CHAPTERS[0];
-let flash = null, mc = null, match = null, exam = null;
+let flash = null, mc = null, match = null, exam = null, game = null, gameTimer = null;
+
+function clearGameTimer(){
+  if(gameTimer){ clearInterval(gameTimer); gameTimer=null; }
+}
+
+function animateActiveScreen(){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const root=$(".screen.active"); if(!root) return;
+    const items=[...new Set([...root.children,...$$(".card,.chapter-panel,.chapter-heading,.stat",root)])].slice(0,20);
+    items.forEach((el,i)=>{
+      el.classList.remove("reveal-in");
+      el.style.setProperty("--reveal-delay",`${Math.min(i*45,360)}ms`);
+      void el.offsetWidth;
+      el.classList.add("reveal-in");
+    });
+  }));
+}
 
 function selectChapter(id){
   const selected = CHAPTERS.find(ch=>ch.id===id);
@@ -48,6 +66,7 @@ function selectChapter(id){
 
 /* ---------- Navigatie ---------- */
 function go(id){
+  if(id!=="spellen") clearGameTimer();
   $$(".screen").forEach(s=>s.classList.remove("active"));
   $$(".tab").forEach(t=>t.classList.remove("active"));
   $("#screen-"+id).classList.add("active");
@@ -58,8 +77,10 @@ function go(id){
   if(id==="flashcards")startFlash();
   if(id==="meerkeuze") startMC();
   if(id==="match")     startMatch();
+  if(id==="spellen")   renderGamesHub();
   if(id==="examen")    startExamIntro();
   if(id==="voortgang") renderVoortgang();
+  animateActiveScreen();
 }
 
 /* ================= START ================= */
@@ -67,6 +88,11 @@ function renderStart(){
   const p = chP(CH.id);
   const totQ = p.mcSeen, totC = p.mcCorrect;
   const pct = totQ ? Math.round(totC/totQ*100) : null;
+  const visualConcepts=[CH.concepts[0],CH.concepts[Math.floor(CH.concepts.length/2)],CH.concepts[CH.concepts.length-1]];
+  $("#hero-visual").innerHTML = `
+    <div class="hero-orb"><span>${CH.icon}</span><b>H${CH.nr}</b></div>
+    ${visualConcepts.map((c,i)=>`<div class="flying-card flying-${i+1}"><span>${c.icon||CH.icon}</span><b>${esc(c.t)}</b></div>`).join("")}
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>`;
   $("#chapter-tabs").innerHTML = CHAPTERS.map(ch=>`
     <button class="chapter-tab ${ch.id===CH.id?'active':''}" onclick="selectChapter('${ch.id}')" aria-pressed="${ch.id===CH.id}">
       <span>H${ch.nr}</span><b>${esc(ch.title)}</b><small>${chapterPct(ch)}% bekend</small>
@@ -119,6 +145,7 @@ function showConcept(i){
       <p class="lead" style="margin-top:.8rem">${esc(c.d)}</p>
       <div class="ex" style="font-size:13px;color:var(--muted);border-left:3px solid var(--tint-a);padding:.6rem .8rem;background:#fafcfb;border-radius:0 8px 8px 0;margin-top:.6rem">
         <b style="color:var(--brand-d)">Voorbeeld:</b> ${esc(c.ex)}</div>
+      ${c.focus?`<div class="focus-callout"><span>🎓</span><div><b>Toetsfocus</b><p>${esc(c.focus)}</p></div></div>`:""}
       <div class="row" style="margin-top:1rem">
         <button class="btn" onclick="showConcept(${(i-1+CH.concepts.length)%CH.concepts.length})">‹ Vorige</button>
         <button class="btn primary" onclick="showConcept(${(i+1)%CH.concepts.length})">Volgende ›</button>
@@ -140,7 +167,7 @@ function renderFlash(){
   wrap.innerHTML = `
     <div class="counter">Kaart ${flash.pos+1} van ${flash.deck.length}</div>
     <div class="pbar"><i style="width:${flash.pos/flash.deck.length*100}%"></i></div>
-    <div class="flash-wrap"><div class="flash" id="flashcard" onclick="this.classList.toggle('flip')">
+    <div class="flash-wrap"><div class="flash" id="flashcard" role="button" tabindex="0" aria-label="Draai flashcard om" onclick="this.classList.toggle('flip')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.classList.toggle('flip')}">
       <div class="face front">
         <div class="emoji">${c.icon||"🔹"}</div>
         <div class="term">${esc(c.t)}</div>
@@ -318,6 +345,181 @@ function saveMatchMaybe(){
   }
 }
 
+/* ================= OEFENSPELLEN ================= */
+function renderGamesHub(){
+  clearGameTimer(); game=null;
+  const p=chP(CH.id);
+  $("#spellen-body").innerHTML = `
+    <div class="hero compact game-hero">
+      <span class="eyebrow">ACTIEF OPHALEN · HOOFDSTUK ${CH.nr}</span>
+      <h2>Speel met de leerstof.</h2>
+      <p>Drie korte spellen over ${esc(CH.title)}. Elk spel traint een ander onderdeel van je toetskennis.</p>
+      <div class="game-summary"><span>🎮 ${p.gameRounds||0} rondes gespeeld</span><span>🏆 beste ronde ${p.gameBest||0}%</span><span>⚡ sprintrecord ${p.sprintBest||0}</span></div>
+    </div>
+    <div class="game-grid">
+      <button class="game-card example-game" onclick="startExampleGame()">
+        <span class="game-art"><i>🧠</i><em>→</em><i>💡</i></span>
+        <span class="eyebrow">TOEPASSEN</span><b>Voorbeeldkraker</b>
+        <small>Lees een praktijksituatie en kies het begrip dat erbij hoort.</small><strong>10 rondes <i>→</i></strong>
+      </button>
+      <button class="game-card truth-game" onclick="startTrueFalseGame()">
+        <span class="game-art"><i>⚖️</i><em>?</em><i>✅</i></span>
+        <span class="eyebrow">ONDERSCHEIDEN</span><b>Waar of niet waar?</b>
+        <small>Controleer of een begrip en omschrijving echt bij elkaar horen.</small><strong>10 rondes <i>→</i></strong>
+      </button>
+      <button class="game-card sprint-game" onclick="startSprintGame()">
+        <span class="game-art"><i>⚡</i><em>60</em><i>⏱️</i></span>
+        <span class="eyebrow">AUTOMATISEREN</span><b>Bliksemronde</b>
+        <small>Herken in zestig seconden zo veel mogelijk begrippen.</small><strong>Start sprint <i>→</i></strong>
+      </button>
+    </div>
+    <div class="research-note"><span>🔬</span><div><b>Didactisch opgebouwd</b><p>De spellen sluiten rechtstreeks aan op de bestaande begrippen, definities en voorbeelden. Ze voegen geen leerstof buiten de kennisbasis toe.</p></div></div>`;
+  animateActiveScreen();
+}
+
+function makeExampleQuestions(amount=10){
+  return sample(CH.concepts,Math.min(amount,CH.concepts.length)).map(concept=>{
+    const wrong=sample(CH.concepts.filter(item=>item.t!==concept.t),3).map(item=>item.t);
+    const opts=shuffle([concept.t,...wrong]);
+    return {concept,opts,ans:opts.indexOf(concept.t)};
+  });
+}
+
+function startExampleGame(){
+  clearGameTimer();
+  game={type:"example",pool:makeExampleQuestions(),i:0,score:0,locked:false,saved:false};
+  renderExampleGame();
+}
+
+function renderExampleGame(){
+  if(game.i>=game.pool.length) return finishKnowledgeGame("🧠 Voorbeeldkraker","startExampleGame()");
+  const q=game.pool[game.i], K=["A","B","C","D"];
+  $("#spellen-body").innerHTML = `
+    <button class="back" onclick="renderGamesHub()">‹ Alle spellen</button>
+    <div class="game-status"><span>Voorbeeld ${game.i+1} van ${game.pool.length}</span><b>${game.score} goed</b></div>
+    <div class="pbar"><i style="width:${game.i/game.pool.length*100}%"></i></div>
+    <div class="card game-play-card">
+      <span class="eyebrow">WELK BEGRIP PAST BIJ DIT VOORBEELD?</span>
+      <div class="example-prompt"><span>${q.concept.icon||CH.icon}</span><p>“${esc(q.concept.ex)}”</p></div>
+      <div class="opts" id="game-opts"></div>
+      <div class="feedback" id="game-feedback" aria-live="polite"></div>
+      <div class="row between"><button class="btn ghost" onclick="renderGamesHub()">Stoppen</button><button class="btn primary hidden" id="game-next" onclick="game.i++;renderExampleGame()">Volgende ›</button></div>
+    </div>`;
+  const box=$("#game-opts");
+  q.opts.forEach((option,index)=>{
+    const button=document.createElement("button");button.className="opt";
+    button.innerHTML=`<span class="k">${K[index]}</span><span>${esc(option)}</span>`;
+    button.onclick=()=>answerExampleGame(index);box.appendChild(button);
+  });
+  game.locked=false; animateActiveScreen();
+}
+
+function answerExampleGame(index){
+  if(game.locked) return; game.locked=true;
+  const q=game.pool[game.i], buttons=$$("#game-opts .opt"), fb=$("#game-feedback");
+  buttons.forEach(button=>button.disabled=true);
+  if(index===q.ans){ buttons[index].classList.add("correct");game.score++;fb.className="feedback show ok";fb.innerHTML=`✓ Goed. <b>${esc(q.concept.t)}</b>: ${esc(q.concept.d)}`; }
+  else { buttons[index].classList.add("wrong");buttons[q.ans].classList.add("correct");fb.className="feedback show no";fb.innerHTML=`✗ Dit is <b>${esc(q.concept.t)}</b>. ${esc(q.concept.d)}`; }
+  $("#game-next").classList.remove("hidden");
+  $("#game-next").textContent=game.i+1>=game.pool.length?"Bekijk resultaat ›":"Volgende ›";
+}
+
+function startTrueFalseGame(){
+  clearGameTimer();
+  const concepts=sample(CH.concepts,Math.min(10,CH.concepts.length));
+  const pool=concepts.map((concept,index)=>{
+    const isTrue=index%2===0;
+    const shown=isTrue?concept:sample(CH.concepts.filter(item=>item.t!==concept.t),1)[0];
+    return {concept,shown,isTrue};
+  });
+  game={type:"truth",pool:shuffle(pool),i:0,score:0,locked:false,saved:false};
+  renderTrueFalseGame();
+}
+
+function renderTrueFalseGame(){
+  if(game.i>=game.pool.length) return finishKnowledgeGame("⚖️ Waar of niet waar?","startTrueFalseGame()");
+  const q=game.pool[game.i];
+  $("#spellen-body").innerHTML = `
+    <button class="back" onclick="renderGamesHub()">‹ Alle spellen</button>
+    <div class="game-status"><span>Stelling ${game.i+1} van ${game.pool.length}</span><b>${game.score} goed</b></div>
+    <div class="pbar"><i style="width:${game.i/game.pool.length*100}%"></i></div>
+    <div class="card game-play-card">
+      <span class="eyebrow">HOREN DEZE BIJ ELKAAR?</span>
+      <div class="truth-prompt"><span>${q.concept.icon||CH.icon}</span><h3>${esc(q.concept.t)}</h3><p>${esc(q.shown.d)}</p></div>
+      <div class="truth-actions" id="truth-actions"><button onclick="answerTrueFalse(true)"><span>✓</span><b>Waar</b></button><button onclick="answerTrueFalse(false)"><span>×</span><b>Niet waar</b></button></div>
+      <div class="feedback" id="game-feedback" aria-live="polite"></div>
+      <div class="row between"><button class="btn ghost" onclick="renderGamesHub()">Stoppen</button><button class="btn primary hidden" id="game-next" onclick="game.i++;renderTrueFalseGame()">Volgende ›</button></div>
+    </div>`;
+  game.locked=false; animateActiveScreen();
+}
+
+function answerTrueFalse(value){
+  if(game.locked) return; game.locked=true;
+  const q=game.pool[game.i], buttons=$$("#truth-actions button"), fb=$("#game-feedback"), correct=value===q.isTrue;
+  buttons.forEach(button=>button.disabled=true);
+  if(correct){game.score++;buttons[value?0:1].classList.add("correct");fb.className="feedback show ok";fb.innerHTML=`✓ Goed gezien. <b>${esc(q.concept.t)}</b>: ${esc(q.concept.d)}`;}
+  else{buttons[value?0:1].classList.add("wrong");buttons[q.isTrue?0:1].classList.add("correct");fb.className="feedback show no";fb.innerHTML=`✗ ${q.isTrue?"Deze omschrijving hoort er wél bij.":"Deze omschrijving hoort bij een ander begrip."} <b>${esc(q.concept.t)}</b>: ${esc(q.concept.d)}`;}
+  $("#game-next").classList.remove("hidden");
+  $("#game-next").textContent=game.i+1>=game.pool.length?"Bekijk resultaat ›":"Volgende ›";
+}
+
+function startSprintGame(){
+  clearGameTimer();
+  game={type:"sprint",score:0,answered:0,time:60,locked:false,finished:false,run:Date.now()};
+  nextSprintQuestion();renderSprintGame();
+  gameTimer=setInterval(()=>{
+    if(!game||game.type!=="sprint"||game.finished) return clearGameTimer();
+    game.time--;
+    const time=$("#game-time"), bar=$("#time-bar");if(time)time.textContent=game.time;if(bar)bar.style.width=`${game.time/60*100}%`;
+    if(game.time<=0) finishSprintGame();
+  },1000);
+}
+
+function nextSprintQuestion(){
+  const concept=sample(CH.concepts,1)[0], wrong=sample(CH.concepts.filter(item=>item.t!==concept.t),3).map(item=>item.t), opts=shuffle([concept.t,...wrong]);
+  game.current={concept,opts,ans:opts.indexOf(concept.t)};game.locked=false;
+}
+
+function renderSprintGame(){
+  if(!game||game.finished) return;
+  const q=game.current,K=["A","B","C","D"];
+  $("#spellen-body").innerHTML = `
+    <button class="back" onclick="renderGamesHub()">‹ Alle spellen</button>
+    <div class="sprint-hud"><div><span>TIJD</span><b id="game-time">${game.time}</b></div><div><span>SCORE</span><b>${game.score}</b></div><div><span>BEANTWOORD</span><b>${game.answered}</b></div></div>
+    <div class="time-track"><i id="time-bar" style="width:${game.time/60*100}%"></i></div>
+    <div class="card game-play-card sprint-play">
+      <span class="eyebrow">WELK BEGRIP HOORT BIJ DE UITLEG?</span>
+      <div class="sprint-prompt"><span>⚡</span><p>${esc(q.concept.d)}</p></div>
+      <div class="opts" id="game-opts"></div>
+    </div>`;
+  const box=$("#game-opts");
+  q.opts.forEach((option,index)=>{const button=document.createElement("button");button.className="opt";button.innerHTML=`<span class="k">${K[index]}</span><span>${esc(option)}</span>`;button.onclick=()=>answerSprintGame(index);box.appendChild(button);});
+}
+
+function answerSprintGame(index){
+  if(game.locked||game.finished) return;game.locked=true;game.answered++;
+  const q=game.current,buttons=$$("#game-opts .opt"),run=game.run;
+  buttons.forEach(button=>button.disabled=true);
+  if(index===q.ans){game.score++;buttons[index].classList.add("correct");}else{buttons[index].classList.add("wrong");buttons[q.ans].classList.add("correct");}
+  setTimeout(()=>{if(game&&game.type==="sprint"&&!game.finished&&game.run===run){nextSprintQuestion();renderSprintGame();}},320);
+}
+
+function finishKnowledgeGame(title,restart){
+  clearGameTimer();
+  const total=game.pool.length,pct=Math.round(game.score/total*100),p=chP(CH.id);
+  if(!game.saved){p.gameRounds++;p.gameBest=Math.max(p.gameBest||0,pct);saveP();game.saved=true;}
+  $("#spellen-body").innerHTML=resultCard(title,game.score,total,pct,`<button class="btn primary" onclick="${restart}">Nog een ronde</button><button class="btn" onclick="renderGamesHub()">Alle spellen</button>`);
+  animateActiveScreen();
+}
+
+function finishSprintGame(){
+  if(!game||game.finished) return;game.finished=true;clearGameTimer();
+  const pct=game.answered?Math.round(game.score/game.answered*100):0,p=chP(CH.id);
+  p.gameRounds++;p.gameBest=Math.max(p.gameBest||0,pct);p.sprintBest=Math.max(p.sprintBest||0,game.score);saveP();
+  $("#spellen-body").innerHTML=`<div class="card sprint-result"><span class="result-burst">⚡</span><span class="eyebrow">TIJD VOORBIJ</span><h2>${game.score} begrippen goed</h2><p>${game.answered} beantwoord · ${pct}% nauwkeurig · record ${p.sprintBest}</p><div class="row"><button class="btn primary" onclick="startSprintGame()">Nog een sprint</button><button class="btn" onclick="renderGamesHub()">Alle spellen</button></div></div>`;
+  animateActiveScreen();
+}
+
 /* ================= EXAMEN ================= */
 function startExamIntro(){
   const p = chP(CH.id);
@@ -435,8 +637,9 @@ function renderVoortgang(){
       <h3>Beheersing</h3>
       ${bar("Flashcards gekend",flashPct,col(flashPct))}
       ${bar("Meerkeuze goed",mcPct,col(mcPct))}
+      ${bar("Beste spelronde",p.gameBest||0,col(p.gameBest||0))}
       ${bar("Beste examen",p.examBest||0,col(p.examBest||0))}
-      <p class="sub" style="margin-top:1rem">Combineren afgerond: <b>${p.matchRounds||0}×</b> · Examens gemaakt: <b>${p.examAttempts||0}×</b></p>
+      <p class="sub" style="margin-top:1rem">Spelrondes: <b>${p.gameRounds||0}×</b> · Sprintrecord: <b>${p.sprintBest||0}</b> · Combineren afgerond: <b>${p.matchRounds||0}×</b> · Examens: <b>${p.examAttempts||0}×</b></p>
     </div>
     <div class="card">
       <span class="eyebrow">ALLE HOOFDSTUKKEN</span>
