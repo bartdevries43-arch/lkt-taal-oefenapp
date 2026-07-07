@@ -149,6 +149,33 @@ Object.assign(ART, {
       <text x="36"  y="88" text-anchor="middle" class="art-s">pictografisch</text>
       <text x="105" y="88" text-anchor="middle" class="art-s">logografisch</text>
       <text x="174" y="88" text-anchor="middle" class="art-s">alfabetisch</text>
+    </svg>`,
+  leesmodellen: `
+    <svg viewBox="0 0 210 118" role="img" aria-label="Drie leesmodellen">
+      <g font-size="8.5">
+        <text x="35"  y="14" text-anchor="middle" class="art-t">bottom-up</text>
+        <rect x="10" y="20" width="50" height="16" rx="4" fill="var(--tint-b)"/><text x="35" y="31" text-anchor="middle" class="art-s">betekenis</text>
+        <rect x="10" y="72" width="50" height="16" rx="4" fill="var(--tint-a)"/><text x="35" y="83" text-anchor="middle" class="art-s">letters</text>
+        <path d="M35 70V38" stroke="var(--brand)" stroke-width="2" marker-end="url(#up)"/>
+        <text x="105" y="14" text-anchor="middle" class="art-t">top-down</text>
+        <rect x="80" y="20" width="50" height="16" rx="4" fill="var(--tint-a)"/><text x="105" y="31" text-anchor="middle" class="art-s">voorkennis</text>
+        <rect x="80" y="72" width="50" height="16" rx="4" fill="var(--tint-b)"/><text x="105" y="83" text-anchor="middle" class="art-s">woord</text>
+        <path d="M105 38v32" stroke="var(--accent)" stroke-width="2" marker-end="url(#up)"/>
+        <text x="175" y="14" text-anchor="middle" class="art-t">interactief</text>
+        <rect x="150" y="20" width="50" height="16" rx="4" fill="var(--tint-b)"/>
+        <rect x="150" y="72" width="50" height="16" rx="4" fill="var(--tint-a)"/><text x="175" y="83" text-anchor="middle" class="art-s">samen</text>
+        <path d="M175 38v32M175 70V38" stroke="var(--brand)" stroke-width="2"/>
+        <path d="M170 44l5-7 5 7M170 64l5 7 5-7" fill="none" stroke="var(--brand)" stroke-width="2"/>
+      </g>
+      <text x="105" y="106" text-anchor="middle" class="art-s">van klein → betekenis, of van voorkennis → woord</text>
+      <defs><marker id="up" markerWidth="8" markerHeight="8" refX="4" refY="1" orient="auto"><path d="M0 6l4-6 4 6" fill="none" stroke="var(--brand)" stroke-width="1.5"/></marker></defs>
+    </svg>`,
+  klemtoon: `
+    <svg viewBox="0 0 210 96" role="img" aria-label="Klemtoon verandert betekenis">
+      <text x="105" y="30" text-anchor="middle" class="art-b"><tspan fill="var(--brand)">VOOR</tspan>komen</text>
+      <text x="105" y="46" text-anchor="middle" class="art-s">= gebeuren</text>
+      <text x="105" y="72" text-anchor="middle" class="art-b">voor<tspan fill="var(--accent)">KOMEN</tspan></text>
+      <text x="105" y="88" text-anchor="middle" class="art-s">= verhinderen</text>
     </svg>`
 });
 
@@ -362,6 +389,68 @@ const ENRICH = {
       { q:"Een kleuter merkt op dat 'kat' en 'kam' allebei met /k/ beginnen. Welk begrip past hierbij?",
         opts:["Taalbewustzijn","Verhaalbegrip","Boekoriëntatie","Decoderen"],
         ans:0, leg:"Taalbewustzijn = nadenken over de vormaspecten van taal (zin, woord, klank), los van de betekenis." }
+    ]
+  },
+
+  /* =========================================================
+     HOOFDSTUK 5 · Voortgezet technisch lezen
+     ========================================================= */
+  "technisch-lezen": {
+    art: {
+      "Bottom-upmodel": "leesmodellen",
+      "Top-downmodel": "leesmodellen",
+      "Interactief model": "leesmodellen",
+      "Klemtoon": "klemtoon"
+    },
+    mc: [
+      { q:"Welk leesmodel gaat ervan uit dat de lezer bij de letters begint en zo naar de betekenis toewerkt?",
+        opts:["Top-downmodel","Bottom-upmodel","Interactief model","Contextmodel"],
+        ans:1, leg:"Bottom-up: lezen start bij de kleinste eenheden (letters), daarna woorden, zinnen en betekenis." },
+      { q:"Een lezer voorspelt vanuit voorkennis en context wat er staat. Bij welk leesmodel hoort dat vooral?",
+        opts:["Bottom-upmodel","Top-downmodel","Meervoudige routemodel","Elementaire leeshandeling"],
+        ans:1, leg:"Top-down: lezen start vanuit voorkennis, voorspellen en context." },
+      { q:"Ervaren lezers verklanken letters én voorspellen vanuit de context. Welk model beschrijft dit samenspel?",
+        opts:["Bottom-upmodel","Top-downmodel","Interactief model","Pre-alfabetische fase"],
+        ans:2, leg:"Het interactieve model combineert bottom-up (woord voor woord) met top-down (voorspellend) lezen." },
+      { q:"Wat betekent 'decoderen' bij technisch lezen?",
+        opts:["De betekenis van een tekst begrijpen","Letters en lettergroepen omzetten naar klanken en woorden","Een tekst samenvatten","Voorspellen wat er komt"],
+        ans:1, leg:"Decoderen = letters/lettergroepen omzetten naar klanken en woorden. Dat is de kern van technisch lezen; de betekenis pakken is begrijpend lezen." },
+      { q:"Een leerling herkent het woord 'de' meteen, zonder erover na te denken. Welk begrip is dit?",
+        opts:["Decoderen","Automatisering","Morfologische analyse","Contextstrategie"],
+        ans:1, leg:"Automatisering = woorden snel herkennen zonder bewuste, trage verklanking. Dat is het doel van technisch lezen." },
+      { q:"Een lezer herkent 'voetbaldoel' direct als voetbal + doel. Welke leesstrategie is dit?",
+        opts:["Contextstrategie","Morfologische analyse","Elementaire leeshandeling","Visuele woordvorm"],
+        ans:1, leg:"Morfologische analyse = woorddelen (morfemen) herkennen tijdens het lezen." },
+      { q:"Een lezer vult 'bibberen van de kou' aan dankzij het zinsverband. Welke strategie gebruikt hij?",
+        opts:["Contextstrategie","Klankclusters","Directe woordherkenning","Automatisering"],
+        ans:0, leg:"De contextstrategie = gebruikmaken van zinsverband, betekenis en voorkennis bij het lezen." },
+      { q:"Een lezer leest 'sch' in 'school' in één keer als groep. Welke strategie is dit?",
+        opts:["Morfologische analyse","Klankclusters gebruiken","Contextstrategie","Visuele woordvorm"],
+        ans:1, leg:"Klankclusters = grotere klankgroepen (zoals /sch/ of /st/) in één keer lezen." },
+      { q:"Wat is directe woordherkenning?",
+        opts:["Een woord letter voor letter verklanken","Een woord meteen herkennen zonder te verklanken","Een woord opzoeken in een bron","Een woord in morfemen delen"],
+        ans:1, leg:"Directe woordherkenning = een woord in één keer herkennen zonder verklanken. Indirecte woordherkenning gaat wél via verklanken of woorddelen." },
+      { q:"In welke Ehri-fase verloopt het lezen vlot en geautomatiseerd?",
+        opts:["Pre-alfabetische fase","Volledig alfabetische fase","Geconsolideerde alfabetische fase","Geautomatiseerde alfabetische fase"],
+        ans:3, leg:"In de geautomatiseerde alfabetische fase verloopt lezen vlot en zonder bewuste inspanning." },
+      { q:"Een kind 'leest' een logo zonder de letters te kennen. Bij welke Ehri-fase past dit?",
+        opts:["Pre-alfabetische fase","Partieel alfabetische fase","Volledig alfabetische fase","Geconsolideerde alfabetische fase"],
+        ans:0, leg:"In de pre-alfabetische fase is er nog geen systematische letter-klankkoppeling; een kind herkent bijv. een logo aan de vorm." },
+      { q:"'VOORkomen' (gebeuren) en 'voorKOMEN' (verhinderen) verschillen door de nadruk. Welk voordrachtsaspect is dit?",
+        opts:["Zinsmelodie","Klemtoon","Tempo","Articulatie"],
+        ans:1, leg:"Klemtoon = de nadruk op een woorddeel of woord; die kan zelfs de betekenis veranderen." },
+      { q:"Een vraagzin gaat aan het eind omhoog in toon. Welk voordrachtsaspect is dit?",
+        opts:["Klemtoon","Zinsmelodie","Volume","Tempo"],
+        ans:1, leg:"Zinsmelodie = het toonverloop in een zin, vaak gestuurd door betekenis en leestekens." },
+      { q:"Waarvoor staat een AVI-niveau?",
+        opts:["Het begrijpend-leesniveau","Het technisch-leesniveau van een tekst of lezer","De omvang van de woordenschat","Het spellingniveau"],
+        ans:1, leg:"AVI is een indeling voor het technisch leesniveau. CLIB gaat juist over begrijpend lezen." },
+      { q:"Hoe wordt dyslexie in de kennisbasis omschreven?",
+        opts:["Een algemene taalontwikkelingsachterstand","Een hardnekkig probleem met accuraat en/of vlot lezen en spellen op woordniveau","Moeite met begrijpend lezen door weinig voorkennis","Een vorm van slechtziendheid"],
+        ans:1, leg:"Dyslexie = een hardnekkig probleem met accuraat en/of vlot lezen en spellen op woordniveau, vooral door problemen in de automatisering." },
+      { q:"Welke van deze is een bekende risicofactor voor dyslexie?",
+        opts:["Een grote woordenschat","Moeite met hakken en plakken en met de letter-klankkoppeling","Veel voorleeservaring","Snel kunnen benoemen"],
+        ans:1, leg:"Risicofactoren zijn onder meer moeite met hakken/plakken, met de letter-klankkoppeling en met snel benoemen." }
     ]
   }
 
