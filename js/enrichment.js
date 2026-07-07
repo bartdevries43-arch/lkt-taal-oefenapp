@@ -68,6 +68,51 @@ Object.assign(ART, {
       <text x="40" y="80" text-anchor="middle" class="art-s">0–4 jaar</text>
       <text x="105" y="80" text-anchor="middle" class="art-s">groep 1–3</text>
       <text x="170" y="80" text-anchor="middle" class="art-s">na groep 3</text>
+    </svg>`,
+  luisterstrategie: `
+    <svg viewBox="0 0 210 126" role="img" aria-label="Vier luisterstrategieën">
+      <g font-size="10">
+        <rect x="8"   y="8"  width="94" height="50" rx="8" fill="var(--tint-a)"/><text x="55" y="30" text-anchor="middle" class="art-t">globaal</text><text x="55" y="45" text-anchor="middle" class="art-s">grote lijn</text>
+        <rect x="108" y="8"  width="94" height="50" rx="8" fill="var(--tint-b)"/><text x="155" y="30" text-anchor="middle" class="art-t">intensief</text><text x="155" y="45" text-anchor="middle" class="art-s">alle details</text>
+        <rect x="8"   y="64" width="94" height="50" rx="8" fill="var(--tint-b)"/><text x="55" y="86" text-anchor="middle" class="art-t">gericht</text><text x="55" y="101" text-anchor="middle" class="art-s">specifieke info</text>
+        <rect x="108" y="64" width="94" height="50" rx="8" fill="var(--tint-a)"/><text x="155" y="86" text-anchor="middle" class="art-t">kritisch</text><text x="155" y="101" text-anchor="middle" class="art-s">mening vormen</text>
+      </g>
+    </svg>`,
+  taalontwikkeling: `
+    <svg viewBox="0 0 210 110" role="img" aria-label="Fasen van taalontwikkeling">
+      <line x1="12" y1="38" x2="198" y2="38" stroke="var(--muted)" stroke-width="2"/>
+      <g>
+        <circle cx="30"  cy="38" r="8" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="2"/>
+        <circle cx="85"  cy="38" r="8" fill="var(--tint-b)" stroke="var(--brand)" stroke-width="2"/>
+        <circle cx="140" cy="38" r="8" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="2"/>
+        <circle cx="188" cy="38" r="8" fill="var(--tint-b)" stroke="var(--accent)" stroke-width="2"/>
+      </g>
+      <g font-size="8.5">
+        <text x="30"  y="58" text-anchor="middle" class="art-t">prelinguaal</text><text x="30"  y="70" text-anchor="middle" class="art-s">0–1 jr</text>
+        <text x="85"  y="58" text-anchor="middle" class="art-t">vroeglinguaal</text><text x="85"  y="70" text-anchor="middle" class="art-s">1–2,5 jr</text>
+        <text x="140" y="58" text-anchor="middle" class="art-t">differentiatie</text><text x="140" y="70" text-anchor="middle" class="art-s">2,5–5 jr</text>
+        <text x="188" y="58" text-anchor="middle" class="art-t">voltooiing</text><text x="188" y="70" text-anchor="middle" class="art-s">5–9 jr</text>
+      </g>
+    </svg>`,
+  tweetaligheid: `
+    <svg viewBox="0 0 210 108" role="img" aria-label="Simultane versus successieve tweetaligheid">
+      <text x="8" y="24" class="art-t">simultaan</text>
+      <rect x="80"  y="12" width="55" height="16" rx="5" fill="var(--tint-a)"/><text x="107" y="24" text-anchor="middle" class="art-s">taal 1</text>
+      <rect x="140" y="12" width="55" height="16" rx="5" fill="var(--tint-b)"/><text x="167" y="24" text-anchor="middle" class="art-s">taal 2</text>
+      <text x="8" y="66" class="art-t">successief</text>
+      <rect x="80"  y="54" width="80" height="16" rx="5" fill="var(--tint-a)"/><text x="120" y="66" text-anchor="middle" class="art-s">taal 1</text>
+      <rect x="165" y="54" width="30" height="16" rx="5" fill="var(--tint-b)"/><text x="180" y="66" text-anchor="middle" class="art-s">taal 2</text>
+      <text x="107" y="94" text-anchor="middle" class="art-s">grens ± 3e jaar</text>
+      <line x1="137" y1="8" x2="137" y2="88" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3"/>
+    </svg>`,
+  competenties4: `
+    <svg viewBox="0 0 210 120" role="img" aria-label="Vier communicatieve competenties">
+      <g font-size="9.5">
+        <rect x="8"   y="10" width="94" height="44" rx="8" fill="var(--tint-a)"/><text x="55" y="30" text-anchor="middle" class="art-t">grammaticaal</text><text x="55" y="44" text-anchor="middle" class="art-s">woorden &amp; vormen</text>
+        <rect x="108" y="10" width="94" height="44" rx="8" fill="var(--tint-b)"/><text x="155" y="30" text-anchor="middle" class="art-t">tekstueel</text><text x="155" y="44" text-anchor="middle" class="art-s">opbouw tekst</text>
+        <rect x="8"   y="62" width="94" height="44" rx="8" fill="var(--tint-b)"/><text x="55" y="82" text-anchor="middle" class="art-t">strategisch</text><text x="55" y="96" text-anchor="middle" class="art-s">omweg vinden</text>
+        <rect x="108" y="62" width="94" height="44" rx="8" fill="var(--tint-a)"/><text x="155" y="82" text-anchor="middle" class="art-t">functioneel</text><text x="155" y="96" text-anchor="middle" class="art-s">passend bij situatie</text>
+      </g>
     </svg>`
 });
 
@@ -136,6 +181,84 @@ const ENRICH = {
       { q:"Een klas bespreekt samen waarom je 'hij loopt' met een -t schrijft. Welk onderdeel van taalonderwijs is dit?",
         opts:["Mondelinge taalvaardigheid","Schriftelijke taalvaardigheid","Taalbeschouwing","Begrijpend lezen"],
         ans:2, leg:"Taalbeschouwing is nadenken over taalvorm, taalgebruik en hoe iets verwoord is — precies wat hier gebeurt." }
+    ]
+  },
+
+  /* =========================================================
+     HOOFDSTUK 2 · Mondelinge taalvaardigheid
+     ========================================================= */
+  mondeling: {
+    art: {
+      "Globaal luisteren": "luisterstrategie",
+      "Intensief luisteren": "luisterstrategie",
+      "Gericht luisteren": "luisterstrategie",
+      "Kritisch luisteren": "luisterstrategie",
+      "Prelinguale periode": "taalontwikkeling",
+      "Vroeglinguale fase": "taalontwikkeling",
+      "Differentiatiefase": "taalontwikkeling",
+      "Voltooiingsfase": "taalontwikkeling",
+      "Simultane tweetaligheid": "tweetaligheid",
+      "Successieve tweetaligheid": "tweetaligheid",
+      "Grammaticale competentie": "competenties4",
+      "Tekstuele competentie": "competenties4",
+      "Strategische competentie": "competenties4",
+      "Functionele competentie": "competenties4"
+    },
+    mc: [
+      { q:"Je luistert naar een discussie en wilt de argumenten beoordelen om een eigen mening te vormen. Welke luisterstrategie gebruik je?",
+        opts:["Globaal luisteren","Intensief luisteren","Gericht luisteren","Kritisch luisteren"],
+        ans:3, leg:"Kritisch luisteren = luisteren om een oordeel of mening te vormen." },
+      { q:"Bij het weerbericht luister je alleen naar de temperatuur voor morgen. Welke luisterstrategie is dit?",
+        opts:["Globaal luisteren","Gericht luisteren","Intensief luisteren","Kritisch luisteren"],
+        ans:1, leg:"Gericht luisteren = luisteren naar specifieke informatie die je nodig hebt." },
+      { q:"Wat is het verschil tussen globaal en intensief luisteren?",
+        opts:["Globaal = op de grote lijn; intensief = op alle details","Globaal = op de details; intensief = op de grote lijn","Ze betekenen hetzelfde","Globaal = kritisch beoordelen; intensief = ontspannen"],
+        ans:0, leg:"Globaal luisteren richt zich op de hoofdlijn; intensief luisteren op de details." },
+      { q:"Een leerling houdt een betoog om de klas te overtuigen van meer buitenspelen. Welk spreekdoel hoort hierbij?",
+        opts:["Informeren","Amuseren","Instrueren","Overtuigen"],
+        ans:3, leg:"Overtuigen = iemand overhalen tot een mening of standpunt." },
+      { q:"Je legt stap voor stap uit hoe een gezelschapsspel gespeeld wordt. Welk spreekdoel is dit?",
+        opts:["Informeren","Instrueren","Amuseren","Overtuigen"],
+        ans:1, leg:"Instrueren = uitleggen hoe iemand iets moet doen." },
+      { q:"Een kind zegt: 'Ik ga eerst opruimen en dan spelen.' Welke sociale taalfunctie gebruikt het?",
+        opts:["Zelfhandhaving","Zelfsturing","Sturing van anderen","Structurering van gesprek"],
+        ans:1, leg:"Zelfsturing = met taal je eigen handelen plannen of aankondigen." },
+      { q:"'Die had ik eerst!' roept een kind bij de bouwhoek. Welke sociale taalfunctie is dit?",
+        opts:["Zelfhandhaving","Zelfsturing","Sturing van anderen","Rapporteren"],
+        ans:0, leg:"Zelfhandhaving = met taal opkomen voor jezelf of je bezit verdedigen." },
+      { q:"Een leerling vertelt niet alleen wát er bij een ongeluk gebeurde, maar legt ook uit wáárom. Welke cognitieve taalfunctie voegt dat 'waarom' toe?",
+        opts:["Rapporteren","Redeneren","Projecteren","Structureren"],
+        ans:1, leg:"Rapporteren = verslag doen van wat er gebeurde; redeneren = een extra denkstap toevoegen (bijv. oorzaak-gevolg)." },
+      { q:"Een leerling bedenkt hoe een personage zich zou voelen. Welke cognitieve taalfunctie is dit?",
+        opts:["Rapporteren","Redeneren","Projecteren","Evalueren"],
+        ans:2, leg:"Projecteren = je verplaatsen in de gedachten of gevoelens van iemand anders." },
+      { q:"Een kind zegt 'loopte', een vorm die het nooit heeft gehoord. Welke theorie verklaart dit het best?",
+        opts:["Behaviorisme (imitatie)","Creatieve constructietheorie","Contrastieve analyse","Registertheorie"],
+        ans:1, leg:"De creatieve constructietheorie: met een aangeboren taalvermogen bouwt een kind zélf regels en vormen, ook vormen die het nooit hoorde ('loopte')." },
+      { q:"Volgens welke oudere verklaring leren kinderen taal vooral door nadoen en bekrachtiging?",
+        opts:["Behaviorisme","Creatieve constructietheorie","Interactionele benadering","Nativisme"],
+        ans:0, leg:"Het behaviorisme verklaart taalverwerving vooral via imitatie en bekrachtiging." },
+      { q:"Welke benadering benadrukt dat zowel aangeboren taalvermogen áls taalaanbod en interactie met de omgeving nodig zijn?",
+        opts:["Behaviorisme","Creatieve constructietheorie","Interactionele benadering","Imitatietheorie"],
+        ans:2, leg:"De interactionele benadering combineert aangeboren vermogen met taalaanbod en interactie (bijv. een ouder reageert op brabbelen)." },
+      { q:"Een kind van 3,5 jaar past steeds meer vormveranderingen en taalregels toe. In welke fase zit het?",
+        opts:["Prelinguale periode","Vroeglinguale fase","Differentiatiefase","Voltooiingsfase"],
+        ans:2, leg:"Differentiatiefase (2,5–5 jaar): het kind leert vormveranderingen en taalregels gebruiken." },
+      { q:"Een baby van 8 maanden herhaalt klankgroepen als 'ba-ba-ba'. Hoe heet dit en in welke periode valt het?",
+        opts:["Brabbelen, prelinguale periode","Vocaliseren, linguale periode","Eenwoordzin, vroeglinguale fase","Overgeneralisatie, voltooiingsfase"],
+        ans:0, leg:"Brabbelen (het herhalen van klankgroepen, vanaf ±7 maanden) hoort bij de prelinguale periode: er zijn nog geen echte woorden." },
+      { q:"Een kind groeit vanaf de geboorte tegelijk met Nederlands én Turks op. Welke vorm van tweetaligheid is dit?",
+        opts:["Simultane tweetaligheid","Successieve tweetaligheid","Interferentie","Overgeneralisatie"],
+        ans:0, leg:"Simultane tweetaligheid = twee talen (ongeveer) tegelijk leren, meestal als de tweede taal vóór het 3e jaar start. Successief = de tweede taal komt later." },
+      { q:"Een leerling neemt een klank uit zijn eerste taal mee in het Nederlands. Hoe heet zo'n fout?",
+        opts:["Overgeneralisatie","Interferentiefout","Registerfout","Analogiefout"],
+        ans:1, leg:"Een interferentiefout ontstaat door invloed van de verschillen tussen de eerste en de tweede taal." },
+      { q:"Een leerling spreekt formeel tijdens een presentatie, maar losjes met vrienden. Welke communicatieve competentie laat dit zien?",
+        opts:["Grammaticale competentie","Tekstuele competentie","Strategische competentie","Functionele competentie"],
+        ans:3, leg:"Functionele competentie = je taalgebruik aanpassen aan situatie, doel en publiek." },
+      { q:"Je weet een woord even niet en omschrijft het dan met andere woorden. Welke competentie gebruik je?",
+        opts:["Grammaticale competentie","Strategische competentie","Tekstuele competentie","Functionele competentie"],
+        ans:1, leg:"Strategische competentie = strategieën inzetten om je communicatieve doel tóch te bereiken (bijv. omschrijven)." }
     ]
   }
 
