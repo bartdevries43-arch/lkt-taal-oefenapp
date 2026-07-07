@@ -39,6 +39,12 @@ enhanceConcept("taalonderwijs", "Beginnende geletterdheid", {
   focus:"Beginnende geletterdheid verbindt taalbewustzijn, letterkennis en aanvankelijk lezen."
 });
 
+enhanceConcept("taalonderwijs", "Gevorderde geletterdheid", {
+  d:"De ontwikkeling na groep 3 waarin leerlingen steeds vloeiender en met begrip leren lezen en doelgericht verschillende soorten teksten leren schrijven.",
+  ex:"Een leerling vat een informatieve tekst samen en schrijft daarna een helder verslag voor een gekozen publiek.",
+  focus:"Gevorderde geletterdheid omvat voortgezet technisch lezen, begrijpend lezen en stellen."
+});
+
 enhanceConcept("beginnende-geletterdheid", "Ontluikende geletterdheid", {
   d:"De ontwikkeling van geletterdheid in de voorschoolse periode, waarin kinderen via boeken, logo’s, tekeningen en hun omgeving ontdekken dat geschreven taal betekenis en functies heeft.",
   ex:"Een peuter herkent het logo van een winkel en doet alsof hij een prentenboek voorleest.",
