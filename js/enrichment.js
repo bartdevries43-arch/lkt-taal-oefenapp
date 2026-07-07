@@ -176,6 +176,26 @@ Object.assign(ART, {
       <text x="105" y="46" text-anchor="middle" class="art-s">= gebeuren</text>
       <text x="105" y="72" text-anchor="middle" class="art-b">voor<tspan fill="var(--accent)">KOMEN</tspan></text>
       <text x="105" y="88" text-anchor="middle" class="art-s">= verhinderen</text>
+    </svg>`,
+  tekstsoorten: `
+    <svg viewBox="0 0 210 104" role="img" aria-label="Vijf tekstsoorten">
+      <g font-size="8">
+        <rect x="4"   y="20" width="38" height="40" rx="7" fill="var(--tint-a)"/><text x="23"  y="46" text-anchor="middle" class="art-e">📖</text><text x="23"  y="72" text-anchor="middle" class="art-s">verhalend</text><text x="23"  y="82" text-anchor="middle" class="art-s">amuseren</text>
+        <rect x="46"  y="20" width="38" height="40" rx="7" fill="var(--tint-b)"/><text x="65"  y="46" text-anchor="middle" class="art-e">📰</text><text x="65"  y="72" text-anchor="middle" class="art-s">informatief</text><text x="65"  y="82" text-anchor="middle" class="art-s">informeren</text>
+        <rect x="88"  y="20" width="38" height="40" rx="7" fill="var(--tint-a)"/><text x="107" y="46" text-anchor="middle" class="art-e">🧾</text><text x="107" y="72" text-anchor="middle" class="art-s">directief</text><text x="107" y="82" text-anchor="middle" class="art-s">instrueren</text>
+        <rect x="130" y="20" width="38" height="40" rx="7" fill="var(--tint-b)"/><text x="149" y="46" text-anchor="middle" class="art-e">💭</text><text x="149" y="72" text-anchor="middle" class="art-s">beschouwend</text><text x="149" y="82" text-anchor="middle" class="art-s">mening</text>
+        <rect x="172" y="20" width="34" height="40" rx="7" fill="var(--tint-a)"/><text x="189" y="46" text-anchor="middle" class="art-e">📣</text><text x="189" y="72" text-anchor="middle" class="art-s">argument.</text><text x="189" y="82" text-anchor="middle" class="art-s">overtuigen</text>
+      </g>
+    </svg>`,
+  perceptieCognitie: `
+    <svg viewBox="0 0 210 96" role="img" aria-label="Perceptie en cognitie">
+      <circle cx="52" cy="44" r="26" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="2"/>
+      <text x="52" y="50" text-anchor="middle" class="art-e">👁️</text>
+      <path d="M82 44h44M120 39l8 5-8 5" fill="none" stroke="var(--muted)" stroke-width="2"/>
+      <circle cx="158" cy="44" r="26" fill="var(--tint-b)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="158" y="50" text-anchor="middle" class="art-e">🧠</text>
+      <text x="52" y="84" text-anchor="middle" class="art-s">perceptie · zintuigen</text>
+      <text x="158" y="84" text-anchor="middle" class="art-s">cognitie · verwerken</text>
     </svg>`
 });
 
@@ -451,6 +471,71 @@ const ENRICH = {
       { q:"Welke van deze is een bekende risicofactor voor dyslexie?",
         opts:["Een grote woordenschat","Moeite met hakken en plakken en met de letter-klankkoppeling","Veel voorleeservaring","Snel kunnen benoemen"],
         ans:1, leg:"Risicofactoren zijn onder meer moeite met hakken/plakken, met de letter-klankkoppeling en met snel benoemen." }
+    ]
+  },
+
+  /* =========================================================
+     HOOFDSTUK 6 · Begrijpend lezen
+     ========================================================= */
+  "begrijpend-lezen": {
+    art: {
+      "Verhalende tekst": "tekstsoorten",
+      "Informatieve tekst": "tekstsoorten",
+      "Directieve tekst": "tekstsoorten",
+      "Beschouwende tekst": "tekstsoorten",
+      "Argumentatieve tekst": "tekstsoorten",
+      "Perceptie": "perceptieCognitie",
+      "Cognitie": "perceptieCognitie"
+    },
+    mc: [
+      { q:"Je leest een recept om een taart te bakken. Wat is je leesdoel?",
+        opts:["Informatie zoeken","Mening vormen","Ontspannen lezen","Handeling uitvoeren"],
+        ans:3, leg:"Leesdoel 'handeling uitvoeren' = instructies volgen om iets te doen, zoals bij een recept." },
+      { q:"Welke tekstsoort stelt vooral de mening of visie van de schrijver centraal, zoals een recensie?",
+        opts:["Verhalende tekst","Informatieve tekst","Beschouwende tekst","Directieve tekst"],
+        ans:2, leg:"Een beschouwende tekst stelt een mening of visie centraal (bijv. een recensie)." },
+      { q:"Een handleiding die uitlegt hoe je iets moet doen, is een ...",
+        opts:["Argumentatieve tekst","Directieve tekst","Beschouwende tekst","Verhalende tekst"],
+        ans:1, leg:"Een directieve tekst legt uit hoe je iets moet doen (handleiding, recept, stappenplan)." },
+      { q:"Een advertentie die je wil overhalen iets te kopen, is vooral een ...",
+        opts:["Informatieve tekst","Argumentatieve tekst","Verhalende tekst","Directieve tekst"],
+        ans:1, leg:"Een argumentatieve tekst probeert de lezer te overtuigen (bijv. een advertentie of betoog)." },
+      { q:"Wat is het verschil tussen fictie en non-fictie?",
+        opts:["Fictie = verzonnen; non-fictie = verwijst naar de werkelijkheid","Fictie = waargebeurd; non-fictie = verzonnen","Ze betekenen hetzelfde","Fictie is altijd poëzie"],
+        ans:0, leg:"Fictie is een verzonnen werkelijkheid; non-fictie verwijst naar de echte, controleerbare werkelijkheid (zakelijke teksten)." },
+      { q:"'Ze stapte in haar Maserati' — je leidt af dat ze waarschijnlijk rijk is. Welke leesstrategie gebruik je?",
+        opts:["Voorspellen","Afleiden","Samenvatten","Visualiseren"],
+        ans:1, leg:"Afleiden = informatie invullen die niet letterlijk in de tekst staat, op basis van aanwijzingen." },
+      { q:"Vóór het lezen bedenk je op basis van de titel waar de tekst waarschijnlijk over gaat. Welke strategie is dit?",
+        opts:["Voorspellen","Monitoren","Samenvatten","Verbinden"],
+        ans:0, leg:"Voorspellen = verwachtingen vormen over de inhoud of het vervolg van de tekst." },
+      { q:"Tijdens het lezen vraag je jezelf af of je de alinea nog wel begrijpt. Welke strategie gebruik je?",
+        opts:["Visualiseren","Monitoren","Verbinden","Afleiden"],
+        ans:1, leg:"Monitoren = je eigen leesbegrip bewaken en bijsturen tijdens het lezen." },
+      { q:"Je koppelt de tekst aan wat je zelf al over het onderwerp weet. Welke strategie is dit?",
+        opts:["Verbinden","Samenvatten","Voorspellen","Vragen stellen"],
+        ans:0, leg:"Verbinden = nieuwe informatie koppelen aan je voorkennis." },
+      { q:"'Omdat' en 'daardoor' maken een verband in de tekst zichtbaar. Zulke woorden heten ...",
+        opts:["Verwijswoorden","Signaalwoorden","Inhoudswoorden","Vraagwoorden"],
+        ans:1, leg:"Signaalwoorden maken verbanden in een tekst zichtbaar (bijv. oorzaak-gevolg met 'omdat')." },
+      { q:"'De jongen rende weg. Hij was bang.' Wat is 'hij' in de tweede zin?",
+        opts:["Signaalwoord","Verwijswoord","Inhoudswoord","Voegwoord"],
+        ans:1, leg:"Een verwijswoord verwijst terug of vooruit in een tekst; 'hij' verwijst naar 'de jongen'." },
+      { q:"'Met een paraplu blijf je droog.' Welke tekstrelatie is dit?",
+        opts:["Chronologie","Vergelijking","Middel-doelrelatie","Vraag-antwoordrelatie"],
+        ans:2, leg:"Een middel-doelrelatie legt het verband tussen een middel (paraplu) en het beoogde doel (droog blijven)." },
+      { q:"'Als je oefent, word je beter.' Welke tekstrelatie zie je hier?",
+        opts:["Voorwaardelijke structuur","Chronologie","Voorbeeldrelatie","Vergelijking"],
+        ans:0, leg:"Een voorwaardelijke structuur koppelt een voorwaarde aan een gevolg (als … dan …)." },
+      { q:"Bij begrijpend lezen komt de tekst via je ogen binnen. Hoe heet het verwérken van die informatie en het koppelen aan je voorkennis?",
+        opts:["Perceptie","Cognitie","Monitoren","Automatisering"],
+        ans:1, leg:"Cognitie = nieuwe informatie verwerken en koppelen aan bestaande kennis. Perceptie is het binnenkomen via de zintuigen." },
+      { q:"Vanaf welk aandeel onbekende woorden wordt een tekst volgens de kennisbasis al snel onleesbaar?",
+        opts:["5%","10%","25%","50%"],
+        ans:1, leg:"Bij ongeveer 10% onbekende woorden wordt een tekst al onleesbaar voor de lezer." },
+      { q:"Waar gaat het tekstkenmerk 'bedoeling' over?",
+        opts:["Het onderwerp van de tekst","Het doel dat de schrijver met de tekst heeft","De lengte van de tekst","De lettergrootte"],
+        ans:1, leg:"Het tekstkenmerk 'bedoeling' gaat over het doel van de schrijver: informeren, overtuigen, amuseren of instrueren." }
     ]
   }
 
