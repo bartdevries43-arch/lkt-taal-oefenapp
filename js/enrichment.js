@@ -196,6 +196,35 @@ Object.assign(ART, {
       <text x="158" y="50" text-anchor="middle" class="art-e">🧠</text>
       <text x="52" y="84" text-anchor="middle" class="art-s">perceptie · zintuigen</text>
       <text x="158" y="84" text-anchor="middle" class="art-s">cognitie · verwerken</text>
+    </svg>`,
+  schrijfproces: `
+    <svg viewBox="0 0 210 116" role="img" aria-label="Het schrijfproces als cyclus">
+      <circle cx="45"  cy="46" r="26" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="2"/>
+      <circle cx="105" cy="46" r="26" fill="var(--tint-b)" stroke="var(--brand)" stroke-width="2"/>
+      <circle cx="165" cy="46" r="26" fill="var(--tint-a)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="45"  y="50" text-anchor="middle" class="art-t">plannen</text>
+      <text x="105" y="50" text-anchor="middle" class="art-t">schrijven</text>
+      <text x="165" y="50" text-anchor="middle" class="art-t">reviseren</text>
+      <path d="M73 40h4M79 40l-6-3v6z" fill="var(--muted)" stroke="var(--muted)"/>
+      <path d="M133 40h4M139 40l-6-3v6z" fill="var(--muted)" stroke="var(--muted)"/>
+      <path d="M150 74c-30 22-75 22-105 0" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="105" y="104" text-anchor="middle" class="art-s">de fasen wisselen elkaar af</text>
+    </svg>`,
+  tekststructuren: `
+    <svg viewBox="0 0 210 110" role="img" aria-label="Drie tekststructuren">
+      <g font-size="8">
+        <rect x="8" y="18" width="58" height="12" rx="3" fill="var(--tint-b)"/>
+        <rect x="8" y="34" width="58" height="12" rx="3" fill="var(--tint-b)"/>
+        <rect x="8" y="50" width="58" height="12" rx="3" fill="var(--tint-b)"/>
+        <text x="37" y="80" text-anchor="middle" class="art-t">stapel</text><text x="37" y="92" text-anchor="middle" class="art-s">losse delen</text>
+        <line x1="76" y1="40" x2="134" y2="40" stroke="var(--brand)" stroke-width="2"/>
+        <circle cx="80" cy="40" r="4" fill="var(--tint-a)" stroke="var(--brand)"/><circle cx="105" cy="40" r="4" fill="var(--tint-a)" stroke="var(--brand)"/><circle cx="130" cy="40" r="4" fill="var(--tint-a)" stroke="var(--brand)"/>
+        <text x="105" y="80" text-anchor="middle" class="art-t">verhaal</text><text x="105" y="92" text-anchor="middle" class="art-s">gebeurtenissen</text>
+        <rect x="150" y="16" width="52" height="14" rx="3" fill="var(--tint-a)"/><text x="176" y="26" text-anchor="middle" class="art-s">standpunt</text>
+        <rect x="152" y="34" width="24" height="10" rx="3" fill="var(--tint-b)"/><rect x="178" y="34" width="24" height="10" rx="3" fill="var(--tint-b)"/>
+        <rect x="152" y="48" width="24" height="10" rx="3" fill="var(--tint-b)"/><rect x="178" y="48" width="24" height="10" rx="3" fill="var(--tint-b)"/>
+        <text x="176" y="80" text-anchor="middle" class="art-t">betoog</text><text x="176" y="92" text-anchor="middle" class="art-s">+ argumenten</text>
+      </g>
     </svg>`
 });
 
@@ -536,6 +565,68 @@ const ENRICH = {
       { q:"Waar gaat het tekstkenmerk 'bedoeling' over?",
         opts:["Het onderwerp van de tekst","Het doel dat de schrijver met de tekst heeft","De lengte van de tekst","De lettergrootte"],
         ans:1, leg:"Het tekstkenmerk 'bedoeling' gaat over het doel van de schrijver: informeren, overtuigen, amuseren of instrueren." }
+    ]
+  },
+
+  /* =========================================================
+     HOOFDSTUK 7 · Stellen (schrijven)
+     ========================================================= */
+  stellen: {
+    art: {
+      "Schrijfproces": "schrijfproces",
+      "Plannen": "schrijfproces",
+      "Schrijven": "schrijfproces",
+      "Reviseren": "schrijfproces",
+      "Stapelstructuur": "tekststructuren",
+      "Verhaalstructuur": "tekststructuren",
+      "Betoogstructuur": "tekststructuren"
+    },
+    mc: [
+      { q:"Een beginnende schrijver begint meteen ('en toen… en toen…') en verbetert hooguit de spelling. Welke manier van schrijven is dit?",
+        opts:["Denkend schrijven","Vertellend schrijven","Reviseren","Structureren"],
+        ans:1, leg:"Vertellend schrijven = praten op papier: meteen beginnen, weinig planning of revisie van de structuur. Kenmerkend voor beginners." },
+      { q:"Een ervaren schrijver maakt eerst een plan, bepaalt doel en publiek en herziet zijn tekst. Hoe heet dit?",
+        opts:["Vertellend schrijven","Denkend schrijven","Coderen","Stileren"],
+        ans:1, leg:"Denkend schrijven = bewust plannen, structureren, formuleren en reviseren." },
+      { q:"Uit welke drie fasen bestaat het schrijfproces, die elkaar afwisselen?",
+        opts:["Lezen, schrijven, nakijken","Plannen, schrijven (formuleren) en reviseren","Inleiding, kern, slot","Doel, publiek, tekstsoort"],
+        ans:1, leg:"Het schrijfproces bestaat uit plannen, schrijven/formuleren en reviseren; deze fasen wisselen elkaar steeds af." },
+      { q:"Wat houdt 'reviseren' in?",
+        opts:["De lay-out en netheid verzorgen","De tekst kritisch herlezen en verbeteren op inhoud, structuur, formulering en spelling","Het onderwerp kiezen","De doelgroep bepalen"],
+        ans:1, leg:"Reviseren = de tekst kritisch herlezen en bijstellen (inhoud, structuur, formulering, spelling) — ook al tijdens het schrijven." },
+      { q:"Welke tekststructuur heeft een boodschappenlijst?",
+        opts:["Verhaalstructuur","Betoogstructuur","Stapelstructuur","Argumentatieve structuur"],
+        ans:2, leg:"Een stapelstructuur bestaat uit min of meer losse onderdelen zonder duidelijke samenhang (bijv. een boodschappenlijst of telefoonboek)." },
+      { q:"Een tekst met een standpunt en onderbouwende argumenten heeft een ...",
+        opts:["Stapelstructuur","Verhaalstructuur","Betoogstructuur","Vraagstructuur"],
+        ans:2, leg:"Een betoogstructuur bevat een standpunt met onderbouwende argumenten." },
+      { q:"Een verhaal met personages die opeenvolgende gebeurtenissen meemaken (begin–probleem–oplossing) heeft een ...",
+        opts:["Betoogstructuur","Verhaalstructuur","Stapelstructuur","Retorische structuur"],
+        ans:1, leg:"Een verhaalstructuur volgt opeenvolgende gebeurtenissen van personages (begin, probleem, oplossing)." },
+      { q:"Wat is het verschil tussen 'formuleren' en 'coderen' bij het schrijven?",
+        opts:["Formuleren = de inhoud in woorden en zinnen verwoorden; coderen = taalregels, spelling en interpunctie correct toepassen","Ze betekenen hetzelfde","Formuleren = spelling; coderen = inhoud","Coderen = een plan maken"],
+        ans:0, leg:"Formuleren = de inhoud verwoorden in woorden en zinnen. Coderen = de taalregels, spelling en interpunctie correct toepassen." },
+      { q:"Je schrijft een gedicht om je gevoelens te uiten. Welke functie van schrijven is dit?",
+        opts:["Communicatieve schrijffunctie","Conceptualiserende schrijffunctie","Expressieve schrijffunctie","Directieve functie"],
+        ans:2, leg:"De expressieve schrijffunctie = schrijven om gevoelens, fantasie of eigen stijl te uiten." },
+      { q:"Je maakt een mindmap om je gedachten te ordenen. Welke functie van schrijven is dit?",
+        opts:["Communicatieve schrijffunctie","Conceptualiserende schrijffunctie","Expressieve schrijffunctie","Esthetische functie"],
+        ans:1, leg:"De conceptualiserende schrijffunctie = schrijven om je gedachten te ordenen (bijv. een mindmap of aantekeningen)." },
+      { q:"Vóór het schrijven verzamel je informatie en bepaal je de tekstsoort. In welke fase van het schrijfproces zit je?",
+        opts:["Plannen","Formuleren","Reviseren","Verzorgen"],
+        ans:0, leg:"Plannen = informatie zoeken en de aanpak of tekstsoort bepalen." },
+      { q:"Aan het eind controleer je de lay-out, alinea's en netheid van je tekst. Welke stelvaardigheid is dit?",
+        opts:["Reviseren","Structureren","Verzorgen","Selecteren"],
+        ans:2, leg:"Verzorgen = lay-out, alinea's, illustraties en netheid controleren." },
+      { q:"Je zet de verzamelde informatie in logische groepjes vóór je gaat schrijven. Welke stelvaardigheid is dit?",
+        opts:["Selecteren","Ordenen","Formuleren","Coderen"],
+        ans:1, leg:"Ordenen = informatie logisch groeperen of in volgorde zetten." },
+      { q:"Waarom bepaal je vooraf je publiek bij het schrijven?",
+        opts:["Om je taal en inhoud aan te passen aan de lezer","Om sneller te typen","Om spelling te oefenen","Om de lay-out te kiezen"],
+        ans:0, leg:"Het publiek bepalen helpt je taal, toon en inhoud af te stemmen op de lezer (bijv. schrijven voor groep 5)." },
+      { q:"Je kiest bewust een formele of juist speelse schrijfstijl. Welke stelvaardigheid is dit?",
+        opts:["Coderen","Stileren","Structureren","Reviseren"],
+        ans:1, leg:"Stileren = een passende schrijfstijl kiezen (bijv. formeel of speels)." }
     ]
   }
 
