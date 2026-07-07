@@ -15,19 +15,23 @@ De app draait volledig in de browser (HTML/CSS/JavaScript, geen server nodig) en
 
 ## 📖 Inhoud
 
-Alle hoofdstukken uit de samenvatting zijn beschikbaar. Samen bevatten ze **375 begrippen**:
+Alle negen hoofdstukken zijn volledig afgewerkt tot hetzelfde niveau als het proefhoofdstuk Woordenschat.
 
-1. **Taalonderwijs en taal** – 26 begrippen
-2. **Mondelinge taalvaardigheid** – 48 begrippen
-3. **Woordenschat** – 28 begrippen en 18 extra toepassingsvragen
-4. **Beginnende geletterdheid** – 39 begrippen
-5. **Voortgezet technisch lezen** – 36 begrippen
-6. **Begrijpend lezen** – 42 begrippen
-7. **Stellen** – 30 begrippen
-8. **Jeugdliteratuur** – 43 begrippen
-9. **Taalbeschouwing en spelling** – 83 begrippen
+| # | Hoofdstuk | Begrippen | Meerkeuzevragen | Illustraties |
+|---|-----------|:---------:|:---------------:|:------------:|
+| 1 | Taalonderwijs en taal | 26 | 15 | 4 |
+| 2 | Mondelinge taalvaardigheid | 48 | 18 | 4 |
+| 3 | Woordenschat | 28 | 18 | 8 |
+| 4 | Beginnende geletterdheid | 39 | 16 | 3 |
+| 5 | Voortgezet technisch lezen | 36 | 16 | 2 |
+| 6 | Begrijpend lezen | 42 | 16 | 2 |
+| 7 | Stellen | 30 | 15 | 2 |
+| 8 | Jeugdliteratuur | 43 | 16 | 3 |
+| 9 | Taalbeschouwing en spelling | 83 | 20 | 5 |
 
-Elk begrip wordt automatisch gebruikt voor flashcards, meerkeuzevragen en combineeropgaven. Elk hoofdstuk heeft daarnaast een eigen examensimulatie van 15 vragen en een eigen voortgangsoverzicht.
+Samen: **375 begrippen**, **150 handgeschreven meerkeuzevragen** en **31 illustraties** (inline SVG, werken offline).
+
+Elk begrip wordt gebruikt voor flashcards en combineeropgaven. De meerkeuze- en examenvragen combineren de handgeschreven toepassingsvragen met automatisch gegenereerde begripsvragen. Elk hoofdstuk heeft een eigen examensimulatie van 15 vragen en een eigen voortgangsoverzicht.
 
 ## 🔬 Inhoudelijke controle
 
@@ -48,6 +52,7 @@ index.html        – opbouw van de app (schermen + tabbladen)
 css/style.css     – vormgeving
 js/data.js        – de leerstof: begrippen, illustraties en vragen per hoofdstuk
 js/chapters.generated.js – hoofdstukken die uit de samenvatting zijn gegenereerd
+js/enrichment.js  – handgeschreven meerkeuzevragen + illustraties per hoofdstuk
 js/research.js    – voorzichtig aangescherpte kernbegrippen en toetsfocus
 js/app.js         – de logica van de vier oefenvormen + voortgang
 scripts/generate-chapters.mjs – werkt de leerstof bij vanuit het Word-document
@@ -61,7 +66,7 @@ De hoofdstukken 1, 2 en 4 t/m 9 worden gegenereerd uit de tabel **Begrippen per 
 node scripts/generate-chapters.mjs
 ```
 
-Hoofdstuk 3 bevat extra handgemaakte illustraties en toepassingsvragen en staat daarom apart in `js/data.js`.
+De begrippenlijst blijft zo herkenbaar en opnieuw genereerbaar. De handgeschreven meerkeuzevragen, illustraties en tekstaanscherpingen staan los daarvan in `js/enrichment.js` en worden bij het laden op de begrippen gelegd — die blijven dus behouden bij opnieuw genereren. Hoofdstuk 3 (Woordenschat) staat als proefhoofdstuk volledig handgemaakt in `js/data.js`.
 
 ## 🚀 Hosten via GitHub Pages
 
