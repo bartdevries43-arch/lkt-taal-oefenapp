@@ -113,6 +113,42 @@ Object.assign(ART, {
         <rect x="8"   y="62" width="94" height="44" rx="8" fill="var(--tint-b)"/><text x="55" y="82" text-anchor="middle" class="art-t">strategisch</text><text x="55" y="96" text-anchor="middle" class="art-s">omweg vinden</text>
         <rect x="108" y="62" width="94" height="44" rx="8" fill="var(--tint-a)"/><text x="155" y="82" text-anchor="middle" class="art-t">functioneel</text><text x="155" y="96" text-anchor="middle" class="art-s">passend bij situatie</text>
       </g>
+    </svg>`,
+  hakkenplakken: `
+    <svg viewBox="0 0 210 120" role="img" aria-label="Hakken en plakken">
+      <rect x="72" y="8" width="66" height="26" rx="7" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="2"/>
+      <text x="105" y="26" text-anchor="middle" class="art-b">maan</text>
+      <g font-size="12">
+        <rect x="20"  y="54" width="46" height="26" rx="7" fill="var(--tint-b)"/><text x="43"  y="72" text-anchor="middle" class="art-t">/m/</text>
+        <rect x="82"  y="54" width="46" height="26" rx="7" fill="var(--tint-b)"/><text x="105" y="72" text-anchor="middle" class="art-t">/aa/</text>
+        <rect x="144" y="54" width="46" height="26" rx="7" fill="var(--tint-b)"/><text x="167" y="72" text-anchor="middle" class="art-t">/n/</text>
+      </g>
+      <path d="M95 36l-40 14M115 36l40 14" stroke="var(--muted)" stroke-width="2" fill="none"/>
+      <text x="40" y="100" text-anchor="middle" class="art-s">hakken ▼ analyse</text>
+      <text x="170" y="100" text-anchor="middle" class="art-s">plakken ▲ synthese</text>
+    </svg>`,
+  foneemGrafeem: `
+    <svg viewBox="0 0 210 100" role="img" aria-label="Foneem-grafeemkoppeling">
+      <rect x="18" y="30" width="60" height="34" rx="8" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="2"/>
+      <text x="48" y="52" text-anchor="middle" class="art-b">/m/</text>
+      <text x="48" y="78" text-anchor="middle" class="art-s">klank (foneem)</text>
+      <path d="M84 47h42" stroke="var(--muted)" stroke-width="2"/>
+      <text x="105" y="41" text-anchor="middle" class="art-eq">↔</text>
+      <rect x="132" y="30" width="60" height="34" rx="8" fill="var(--tint-b)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="162" y="53" text-anchor="middle" class="art-b">m</text>
+      <text x="162" y="78" text-anchor="middle" class="art-s">letter (grafeem)</text>
+    </svg>`,
+  schriftsystemen: `
+    <svg viewBox="0 0 210 110" role="img" aria-label="Drie schriftsystemen">
+      <rect x="6"   y="20" width="60" height="54" rx="9" fill="var(--tint-a)"/>
+      <rect x="75"  y="20" width="60" height="54" rx="9" fill="var(--tint-b)"/>
+      <rect x="144" y="20" width="60" height="54" rx="9" fill="var(--tint-a)"/>
+      <text x="36"  y="52" text-anchor="middle" class="art-e">🚸</text>
+      <text x="105" y="53" text-anchor="middle" class="art-b">漢</text>
+      <text x="174" y="52" text-anchor="middle" class="art-b">A B C</text>
+      <text x="36"  y="88" text-anchor="middle" class="art-s">pictografisch</text>
+      <text x="105" y="88" text-anchor="middle" class="art-s">logografisch</text>
+      <text x="174" y="88" text-anchor="middle" class="art-s">alfabetisch</text>
     </svg>`
 });
 
@@ -259,6 +295,73 @@ const ENRICH = {
       { q:"Je weet een woord even niet en omschrijft het dan met andere woorden. Welke competentie gebruik je?",
         opts:["Grammaticale competentie","Strategische competentie","Tekstuele competentie","Functionele competentie"],
         ans:1, leg:"Strategische competentie = strategieën inzetten om je communicatieve doel tóch te bereiken (bijv. omschrijven)." }
+    ]
+  },
+
+  /* =========================================================
+     HOOFDSTUK 4 · Beginnende geletterdheid
+     ========================================================= */
+  "beginnende-geletterdheid": {
+    art: {
+      "Auditieve analyse": "hakkenplakken",
+      "Auditieve synthese": "hakkenplakken",
+      "Alfabetisch principe": "foneemGrafeem",
+      "Foneem": "foneemGrafeem",
+      "Grafeem": "foneemGrafeem",
+      "Foneem-grafeemkoppeling": "foneemGrafeem",
+      "Pictografisch schrift": "schriftsystemen",
+      "Logografisch schrift": "schriftsystemen",
+      "Alfabetisch schrift": "schriftsystemen"
+    },
+    mc: [
+      { q:"Wat is het verschil tussen fonologisch en fonemisch bewustzijn?",
+        opts:["Fonologisch = omgaan met de klankvorm van taal in het algemeen; fonemisch = het besef dat woorden uit losse fonemen bestaan","Ze betekenen precies hetzelfde","Fonologisch gaat over letters, fonemisch over betekenis","Fonemisch is breder dan fonologisch"],
+        ans:0, leg:"Fonologisch bewustzijn is het brede vermogen om met de klankvorm van taal om te gaan (rijm, klankgroepen). Fonemisch bewustzijn is daar een onderdeel van: het besef dat woorden uit losse fonemen bestaan." },
+      { q:"Op school heet het splitsen van 'maan' in /m/ /aa/ /n/ 'hakken'. Welke vaardigheid is dit?",
+        opts:["Auditieve synthese","Auditieve analyse","Visuele analyse","Temporeel ordenen"],
+        ans:1, leg:"Auditieve analyse = een woord in klanken verdelen ('hakken'). Auditieve synthese = klanken samenvoegen ('plakken')." },
+      { q:"Een kind voegt /m/ /aa/ /n/ samen tot 'maan'. Hoe heet deze vaardigheid?",
+        opts:["Auditieve analyse","Auditieve synthese","Visuele synthese","Klankpositie bepalen"],
+        ans:1, leg:"Auditieve synthese = losse klanken samenvoegen tot een woord ('plakken')." },
+      { q:"Wat houdt het alfabetisch principe in?",
+        opts:["Woorden staan op alfabetische volgorde","Klanken (fonemen) in woorden komen overeen met letters (grafemen)","Elk woord begint met een hoofdletter","Je leest altijd van links naar rechts"],
+        ans:1, leg:"Het alfabetisch principe: gesproken woorden bestaan uit klanken, en die fonemen corresponderen met letters (grafemen) — de foneem-grafeemkoppeling." },
+      { q:"Wat is een foneem?",
+        opts:["Een letter","Een klank die betekenisverschil veroorzaakt","Een lettergreep","Het kleinste betekenisdragende woorddeel"],
+        ans:1, leg:"Een foneem is de kleinste klank die betekenisverschil maakt: /b/ maakt 'bak' anders dan 'dak'." },
+      { q:"'oe' in het woord 'boek' is één ...",
+        opts:["Foneem","Grafeem","Morfeem","Syllabe"],
+        ans:1, leg:"Een grafeem is een letter of lettercombinatie die één foneem weergeeft, zoals 'oe' in 'boek'." },
+      { q:"Een beginnende lezer verklankt /m/ /aa/ /n/ en voegt het samen tot 'maan'. Hoe heet dit spellend lezen?",
+        opts:["De elementaire leeshandeling","Directe woordherkenning","Morfologische analyse","Contextstrategie"],
+        ans:0, leg:"De elementaire leeshandeling is spellend lezen: grafemen aan fonemen koppelen, de volgorde vasthouden, samenvoegen en betekenis geven." },
+      { q:"Welk woord is klankzuiver (schrijf je precies zoals je het hoort)?",
+        opts:["Maan","Hond","Meeuw","Thee"],
+        ans:0, leg:"Een klankzuiver woord schrijf je volgens het fonologische principe, precies zoals je het hoort, zoals 'maan' of 'kat'. Bij 'hond' hoor je een /t/, dus die is niet klankzuiver." },
+      { q:"Een kleuter weet dat je een boek van voor naar achter leest en dat de tekst een boodschap draagt. Welk begrip is dit?",
+        opts:["Verhaalbegrip","Boekoriëntatie","Taalbewustzijn","Fonemisch bewustzijn"],
+        ans:1, leg:"Boekoriëntatie = weten hoe boeken werken: omslag, leesrichting, bladzijdes, tekst en illustraties." },
+      { q:"Een kind kan een voorgelezen verhaal navertellen met begin, probleem en oplossing. Welk begrip is dit?",
+        opts:["Boekoriëntatie","Verhaalbegrip","Alfabetisch principe","Auditieve synthese"],
+        ans:1, leg:"Verhaalbegrip = begrijpen hoe verhalen zijn opgebouwd en dit kunnen navertellen of voorspellen." },
+      { q:"Een kind leert het verschil zien tussen de letters b en d. Welke vaardigheid oefent het?",
+        opts:["Auditieve discriminatie","Visuele discriminatie","Spatieel ordenen","Visuele synthese"],
+        ans:1, leg:"Visuele discriminatie = verschillen zien tussen letters, woorden of afbeeldingen (bijv. b en d)." },
+      { q:"'Waar in het woord vuur hoor je de /v/?' Welke auditieve vaardigheid train je hiermee?",
+        opts:["Auditieve analyse","Klankpositie bepalen","Temporeel ordenen","Auditieve discriminatie"],
+        ans:1, leg:"Klankpositie bepalen = aangeven waar een klank in een woord staat (bijv. /v/ vooraan in 'vuur')." },
+      { q:"In welk schriftsysteem staat elk teken voor een heel woord of begrip, zoals in het Chinees?",
+        opts:["Pictografisch schrift","Logografisch schrift","Alfabetisch schrift","Syllabisch schrift"],
+        ans:1, leg:"Logografisch schrift: elk teken geeft een woord of betekenis weer (bijv. een Chinees karakter). Pictografisch = tekeningen, alfabetisch = letters voor klanken." },
+      { q:"Een kleuter schrijft 'fis' voor 'vis', precies zoals hij het hoort. Hoe heet deze spontane spelling?",
+        opts:["Krabbelen","Invented spelling","Ketens letterachtige vormen","Logografisch schrift"],
+        ans:1, leg:"Invented spelling = een kind schrijft woorden zoals het ze hoort; spontane, zelfbedachte spelling." },
+      { q:"Iemand kan zó zwak lezen en schrijven dat meedoen in de maatschappij moeilijk is. Welk begrip past?",
+        opts:["Functionele geletterdheid","Functioneel analfabetisme","Ontluikende geletterdheid","Dyslexie"],
+        ans:1, leg:"Functioneel analfabetisme = zo zwak lezen/schrijven dat functioneren in een geletterde samenleving lastig is. Functionele geletterdheid is juist wél kunnen meedoen." },
+      { q:"Een kleuter merkt op dat 'kat' en 'kam' allebei met /k/ beginnen. Welk begrip past hierbij?",
+        opts:["Taalbewustzijn","Verhaalbegrip","Boekoriëntatie","Decoderen"],
+        ans:0, leg:"Taalbewustzijn = nadenken over de vormaspecten van taal (zin, woord, klank), los van de betekenis." }
     ]
   }
 
