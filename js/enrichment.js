@@ -210,6 +210,51 @@ Object.assign(ART, {
       <path d="M150 74c-30 22-75 22-105 0" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
       <text x="105" y="104" text-anchor="middle" class="art-s">de fasen wisselen elkaar af</text>
     </svg>`,
+  rijmschemas: `
+    <svg viewBox="0 0 210 116" role="img" aria-label="Vier rijmschema's">
+      <g font-size="10" text-anchor="middle">
+        <text x="27"  y="16" class="art-t">gepaard</text>
+        <text x="27"  y="36" class="art-b">A</text><text x="27" y="52" class="art-b">A</text><text x="27" y="68" class="art-b">B</text><text x="27" y="84" class="art-b">B</text>
+        <text x="80"  y="16" class="art-t">omarmend</text>
+        <text x="80"  y="36" class="art-b">A</text><text x="80" y="52" class="art-b">B</text><text x="80" y="68" class="art-b">B</text><text x="80" y="84" class="art-b">A</text>
+        <text x="133" y="16" class="art-t">gekruist</text>
+        <text x="133" y="36" class="art-b">A</text><text x="133" y="52" class="art-b">B</text><text x="133" y="68" class="art-b">A</text><text x="133" y="84" class="art-b">B</text>
+        <text x="184" y="16" class="art-t">gebroken</text>
+        <text x="184" y="36" class="art-b">A</text><text x="184" y="52" class="art-b">B</text><text x="184" y="68" class="art-b">C</text><text x="184" y="84" class="art-b">B</text>
+      </g>
+      <text x="105" y="106" text-anchor="middle" class="art-s">letters op dezelfde klank = rijm</text>
+    </svg>`,
+  dichtvormen: `
+    <svg viewBox="0 0 210 112" role="img" aria-label="Haiku en elfje">
+      <text x="52" y="14" text-anchor="middle" class="art-t">haiku</text>
+      <rect x="20" y="22" width="30" height="10" rx="3" fill="var(--tint-a)"/><text x="60" y="31" class="art-s">5</text>
+      <rect x="20" y="36" width="46" height="10" rx="3" fill="var(--tint-b)"/><text x="76" y="45" class="art-s">7</text>
+      <rect x="20" y="50" width="30" height="10" rx="3" fill="var(--tint-a)"/><text x="60" y="59" class="art-s">5 lettergrepen</text>
+      <text x="160" y="14" text-anchor="middle" class="art-t">elfje</text>
+      <g fill="var(--tint-b)">
+        <rect x="150" y="22" width="14" height="9" rx="2"/>
+        <rect x="146" y="34" width="22" height="9" rx="2"/>
+        <rect x="142" y="46" width="30" height="9" rx="2"/>
+        <rect x="138" y="58" width="38" height="9" rx="2"/>
+        <rect x="150" y="70" width="14" height="9" rx="2"/>
+      </g>
+      <text x="160" y="94" text-anchor="middle" class="art-s">1-2-3-4-1 woorden</text>
+    </svg>`,
+  criteria3: `
+    <svg viewBox="0 0 210 104" role="img" aria-label="Drie beoordelingscriteria">
+      <rect x="6"   y="18" width="60" height="50" rx="9" fill="var(--tint-a)"/>
+      <rect x="75"  y="18" width="60" height="50" rx="9" fill="var(--tint-b)"/>
+      <rect x="144" y="18" width="60" height="50" rx="9" fill="var(--tint-a)"/>
+      <text x="36"  y="46" text-anchor="middle" class="art-e">📖</text>
+      <text x="105" y="46" text-anchor="middle" class="art-e">🧒</text>
+      <text x="174" y="46" text-anchor="middle" class="art-e">⚖️</text>
+      <text x="36"  y="82" text-anchor="middle" class="art-s">literair</text>
+      <text x="105" y="82" text-anchor="middle" class="art-s">pedagogisch</text>
+      <text x="174" y="82" text-anchor="middle" class="art-s">ideologisch</text>
+      <text x="36"  y="94" text-anchor="middle" class="art-s">de tekst</text>
+      <text x="105" y="94" text-anchor="middle" class="art-s">het kind</text>
+      <text x="174" y="94" text-anchor="middle" class="art-s">de waarden</text>
+    </svg>`,
   tekststructuren: `
     <svg viewBox="0 0 210 110" role="img" aria-label="Drie tekststructuren">
       <g font-size="8">
@@ -627,6 +672,73 @@ const ENRICH = {
       { q:"Je kiest bewust een formele of juist speelse schrijfstijl. Welke stelvaardigheid is dit?",
         opts:["Coderen","Stileren","Structureren","Reviseren"],
         ans:1, leg:"Stileren = een passende schrijfstijl kiezen (bijv. formeel of speels)." }
+    ]
+  },
+
+  /* =========================================================
+     HOOFDSTUK 8 · Jeugdliteratuur
+     ========================================================= */
+  jeugdliteratuur: {
+    art: {
+      "Gepaard rijm": "rijmschemas",
+      "Omarmend rijm": "rijmschemas",
+      "Gekruist rijm": "rijmschemas",
+      "Gebroken rijm": "rijmschemas",
+      "Elfje": "dichtvormen",
+      "Haiku": "dichtvormen",
+      "Literaire criteria": "criteria3",
+      "Pedagogische criteria": "criteria3",
+      "Ideologische criteria": "criteria3"
+    },
+    mc: [
+      { q:"Welk rijmschema hoort bij het patroon A-B-A-B?",
+        opts:["Gepaard rijm","Omarmend rijm","Gekruist rijm","Gebroken rijm"],
+        ans:2, leg:"Gekruist rijm = ABAB. Gepaard = AABB, omarmend = ABBA, gebroken = ABCB." },
+      { q:"Het rijmschema A-B-B-A heet ...",
+        opts:["Gepaard rijm","Omarmend rijm","Gekruist rijm","Gebroken rijm"],
+        ans:1, leg:"Omarmend rijm = ABBA: de buitenste regels rijmen op elkaar en de binnenste ook." },
+      { q:"Twee opeenvolgende regels rijmen telkens: A-A-B-B. Welk rijmschema is dit?",
+        opts:["Gepaard rijm","Gekruist rijm","Omarmend rijm","Gebroken rijm"],
+        ans:0, leg:"Gepaard rijm = AABB: telkens twee regels achter elkaar rijmen." },
+      { q:"'Liesje leerde Lotje lopen.' Welk verschijnsel is dit?",
+        opts:["Eindrijm","Beginrijm (alliteratie)","Gebroken rijm","Ritme"],
+        ans:1, leg:"Beginrijm (alliteratie) = klankherhaling aan het begin van woorden." },
+      { q:"Een gedicht van 3 regels met 5-7-5 lettergrepen is een ...",
+        opts:["Limerick","Haiku","Elfje","Sonnet"],
+        ans:1, leg:"Een haiku heeft 3 regels met 5, 7 en 5 lettergrepen." },
+      { q:"Een gedicht van 11 woorden verdeeld over 5 regels (1-2-3-4-1) is een ...",
+        opts:["Kwatrijn","Elfje","Rondeel","Copla"],
+        ans:1, leg:"Een elfje bestaat uit 11 woorden verdeeld over 5 regels volgens 1-2-3-4-1." },
+      { q:"Hoeveel regels heeft een sonnet?",
+        opts:["4","8","11","14"],
+        ans:3, leg:"Een sonnet is een gedicht van 14 regels." },
+      { q:"Een gedicht van 4 regels heet een ...",
+        opts:["Kwatrijn","Haiku","Limerick","Sonnet"],
+        ans:0, leg:"Een kwatrijn is een gedicht van 4 regels." },
+      { q:"Een toneeltekst die bedoeld is om gespeeld te worden, valt onder welke vorm?",
+        opts:["Proza","Drama","Poëzie","Non-fictie"],
+        ans:1, leg:"Drama = een tekstvorm die bedoeld is om gespeeld te worden (toneel). Proza = gewone verhaaltaal, poëzie = gedichten." },
+      { q:"Bij welk beoordelingscriterium staat de tekst zelf centraal (stijl, originaliteit, taalgebruik)?",
+        opts:["Pedagogische criteria","Ideologische criteria","Literaire criteria","Didactische criteria"],
+        ans:2, leg:"Literaire criteria richten zich op de tekstkwaliteit zelf: stijl, originaliteit en taalgebruik." },
+      { q:"Je beoordeelt of een boek past bij de ontwikkeling en de leeftijd van het kind. Welk criterium is dit?",
+        opts:["Literaire criteria","Pedagogische criteria","Ideologische criteria","Esthetische criteria"],
+        ans:1, leg:"Pedagogische criteria kijken naar de ontwikkeling en het niveau van het kind." },
+      { q:"Je let op welk beeld van jongens en meisjes een boek uitdraagt. Welk beoordelingscriterium gebruik je?",
+        opts:["Literaire criteria","Pedagogische criteria","Ideologische criteria","Vormcriteria"],
+        ans:2, leg:"Ideologische criteria richten zich op de normen, waarden en het maatschappijbeeld in het boek." },
+      { q:"Een kind geniet van de mooie klank en taal van een gedicht. Welke functie van jeugdliteratuur is dit?",
+        opts:["Informatieve functie","Esthetische functie","Opvoedende functie","Ontspannende functie"],
+        ans:1, leg:"De esthetische functie = genieten van de schoonheid van taal of vorm." },
+      { q:"Een kind leeft mee met een personage en herkent eigen gevoelens. Welke functie is dit?",
+        opts:["Creatieve functie","Emotionele functie","Informatieve functie","Opvoedende functie"],
+        ans:1, leg:"De emotionele functie = literatuur helpt bij herkenning en identificatie." },
+      { q:"Een informatieve tekst over vulkanen die naar de werkelijkheid verwijst, is ...",
+        opts:["Fictie","Non-fictie","Poëzie","Drama"],
+        ans:1, leg:"Non-fictie verwijst naar de (controleerbare) werkelijkheid; fictie is een verzonnen werkelijkheid." },
+      { q:"In welk genre geven tekst en beeld samen de betekenis, met illustraties op elke pagina?",
+        opts:["Stripverhaal","Prentenboek","Poëziebundel","Informatieve tekst"],
+        ans:1, leg:"In een prentenboek geven tekst en beeld samen de betekenis." }
     ]
   }
 
