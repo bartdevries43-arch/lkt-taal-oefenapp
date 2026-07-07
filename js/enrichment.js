@@ -270,6 +270,35 @@ Object.assign(ART, {
         <rect x="152" y="48" width="24" height="10" rx="3" fill="var(--tint-b)"/><rect x="178" y="48" width="24" height="10" rx="3" fill="var(--tint-b)"/>
         <text x="176" y="80" text-anchor="middle" class="art-t">betoog</text><text x="176" y="92" text-anchor="middle" class="art-s">+ argumenten</text>
       </g>
+    </svg>`,
+  spellingprincipes: `
+    <svg viewBox="0 0 210 118" role="img" aria-label="Vier spellingprincipes">
+      <g font-size="8.5">
+        <rect x="6"   y="16" width="96" height="40" rx="8" fill="var(--tint-a)"/><text x="54"  y="34" text-anchor="middle" class="art-t">fonologisch</text><text x="54"  y="48" text-anchor="middle" class="art-s">schrijf wat je hoort · kat</text>
+        <rect x="108" y="16" width="96" height="40" rx="8" fill="var(--tint-b)"/><text x="156" y="34" text-anchor="middle" class="art-t">morfologisch</text><text x="156" y="48" text-anchor="middle" class="art-s">hond ← honden</text>
+        <rect x="6"   y="62" width="96" height="40" rx="8" fill="var(--tint-b)"/><text x="54"  y="80" text-anchor="middle" class="art-t">etymologisch</text><text x="54"  y="94" text-anchor="middle" class="art-s">herkomst · ij / ei</text>
+        <rect x="108" y="62" width="96" height="40" rx="8" fill="var(--tint-a)"/><text x="156" y="80" text-anchor="middle" class="art-t">syllabisch</text><text x="156" y="94" text-anchor="middle" class="art-s">klankgroepen · ra-men</text>
+      </g>
+    </svg>`,
+  morfeemVrijGebonden: `
+    <svg viewBox="0 0 210 100" role="img" aria-label="Vrij en gebonden morfeem">
+      <rect x="16" y="30" width="66" height="30" rx="7" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="2"/>
+      <text x="49" y="50" text-anchor="middle" class="art-b">huis</text>
+      <text x="49" y="80" text-anchor="middle" class="art-s">vrij · staat alleen</text>
+      <rect x="120" y="30" width="42" height="30" rx="7" fill="var(--tint-b)" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="141" y="50" text-anchor="middle" class="art-b">-heid</text>
+      <text x="150" y="80" text-anchor="middle" class="art-s">gebonden · plakt vast</text>
+    </svg>`,
+  verenkelingVerdubbeling: `
+    <svg viewBox="0 0 210 104" role="img" aria-label="Verenkelen en verdubbelen">
+      <rect x="12" y="26" width="86" height="34" rx="8" fill="var(--tint-a)"/>
+      <text x="55" y="48" text-anchor="middle" class="art-b">ra<tspan fill="var(--brand)">m</tspan>en</text>
+      <text x="55" y="76" text-anchor="middle" class="art-s">lange klank → 1 letter</text>
+      <text x="55" y="88" text-anchor="middle" class="art-s">verenkelen</text>
+      <rect x="112" y="26" width="86" height="34" rx="8" fill="var(--tint-b)"/>
+      <text x="155" y="48" text-anchor="middle" class="art-b">ko<tspan fill="var(--accent)">ff</tspan>er</text>
+      <text x="155" y="76" text-anchor="middle" class="art-s">korte klank → dubbel</text>
+      <text x="155" y="88" text-anchor="middle" class="art-s">verdubbelen</text>
     </svg>`
 });
 
@@ -739,6 +768,89 @@ const ENRICH = {
       { q:"In welk genre geven tekst en beeld samen de betekenis, met illustraties op elke pagina?",
         opts:["Stripverhaal","Prentenboek","Poëziebundel","Informatieve tekst"],
         ans:1, leg:"In een prentenboek geven tekst en beeld samen de betekenis." }
+    ]
+  },
+
+  /* =========================================================
+     HOOFDSTUK 9 · Taalbeschouwing en spelling
+     ========================================================= */
+  "taalbeschouwing-spelling": {
+    art: {
+      "Synoniem": "synoniem",
+      "Antoniem": "antoniem",
+      "Hyponiem": "hyponiem",
+      "Homofoon": "homofoon",
+      "Morfeem": "morfeemVrijGebonden",
+      "Vrij morfeem": "morfeemVrijGebonden",
+      "Gebonden morfeem": "morfeemVrijGebonden",
+      "Fonologisch principe": "spellingprincipes",
+      "Morfologisch principe": "spellingprincipes",
+      "Etymologisch principe": "spellingprincipes",
+      "Syllabisch principe": "spellingprincipes",
+      "Verenkelingsregel": "verenkelingVerdubbeling",
+      "Verdubbelingsregel": "verenkelingVerdubbeling"
+    },
+    mc: [
+      { q:"Wat is een morfeem?",
+        opts:["Een klank die betekenis onderscheidt","Het kleinste betekenisdragende deel van een woord","Een lettergreep","Een zinsdeel"],
+        ans:1, leg:"Een morfeem is het kleinste betekenisdragende deel van een woord, zoals '-heid' in 'vrijheid'." },
+      { q:"Welk van deze is een gebonden morfeem?",
+        opts:["huis","-tje","boom","fiets"],
+        ans:1, leg:"Een gebonden morfeem kan niet zelfstandig voorkomen, zoals '-tje' of '-heid'. 'Huis', 'boom' en 'fiets' zijn vrije morfemen." },
+      { q:"'Fietsbel' is gevormd uit twee losse woorden. Hoe heet zo'n woordvorming?",
+        opts:["Afleiding","Samenstelling","Verbuiging","Vervoeging"],
+        ans:1, leg:"Een samenstelling is een nieuw woord uit twee losse woorden (fiets + bel). Een afleiding voegt een gebonden morfeem toe (bijv. 'nattig')." },
+      { q:"Het woord 'nattig' ontstaat door een gebonden morfeem toe te voegen. Hoe heet deze woordvorming?",
+        opts:["Samenstelling","Afleiding","Vervoeging","Verbuiging"],
+        ans:1, leg:"Een afleiding vormt een nieuw woord door een gebonden morfeem toe te voegen (nat + -ig)." },
+      { q:"'Loop, loopt, liep' zijn vormen van hetzelfde werkwoord. Deze vormverandering heet ...",
+        opts:["Verbuiging","Vervoeging","Afleiding","Samenstelling"],
+        ans:1, leg:"Vervoeging = vormverandering van werkwoorden (loop, loopt, liep). Verbuiging betreft o.a. bijvoeglijke naamwoorden (mooi → mooie)." },
+      { q:"Welk onderdeel van de taalkunde bestudeert de zinsbouw en de woordvolgorde?",
+        opts:["Semantiek","Syntaxis","Fonologie","Pragmatiek"],
+        ans:1, leg:"Syntaxis = de regels voor zinsbouw en woordvolgorde. Semantiek = betekenis, fonologie = klanken." },
+      { q:"Een zin klopt grammaticaal, maar is in de situatie onbeleefd. Welk taalkunde-onderdeel gaat hierover?",
+        opts:["Semantiek","Syntaxis","Pragmatiek","Morfologie"],
+        ans:2, leg:"Pragmatiek = taalgebruik in concrete situaties en sociale context (bijv. beleefdheid)." },
+      { q:"'Hart' en 'hard' klinken hetzelfde maar worden anders geschreven. Dit zijn ...",
+        opts:["Homografen","Homofonen","Homoniemen","Synoniemen"],
+        ans:1, leg:"Homofonen klinken hetzelfde maar worden verschillend geschreven. Homografen worden hetzelfde geschreven maar anders uitgesproken." },
+      { q:"'regent' (het regent) en 'regent' (een heerser) schrijf je hetzelfde maar spreek je anders uit. Dit zijn ...",
+        opts:["Homofonen","Homografen","Synoniemen","Antoniemen"],
+        ans:1, leg:"Homografen worden hetzelfde geschreven maar anders uitgesproken (en betekenen iets anders)." },
+      { q:"Wat is het verschil tussen zinsontleden en woordbenoemen?",
+        opts:["Zinsontleden = de functie van zinsdelen benoemen; woordbenoemen = de woordsoort van losse woorden benoemen","Ze betekenen hetzelfde","Zinsontleden = spelling; woordbenoemen = betekenis","Woordbenoemen = zinsdelen; zinsontleden = woordsoorten"],
+        ans:0, leg:"Zinsontleden = de functie van zinsdelen benoemen (onderwerp, gezegde…). Woordbenoemen = de woordsoort van losse woorden benoemen (zn, ww…)." },
+      { q:"'Ik eet een appel.' Wat is 'een appel' in deze zin?",
+        opts:["Onderwerp","Lijdend voorwerp","Meewerkend voorwerp","Bijwoordelijke bepaling"],
+        ans:1, leg:"Het lijdend voorwerp ondergaat de handeling: je eet 'een appel'." },
+      { q:"Welke werkwoordsvorm verandert mee met het onderwerp en de tijd?",
+        opts:["Infinitief","Persoonsvorm","Voltooid deelwoord","Hele werkwoord"],
+        ans:1, leg:"De persoonsvorm verandert met onderwerp en tijd (ik loop, hij loopt, hij liep)." },
+      { q:"Je schrijft 'hond' met een d omdat je 'honden' kent. Welk spellingprincipe pas je toe?",
+        opts:["Fonologisch principe","Etymologisch principe","Morfologisch principe (gelijkvormigheid)","Syllabisch principe"],
+        ans:2, leg:"De regel van gelijkvormigheid (morfologisch principe): je schrijft een morfeem steeds hetzelfde — 'hond' vanwege 'honden'." },
+      { q:"Waarom schrijf je 'koffer' met een dubbele f?",
+        opts:["Etymologisch principe","Verdubbelingsregel: na een korte klank verdubbel je de medeklinker","Verenkelingsregel: na een lange klank één letter","Woordbeeldstrategie"],
+        ans:1, leg:"Verdubbelingsregel (syllabisch principe): na een korte klank verdubbel je de medeklinker → koffer, bakker." },
+      { q:"Waarom schrijf je 'ramen' met één a?",
+        opts:["Verdubbelingsregel","Verenkelingsregel: na een lange klank aan het eind van een klankgroep schrijf je één klinker","Etymologisch principe","Regel van gelijkvormigheid"],
+        ans:1, leg:"Verenkelingsregel (syllabisch principe): na een lange klank aan het eind van een klankgroep schrijf je één klinker → ra-men." },
+      { q:"De keuze tussen 'ij' en 'ei' moet je vooral onthouden; ze hangt samen met de herkomst van het woord. Welk spellingprincipe is dit?",
+        opts:["Fonologisch principe","Morfologisch principe","Etymologisch principe","Syllabisch principe"],
+        ans:2, leg:"Het etymologische principe: de herkomst van een woord bepaalt de schrijfwijze (bijv. ij/ei als 'weetstuk')." },
+      { q:"Bij welk woord kun je de spelling met een regel afleiden (regelwoord)?",
+        opts:["Vrouw","Bomen","Fiets","Trein"],
+        ans:1, leg:"Een regelwoord kun je met een spellingregel schrijven ('bomen' via verenkeling). Een weetwoord zoals 'vrouw' moet je vooral onthouden." },
+      { q:"Je schrijft 'dromen' door te vergelijken met 'bomen'. Welke spellingstrategie is dit?",
+        opts:["Regelstrategie","Analogiestrategie","Woordbeeldstrategie","Hulpstrategie"],
+        ans:1, leg:"De analogiestrategie: spellen door te vergelijken met een bekend woord (dromen zoals bomen)." },
+      { q:"Je gebruikt ''t kofschip' om te bepalen of een werkwoord met -te of -de eindigt. Welke strategie is dit?",
+        opts:["Fonologische strategie","Woordbeeldstrategie","Hulpstrategie","Regelstrategie"],
+        ans:2, leg:"Een hulpstrategie is een zelfbedacht geheugensteuntje of ezelsbruggetje, zoals ''t kofschip'." },
+      { q:"De taal van de overheid, het onderwijs en het journaal noem je ...",
+        opts:["Dialect","Standaardtaal","Register","Taalvariëteit"],
+        ans:1, leg:"Standaardtaal is de taal van overheid, onderwijs en media. Een dialect is een regionale variant." }
     ]
   }
 
