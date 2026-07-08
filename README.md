@@ -10,8 +10,9 @@ De app draait volledig in de browser (HTML/CSS/JavaScript, geen server nodig) en
 - ✅ **Meerkeuze** – vragen met directe feedback en uitleg bij elk antwoord.
 - 🔗 **Combineren** – koppel elk begrip aan de juiste omschrijving.
 - 🎮 **Oefenspellen** – Voorbeeldkraker, Waar of niet waar? en een Bliksemronde van 60 seconden.
-- 🎯 **Examen-simulatie** – 15 gemengde vragen, zonder feedback tussendoor, met een eindcijfer (geslaagd vanaf 5,5).
-- 📊 **Voortgang** – overzicht van wat je al kent, per oefenvorm.
+- 📝 **Oefentoets** – 20 vragen per domein of gemengd, mét directe feedback en uitleg en een indicatief cijfer.
+- 🎯 **Eindtoets** – volledige examensimulatie over alle 9 domeinen, met klok en zónder feedback. Cijfer 1–10, **geslaagd vanaf een 6**, en aan het eind je **domeinscores** per domein — net als bij de echte toets. Keuze uit 90 / 45 / 27 vragen.
+- 📊 **Voortgang** – overzicht van wat je al kent, per oefenvorm en per domein.
 
 ## 📖 Inhoud
 
@@ -32,6 +33,20 @@ Alle negen hoofdstukken zijn volledig afgewerkt tot hetzelfde niveau als het pro
 Samen: **375 begrippen**, **150 handgeschreven meerkeuzevragen** en **31 illustraties** (inline SVG, werken offline).
 
 Elk begrip wordt gebruikt voor flashcards en combineeropgaven. De meerkeuze- en examenvragen combineren de handgeschreven toepassingsvragen met automatisch gegenereerde begripsvragen. Elk hoofdstuk heeft een eigen examensimulatie van 15 vragen en een eigen voortgangsoverzicht.
+
+## 🎯 Over de LKT Taal-toets (pabo)
+
+De app bereidt voor op de **landelijke kennisbasistoets Taal** van de pabo (lerarenopleiding basisonderwijs), afgenomen via 10voordeleraar. Op basis van de officiële documenten en sites:
+
+- **9 domeinen** – exact de 9 hoofdstukken in de app: mondelinge taalvaardigheid, woordenschat, beginnende geletterdheid, voortgezet technisch lezen, begrijpend lezen, stellen, jeugdliteratuur, taalbeschouwing en spelling.
+- **Vraagtype** – digitale **meerkeuzevragen met 3 of 4 antwoordopties**; 1 punt per goed antwoord, geen aftrek.
+- **Uitslag** – de score wordt omgezet naar een **cijfer van 1 tot 10; je bent geslaagd vanaf een 6**. De cesuur wordt per afname wetenschappelijk bepaald.
+- **Domeinscores** – na afloop zie je per domein hoe je scoorde. De eindtoets in deze app doet dit na.
+- **Voorbereiding** – 10voordeleraar biedt een voorbeeldtoets en per domein oefentoetsen.
+
+> Let op: de drie meegeleverde pdf's (Toetsgids, Handreiking, Kennisbasis) zijn de **tweedegraads** lerarenopleiding Nederlands (voortgezet onderwijs), niet de pabo. Ze zijn gebruikt voor het **toetsformat** (dat blijkens de OER ook voor de pabo geldt), niet voor de inhoud. De inhoud volgt de pabo-kennisbasis en `SAMENVATTING TAAL.docx`.
+
+Bronnen: [lkt.10voordeleraar.nl/pabo/nederlands](https://lkt.10voordeleraar.nl/pabo/nederlands) · [lkttaal.nl](https://www.lkttaal.nl/) · Toetsgids & OER 10voordeleraar 2025-2026.
 
 ## 🔬 Inhoudelijke controle
 

@@ -67,6 +67,7 @@ function selectChapter(id){
 /* ---------- Navigatie ---------- */
 function go(id){
   if(id!=="spellen") clearGameTimer();
+  if(id!=="examen") clearExamTimer();
   $$(".screen").forEach(s=>s.classList.remove("active"));
   $$(".tab").forEach(t=>t.classList.remove("active"));
   $("#screen-"+id).classList.add("active");
@@ -78,7 +79,7 @@ function go(id){
   if(id==="meerkeuze") startMC();
   if(id==="match")     startMatch();
   if(id==="spellen")   renderGamesHub();
-  if(id==="examen")    startExamIntro();
+  if(id==="examen")    renderToetsHub();
   if(id==="voortgang") renderVoortgang();
   animateActiveScreen();
 }
@@ -103,7 +104,7 @@ function renderStart(){
   $("#start-stats").innerHTML = `
     <div class="stat"><b>${CH.concepts.length}</b><span>begrippen in dit hoofdstuk</span></div>
     <div class="stat"><b>${pct===null?"–":pct+"%"}</b><span>meerkeuze goed</span></div>
-    <div class="stat"><b>${p.examLastGrade?p.examLastGrade.toFixed(1):"–"}</b><span>laatste examencijfer</span></div>`;
+    <div class="stat"><b>${P.eindtoets?P.eindtoets.lastGrade.toFixed(1):"–"}</b><span>laatste eindtoetscijfer</span></div>`;
   $("#start-chapter").innerHTML = `
     <button class="study-button" onclick="go('begrippen')">
       <span class="study-icon">${CH.icon}</span>
@@ -216,17 +217,19 @@ function flashDone(){
 function flashHardOnly(){ const h=flash.hard; flash={deck:shuffle(h),pos:0,hard:[]}; renderFlash(); }
 
 /* ================= MEERKEUZE ================= */
-function buildMCPool(){
-  // Vaste meerkeuzevragen + automatisch gegenereerde begrip-vragen
-  const base = (CH.mc || []).map(q=>({q:q.q, opts:q.opts, ans:q.ans, leg:q.leg}));
-  const gen = CH.concepts.map(c=>{
-    const wrong = sample(CH.concepts.filter(x=>x.t!==c.t),3).map(x=>x.t);
+// Vraagpool voor één hoofdstuk, getagd met domein (voor oefentoets/eindtoets).
+function poolForChapter(ch){
+  const base = (ch.mc || []).map(q=>({q:q.q, opts:q.opts, ans:q.ans, leg:q.leg, raw:false}));
+  const gen = ch.concepts.map(c=>{
+    const wrong = sample(ch.concepts.filter(x=>x.t!==c.t),3).map(x=>x.t);
     const opts = shuffle([c.t, ...wrong]);
     return { q:`Welk begrip hoort bij deze omschrijving?<br><span style="font-weight:500;color:var(--muted)">“${esc(c.d)}”</span>`,
              opts, ans:opts.indexOf(c.t), leg:`${c.t}: ${c.d}`, raw:true };
   });
-  return shuffle([...base, ...gen]);
+  return [...base, ...gen].map(q=>({ ...q, dom:ch.id, domNr:ch.nr, domTitle:ch.title }));
 }
+function buildMCPool(){ return shuffle(poolForChapter(CH)); }
+function fmtTime(s){ const m=Math.floor(s/60), r=s%60; return m+":"+(r<10?"0":"")+r; }
 function startMC(){
   mc = { pool: buildMCPool().slice(0,10), i:0, score:0, answered:false };
   renderMC();
@@ -520,63 +523,221 @@ function finishSprintGame(){
   animateActiveScreen();
 }
 
-/* ================= EXAMEN ================= */
-function startExamIntro(){
-  const p = chP(CH.id);
+/* ================= TOETSEN: OEFENTOETS & EINDTOETS ================= */
+let examTimer = null, oefen = null;
+function clearExamTimer(){ if(examTimer){ clearInterval(examTimer); examTimer=null; } }
+function grade(pct){ return Math.max(1, Math.min(10, 1 + 9*pct/100)); }
+
+function renderToetsHub(){
+  clearExamTimer();
+  const e = P.eindtoets;
   $("#examen-body").innerHTML = `
+    <div class="hero compact">
+      <span class="eyebrow">TOETSEN</span>
+      <h2>Oefentoets en eindtoets.</h2>
+      <p>Oefen gericht mét uitleg, of doe een volledige examensimulatie over alle negen domeinen — net als de echte landelijke kennistoets.</p>
+    </div>
+    <div class="tip">📌 De echte LKT Taal (pabo) is een digitale toets met meerkeuzevragen (3–4 opties). Je cijfer loopt van 1 tot 10 en je bent <b>geslaagd vanaf een 6</b>. Na afloop krijg je <b>domeinscores</b> per domein. <span style="opacity:.75">Bron: 10voordeleraar.</span></div>
+    <div class="game-grid" style="grid-template-columns:1fr 1fr">
+      <button class="game-card example-game" onclick="renderOefenSelect()">
+        <span class="game-art"><i>📝</i><em>+</em><i>💡</i></span>
+        <span class="eyebrow">OEFENEN MET FEEDBACK</span><b>Oefentoets</b>
+        <small>Kies één domein of oefen gemengd. 20 vragen met directe uitleg bij elk antwoord en een indicatief cijfer.</small>
+        <strong>Start oefentoets <i>→</i></strong>
+      </button>
+      <button class="game-card sprint-game" onclick="renderEindtoetsSelect()">
+        <span class="game-art"><i>🎯</i><em>1–10</em><i>⏱️</i></span>
+        <span class="eyebrow">EXAMENSIMULATIE</span><b>Eindtoets</b>
+        <small>Alle 9 domeinen door elkaar, mét klok en zónder feedback. Cijfer 1–10, geslaagd vanaf een 6, met domeinscores.</small>
+        <strong>${e?`Beste: cijfer ${e.bestGrade.toFixed(1)} · opnieuw`:'Start eindtoets'} <i>→</i></strong>
+      </button>
+    </div>`;
+  animateActiveScreen();
+}
+
+/* ---- Oefentoets (met directe feedback) ---- */
+function renderOefenSelect(){
+  clearExamTimer();
+  const rows = CHAPTERS.map(ch=>`
+    <button class="progress-chapter" onclick="startOefentoets('${ch.id}')">
+      <span class="progress-icon">${ch.icon}</span>
+      <span class="progress-copy"><b>H${ch.nr} · ${esc(ch.title)}</b><small>${ch.concepts.length} begrippen</small></span>
+      <strong>›</strong></button>`).join("");
+  $("#examen-body").innerHTML = `
+    <button class="back" onclick="renderToetsHub()">‹ Terug naar toetsen</button>
     <div class="card">
-      <h2>🎯 Examen-simulatie</h2>
-      <p class="sub">15 gemengde vragen over dit hoofdstuk. Aan het eind krijg je een cijfer. Geslaagd vanaf een 5,5.</p>
-      <div class="tip">📌 Geen feedback tijdens de toets — net als bij het echte examen. De uitleg zie je pas bij het resultaat.</div>
-      ${p.examAttempts?`<p class="sub">Eerder gemaakt: ${p.examAttempts}× · beste score ${p.examBest}% · laatste cijfer ${p.examLastGrade.toFixed(1)}</p>`:""}
-      <button class="btn primary wide" onclick="startExam()">Start examen (15 vragen)</button>
+      <h2>📝 Oefentoets</h2>
+      <p class="sub">20 vragen met directe feedback en uitleg. Kies een domein of oefen gemengd over alle domeinen.</p>
+      <button class="btn primary wide" style="margin-bottom:.9rem" onclick="startOefentoets('mixed')">🔀 Gemengde oefentoets (alle domeinen)</button>
+      <div class="progress-list">${rows}</div>
     </div>`;
 }
-function startExam(){
-  exam = { pool: buildMCPool().slice(0,15), i:0, score:0, wrong:[] };
-  renderExam();
+function startOefentoets(scope){
+  clearExamTimer();
+  let pool;
+  if(scope==='mixed'){ pool=[]; CHAPTERS.forEach(ch=>{ pool=pool.concat(poolForChapter(ch)); }); pool=shuffle(pool).slice(0,20); }
+  else { const ch=CHAPTERS.find(c=>c.id===scope)||CH; pool=shuffle(poolForChapter(ch)).slice(0,20); }
+  oefen={ pool, i:0, score:0, answered:false, scope };
+  renderOefen();
 }
-function renderExam(){
-  if(exam.i >= exam.pool.length) return examDone();
-  const q = exam.pool[exam.i]; const K=["A","B","C","D"];
+function renderOefen(){
+  if(oefen.i>=oefen.pool.length) return oefenDone();
+  const q=oefen.pool[oefen.i], K=["A","B","C","D"];
+  const title = oefen.scope==='mixed' ? 'Gemengde oefentoets' : ('H'+q.domNr+' · '+q.domTitle);
   $("#examen-body").innerHTML = `
-    <div class="counter">Vraag ${exam.i+1} van ${exam.pool.length}</div>
-    <div class="pbar"><i style="width:${exam.i/exam.pool.length*100}%"></i></div>
+    <div class="counter">${esc(title)} — vraag ${oefen.i+1} van ${oefen.pool.length}</div>
+    <div class="pbar"><i style="width:${oefen.i/oefen.pool.length*100}%"></i></div>
     <div class="card">
       <div class="q">${q.raw?q.q:esc(q.q)}</div>
+      <div class="opts" id="oef-opts"></div>
+      <div class="feedback" id="oef-fb"></div>
+      <div class="row between">
+        <button class="btn ghost" onclick="renderToetsHub()">Stoppen</button>
+        <button class="btn primary hidden" id="oef-next" onclick="oefen.i++;renderOefen()">Volgende ›</button>
+      </div>
+    </div>`;
+  const box=$("#oef-opts");
+  q.opts.forEach((o,idx)=>{
+    const b=document.createElement("button");
+    b.className="opt"; b.innerHTML=`<span class="k">${K[idx]}</span><span>${esc(o)}</span>`;
+    b.onclick=()=>answerOefen(idx);
+    box.appendChild(b);
+  });
+  oefen.answered=false;
+}
+function answerOefen(idx){
+  if(oefen.answered) return; oefen.answered=true;
+  const q=oefen.pool[oefen.i], opts=$$("#oef-opts .opt"), fb=$("#oef-fb");
+  opts.forEach(o=>o.disabled=true);
+  const dp=chP(q.dom); dp.mcSeen++;
+  if(idx===q.ans){ opts[idx].classList.add("correct"); oefen.score++; dp.mcCorrect++; fb.className="feedback show ok"; fb.innerHTML="✓ Goed! "+esc(q.leg); }
+  else { opts[idx].classList.add("wrong"); opts[q.ans].classList.add("correct"); fb.className="feedback show no"; fb.innerHTML="✗ Helaas. "+esc(q.leg); }
+  saveP();
+  const nx=$("#oef-next"); nx.classList.remove("hidden");
+  nx.textContent = oefen.i+1>=oefen.pool.length ? "Bekijk resultaat ›" : "Volgende ›";
+}
+function oefenDone(){
+  const s=oefen.score, t=oefen.pool.length, pct=Math.round(s/t*100), cijfer=grade(pct);
+  $("#examen-body").innerHTML = `
+    <div class="card">
+      <h2>📝 Oefentoets afgerond</h2>
+      <div class="ring" style="--p:${pct}"><span>${cijfer.toFixed(1)}</span></div>
+      <div class="score-box"><div class="big">${s}/${t}</div><div class="lbl">${pct}% goed · indicatief cijfer ${cijfer.toFixed(1)}</div></div>
+      <div class="tip ${pct>=60?'ok':''}">${pct>=60?'👍 Lekker bezig — dit zit er goed in.':'🔁 Herhaal de lastige begrippen en probeer het nog eens.'}</div>
+      <div class="row" style="margin-top:1rem">
+        <button class="btn primary" onclick="renderOefenSelect()">Nieuwe oefentoets</button>
+        <button class="btn" onclick="renderEindtoetsSelect()">Naar de eindtoets →</button>
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ---- Eindtoets (examensimulatie: klok, geen feedback, domeinscores) ---- */
+function renderEindtoetsSelect(){
+  clearExamTimer();
+  $("#examen-body").innerHTML = `
+    <button class="back" onclick="renderToetsHub()">‹ Terug naar toetsen</button>
+    <div class="card">
+      <h2>🎯 Eindtoets — examensimulatie</h2>
+      <p class="sub">Vragen uit alle 9 domeinen door elkaar. <b>Geen feedback tijdens de toets.</b> Aan het eind krijg je je cijfer (1–10), je uitslag (geslaagd vanaf een 6) en je domeinscores.</p>
+      <div class="tip">⏱️ Er loopt een klok. Je kunt terug- en vooruitbladeren en tussentijds inleveren. Als de tijd om is, wordt automatisch ingeleverd.</div>
+      <div class="row">
+        <button class="btn primary" onclick="startEindtoets(90,90)">Volledig · 90 vragen · 90 min</button>
+        <button class="btn" onclick="startEindtoets(45,45)">Half · 45 vragen · 45 min</button>
+        <button class="btn" onclick="startEindtoets(27,25)">Kort · 27 vragen · 25 min</button>
+      </div>
+      <p class="sub" style="margin-top:.8rem">De echte toets telt ± 90–110 vragen in 2 uur. De cesuur (het aantal goed voor een 6) wordt per afname bepaald; het cijfer hier is een indicatie.</p>
+    </div>`;
+}
+function startEindtoets(total, minutes){
+  clearExamTimer();
+  const perDom=Math.max(1, Math.round(total/CHAPTERS.length));
+  let pool=[];
+  CHAPTERS.forEach(ch=>{ pool=pool.concat(sample(poolForChapter(ch), perDom)); });
+  pool=shuffle(pool);
+  exam={ pool, i:0, answers:new Array(pool.length).fill(null), time:minutes*60 };
+  examTimer=setInterval(()=>{
+    if(!exam){ return clearExamTimer(); }
+    exam.time--;
+    const c=$("#exam-clock"); if(c){ c.textContent=fmtTime(Math.max(0,exam.time)); if(exam.time<=30) c.style.color="var(--no)"; }
+    if(exam.time<=0){ clearExamTimer(); finishEindtoets(true); }
+  },1000);
+  renderEindtoets();
+}
+function renderEindtoets(){
+  const q=exam.pool[exam.i], K=["A","B","C","D"], n=exam.pool.length;
+  const answeredCount=exam.answers.filter(a=>a!==null).length;
+  const last=exam.i===n-1;
+  $("#examen-body").innerHTML = `
+    <div class="sprint-hud">
+      <div><span>TIJD</span><b id="exam-clock">${fmtTime(exam.time)}</b></div>
+      <div><span>VRAAG</span><b>${exam.i+1}/${n}</b></div>
+      <div><span>BEANTWOORD</span><b>${answeredCount}/${n}</b></div>
+    </div>
+    <div class="pbar"><i style="width:${exam.i/n*100}%"></i></div>
+    <div class="card">
+      <span class="eyebrow">DOMEIN: ${esc(q.domTitle)}</span>
+      <div class="q" style="margin-top:.4rem">${q.raw?q.q:esc(q.q)}</div>
       <div class="opts" id="ex-opts"></div>
+      <div class="row between" style="margin-top:.4rem">
+        <button class="btn" ${exam.i===0?'disabled':''} onclick="exam.i--;renderEindtoets()">‹ Vorige</button>
+        ${last
+          ? `<button class="btn primary" onclick="confirmInleveren()">Inleveren ✓</button>`
+          : `<button class="btn primary" onclick="exam.i++;renderEindtoets()">Volgende ›</button>`}
+      </div>
+      <button class="btn ghost danger" style="margin-top:.6rem;font-size:12px" onclick="confirmInleveren()">Nu inleveren en cijfer bekijken</button>
     </div>`;
   const box=$("#ex-opts");
   q.opts.forEach((o,idx)=>{
     const b=document.createElement("button");
     b.className="opt"; b.innerHTML=`<span class="k">${K[idx]}</span><span>${esc(o)}</span>`;
-    b.onclick=()=>{
-      if(idx===q.ans) exam.score++; else exam.wrong.push({q,picked:idx});
-      exam.i++; renderExam();
-    };
+    if(exam.answers[exam.i]===idx){ b.style.borderColor="var(--purple)"; b.style.background="rgba(205,184,255,.20)"; }
+    b.onclick=()=>{ exam.answers[exam.i]=idx; renderEindtoets(); };
     box.appendChild(b);
   });
 }
-function grade(pct){ return Math.max(1, Math.min(10, 1 + 9*pct/100)); }
-function examDone(){
-  const s=exam.score,t=exam.pool.length,pct=Math.round(s/t*100),cijfer=grade(pct);
-  const p=chP(CH.id);
-  p.examAttempts++; p.examLastGrade=cijfer; if(pct>p.examBest)p.examBest=pct; saveP();
-  const geslaagd = cijfer>=5.5;
-  const wrongHTML = exam.wrong.length ? `<h3>Fout beantwoord — leer deze na:</h3>`+
-     exam.wrong.map(w=>`<div class="feedback show no" style="margin-bottom:.5rem">${w.q.raw?w.q.q:esc(w.q.q)}<br><b>Goed:</b> ${esc(w.q.opts[w.q.ans])}. ${esc(w.q.leg)}</div>`).join("")
-     : `<div class="tip ok">🏆 Alles goed! Foutloos examen.</div>`;
+function confirmInleveren(){
+  const answeredCount=exam.answers.filter(a=>a!==null).length, n=exam.pool.length;
+  if(answeredCount<n && !confirm(`Je hebt ${answeredCount} van de ${n} vragen beantwoord. Weet je zeker dat je wilt inleveren?`)) return;
+  clearExamTimer(); finishEindtoets(false);
+}
+function finishEindtoets(auto){
+  clearExamTimer();
+  const n=exam.pool.length;
+  let score=0; const wrong=[]; const perDom={};
+  exam.pool.forEach((q,i)=>{
+    const a=exam.answers[i], ok=a===q.ans;
+    if(!perDom[q.dom]) perDom[q.dom]={nr:q.domNr,title:q.domTitle,t:0,c:0};
+    perDom[q.dom].t++; if(ok) perDom[q.dom].c++;
+    if(ok) score++; else wrong.push({q,picked:a});
+    const dp=chP(q.dom); dp.mcSeen++; if(ok) dp.mcCorrect++;
+  });
+  const pct=Math.round(score/n*100), cijfer=grade(pct), geslaagd=cijfer>=6;
+  const prev=P.eindtoets||{attempts:0,bestGrade:0,bestPct:0};
+  P.eindtoets={ attempts:prev.attempts+1, bestGrade:Math.max(prev.bestGrade,cijfer), bestPct:Math.max(prev.bestPct,pct), lastGrade:cijfer, lastPct:pct };
+  saveP();
+  const col=p=>p>=70?"var(--ok)":p>=50?"var(--accent)":"var(--no)";
+  const domBars=Object.values(perDom).sort((a,b)=>a.nr-b.nr).map(d=>{
+    const p=Math.round(d.c/d.t*100);
+    return `<div class="bar-row"><div class="bl" title="${esc(d.title)}">H${d.nr} ${esc(d.title)}</div><div class="bt"><i style="width:${p}%;background:${col(p)}"></i></div><div class="bp" style="color:${col(p)}">${d.c}/${d.t}</div></div>`;
+  }).join("");
+  const wrongHTML = wrong.length ? `<h3>Fout of niet beantwoord — leer deze na (${wrong.length}):</h3>`+
+     wrong.slice(0,40).map(w=>`<div class="feedback show no" style="margin-bottom:.5rem"><span class="eyebrow">H${w.q.domNr} · ${esc(w.q.domTitle)}</span><br>${w.q.raw?w.q.q:esc(w.q.q)}<br><b>Goed:</b> ${esc(w.q.opts[w.q.ans])}. ${esc(w.q.leg)}</div>`).join("")
+     : `<div class="tip ok">🏆 Alles goed! Foutloze eindtoets.</div>`;
   $("#examen-body").innerHTML = `
     <div class="card">
-      <h2>🎯 Examenresultaat</h2>
+      <h2>🎯 Uitslag eindtoets</h2>
+      ${auto?`<div class="tip">⏱️ De tijd was om — de toets is automatisch ingeleverd.</div>`:''}
       <div class="ring" style="--p:${pct}"><span>${cijfer.toFixed(1)}</span></div>
-      <div class="score-box"><div class="big">${s}/${t}</div><div class="lbl">${pct}% goed · cijfer ${cijfer.toFixed(1)}</div></div>
-      <div class="tip ${geslaagd?'ok':'no'}">${geslaagd?'✅ Geslaagd! Je zit boven de 5,5.':'⚠️ Nog niet geslaagd. Herhaal de begrippen en probeer opnieuw.'}</div>
-      ${wrongHTML}
+      <div class="score-box"><div class="big">${score}/${n}</div><div class="lbl">${pct}% goed · cijfer ${cijfer.toFixed(1)} (indicatief)</div></div>
+      <div class="tip ${geslaagd?'ok':'no'}">${geslaagd?'✅ Geslaagd! Je zit op of boven een 6.':'⚠️ Nog niet geslaagd — je hebt minstens een 6 nodig. Pak de zwakke domeinen hieronder aan.'}</div>
+      <h3>Domeinscores</h3>
+      ${domBars}
       <div class="row" style="margin-top:1rem">
-        <button class="btn primary" onclick="startExam()">Opnieuw examen</button>
-        <button class="btn" onclick="go('begrippen')">Stof herhalen</button>
+        <button class="btn primary" onclick="renderEindtoetsSelect()">Nieuwe eindtoets</button>
+        <button class="btn" onclick="go('begrippen')">Zwak domein herhalen</button>
       </div>
+      ${wrongHTML}
     </div>`;
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -632,14 +793,14 @@ function renderVoortgang(){
       <div class="stat-grid">
         <div class="stat"><b>${p.mcSeen}</b><span>vragen gedaan</span></div>
         <div class="stat"><b>${flashKnown}/${CH.concepts.length}</b><span>flashcards gekend</span></div>
-        <div class="stat"><b>${p.examLastGrade?p.examLastGrade.toFixed(1):"–"}</b><span>laatste cijfer</span></div>
+        <div class="stat"><b>${P.eindtoets?P.eindtoets.lastGrade.toFixed(1):"–"}</b><span>laatste eindtoetscijfer</span></div>
       </div>
       <h3>Beheersing</h3>
       ${bar("Flashcards gekend",flashPct,col(flashPct))}
       ${bar("Meerkeuze goed",mcPct,col(mcPct))}
       ${bar("Beste spelronde",p.gameBest||0,col(p.gameBest||0))}
-      ${bar("Beste examen",p.examBest||0,col(p.examBest||0))}
-      <p class="sub" style="margin-top:1rem">Spelrondes: <b>${p.gameRounds||0}×</b> · Sprintrecord: <b>${p.sprintBest||0}</b> · Combineren afgerond: <b>${p.matchRounds||0}×</b> · Examens: <b>${p.examAttempts||0}×</b></p>
+      ${bar("Beste eindtoets",P.eindtoets?P.eindtoets.bestPct:0,col(P.eindtoets?P.eindtoets.bestPct:0))}
+      <p class="sub" style="margin-top:1rem">Spelrondes: <b>${p.gameRounds||0}×</b> · Sprintrecord: <b>${p.sprintBest||0}</b> · Combineren afgerond: <b>${p.matchRounds||0}×</b> · Eindtoetsen: <b>${P.eindtoets?P.eindtoets.attempts:0}×</b></p>
     </div>
     <div class="card">
       <span class="eyebrow">ALLE HOOFDSTUKKEN</span>
