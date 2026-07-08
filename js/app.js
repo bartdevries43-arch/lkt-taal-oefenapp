@@ -1,6 +1,6 @@
 /* ============================================================
    LKT Taal – Oefenapp  ·  LOGICA
-   Oefenvormen: flashcards, meerkeuze, combineren, spellen en examen.
+   Oefenvormen: flashcards, combineren, spellen, oefentoets, hoofdstuktoets en eindtoets.
    Voortgang wordt lokaal (localStorage) op dit apparaat bewaard.
    ============================================================ */
 "use strict";
@@ -66,6 +66,10 @@ function selectChapter(id){
 
 /* ---------- Navigatie ---------- */
 function go(id){
+  if(examInProgress){
+    if(!confirm("Je hebt een lopende toets. Als je nu weggaat, gaat je voortgang in deze toets verloren. Toch stoppen?")) return;
+    examInProgress=false; clearExamTimer();
+  }
   if(id!=="spellen") clearGameTimer();
   if(id!=="examen") clearExamTimer();
   $$(".screen").forEach(s=>s.classList.remove("active"));
@@ -76,7 +80,6 @@ function go(id){
   if(id==="start")     renderStart();
   if(id==="begrippen") renderBegrippen();
   if(id==="flashcards")startFlash();
-  if(id==="meerkeuze") startMC();
   if(id==="match")     startMatch();
   if(id==="spellen")   renderGamesHub();
   if(id==="examen")    renderToetsHub();
@@ -103,7 +106,7 @@ function renderStart(){
     <div class="chapter-score"><b>${chapterKnown(CH)}/${CH.concepts.length}</b><span>begrippen bekend</span></div>`;
   $("#start-stats").innerHTML = `
     <div class="stat"><b>${CH.concepts.length}</b><span>begrippen in dit hoofdstuk</span></div>
-    <div class="stat"><b>${pct===null?"–":pct+"%"}</b><span>meerkeuze goed</span></div>
+    <div class="stat"><b>${pct===null?"–":pct+"%"}</b><span>toetsvragen goed</span></div>
     <div class="stat"><b>${P.eindtoets?P.eindtoets.lastGrade.toFixed(1):"–"}</b><span>laatste eindtoetscijfer</span></div>`;
   $("#start-chapter").innerHTML = `
     <button class="study-button" onclick="go('begrippen')">
@@ -210,14 +213,14 @@ function flashDone(){
       <div class="row">
         ${hard?`<button class="btn primary" onclick="flashHardOnly()">Alleen de lastige (${hard})</button>`:""}
         <button class="btn ${hard?'':'primary'}" onclick="startFlash()">Hele set opnieuw</button>
-        <button class="btn" onclick="go('meerkeuze')">Nu meerkeuze →</button>
+        <button class="btn" onclick="go('examen')">Nu een toets →</button>
       </div>
     </div>`;
 }
 function flashHardOnly(){ const h=flash.hard; flash={deck:shuffle(h),pos:0,hard:[]}; renderFlash(); }
 
-/* ================= MEERKEUZE ================= */
-// Vraagpool voor één hoofdstuk, getagd met domein (voor oefentoets/eindtoets).
+/* ================= VRAAGPOOL ================= */
+// Vraagpool voor één hoofdstuk, getagd met domein (voor oefentoets, hoofdstuktoets en eindtoets).
 function poolForChapter(ch){
   const base = (ch.mc || []).map(q=>({q:q.q, opts:q.opts, ans:q.ans, leg:q.leg, raw:false}));
   const gen = ch.concepts.map(c=>{
@@ -228,60 +231,7 @@ function poolForChapter(ch){
   });
   return [...base, ...gen].map(q=>({ ...q, dom:ch.id, domNr:ch.nr, domTitle:ch.title }));
 }
-function buildMCPool(){ return shuffle(poolForChapter(CH)); }
 function fmtTime(s){ const m=Math.floor(s/60), r=s%60; return m+":"+(r<10?"0":"")+r; }
-function startMC(){
-  mc = { pool: buildMCPool().slice(0,10), i:0, score:0, answered:false };
-  renderMC();
-}
-function renderMC(){
-  if(mc.i >= mc.pool.length) return mcDone();
-  const q = mc.pool[mc.i];
-  const K = ["A","B","C","D","E"];
-  $("#meerkeuze-body").innerHTML = `
-    <div class="counter">Vraag ${mc.i+1} van ${mc.pool.length}</div>
-    <div class="pbar"><i style="width:${mc.i/mc.pool.length*100}%"></i></div>
-    <div class="card">
-      <div class="q">${q.raw?q.q:esc(q.q)}</div>
-      <div class="opts" id="mc-opts"></div>
-      <div class="feedback" id="mc-fb"></div>
-      <div class="row between">
-        <button class="btn ghost" onclick="go('start')">Stoppen</button>
-        <button class="btn primary hidden" id="mc-next" onclick="mc.i++;renderMC()">Volgende ›</button>
-      </div>
-    </div>`;
-  const box = $("#mc-opts");
-  q.opts.forEach((o,idx)=>{
-    const b = document.createElement("button");
-    b.className="opt"; b.innerHTML=`<span class="k">${K[idx]}</span><span>${esc(o)}</span>`;
-    b.onclick = ()=>answerMC(idx);
-    box.appendChild(b);
-  });
-  mc.answered = false;
-}
-function answerMC(idx){
-  if(mc.answered) return; mc.answered = true;
-  const q = mc.pool[mc.i], opts = $$("#mc-opts .opt");
-  opts.forEach(o=>o.disabled=true);
-  const p = chP(CH.id); p.mcSeen++;
-  const fb = $("#mc-fb");
-  if(idx===q.ans){
-    opts[idx].classList.add("correct"); mc.score++; p.mcCorrect++;
-    fb.className="feedback show ok"; fb.innerHTML="✓ Goed! "+esc(q.leg);
-  } else {
-    opts[idx].classList.add("wrong"); opts[q.ans].classList.add("correct");
-    fb.className="feedback show no"; fb.innerHTML="✗ Helaas. "+esc(q.leg);
-  }
-  saveP();
-  $("#mc-next").classList.remove("hidden");
-  $("#mc-next").textContent = mc.i+1>=mc.pool.length ? "Bekijk resultaat ›" : "Volgende ›";
-}
-function mcDone(){
-  const s=mc.score,t=mc.pool.length,pct=Math.round(s/t*100);
-  $("#meerkeuze-body").innerHTML = resultCard("✅ Meerkeuze", s, t, pct,
-     `<button class="btn primary" onclick="startMC()">Nieuwe vragen</button>
-      <button class="btn" onclick="go('match')">Combineren →</button>`);
-}
 
 /* ================= COMBINEREN (match) ================= */
 function startMatch(){
@@ -524,12 +474,12 @@ function finishSprintGame(){
 }
 
 /* ================= TOETSEN: OEFENTOETS & EINDTOETS ================= */
-let examTimer = null, oefen = null;
+let examTimer = null, oefen = null, examInProgress = false;
 function clearExamTimer(){ if(examTimer){ clearInterval(examTimer); examTimer=null; } }
 function grade(pct){ return Math.max(1, Math.min(10, 1 + 9*pct/100)); }
 
 function renderToetsHub(){
-  clearExamTimer();
+  clearExamTimer(); examInProgress=false;
   const e = P.eindtoets;
   $("#examen-body").innerHTML = `
     <div class="hero compact">
@@ -698,7 +648,9 @@ const MATRIJS = {
 function runEindtoets(pool, minutes, title, official){
   clearExamTimer();
   exam={ pool:shuffle(pool), i:0, answers:new Array(pool.length).fill(null),
+         marks:new Set(), showGrid:false,
          time:minutes>0?minutes*60:null, title:title||"Eindtoets", official:!!official };
+  examInProgress=true;
   if(minutes>0){
     examTimer=setInterval(()=>{
       if(!exam||exam.time==null){ return clearExamTimer(); }
@@ -729,7 +681,13 @@ function startHoofdstuktoets(chId){
 function renderEindtoets(){
   const q=exam.pool[exam.i], K=["A","B","C","D"], n=exam.pool.length;
   const answeredCount=exam.answers.filter(a=>a!==null).length;
-  const last=exam.i===n-1;
+  const last=exam.i===n-1, marked=exam.marks.has(exam.i);
+  const grid = exam.showGrid
+    ? `<div class="qgrid">`+exam.pool.map((_,i)=>{
+        const cls=[i===exam.i?'current':'', exam.answers[i]!=null?'answered':'', exam.marks.has(i)?'marked':''].filter(Boolean).join(' ');
+        return `<button class="${cls}" title="Ga naar vraag ${i+1}" onclick="exam.i=${i};renderEindtoets()">${i+1}</button>`;
+      }).join('')+`</div>
+      <p class="qgrid-legend"><b>paars</b> = ingevuld · <b>oranje rand</b> = gemarkeerd · <b>omlijnd</b> = huidige vraag</p>` : '';
   $("#examen-body").innerHTML = `
     <div class="sprint-hud">
       <div><span>TIJD</span><b id="exam-clock">${exam.time==null?'∞':fmtTime(exam.time)}</b></div>
@@ -738,8 +696,11 @@ function renderEindtoets(){
     </div>
     <div class="pbar"><i style="width:${exam.i/n*100}%"></i></div>
     <div class="card">
-      <span class="eyebrow">DOMEIN: ${esc(q.domTitle)}</span>
-      <div class="q" style="margin-top:.4rem">${q.raw?q.q:esc(q.q)}</div>
+      <div class="row between" style="margin-bottom:.35rem;align-items:center">
+        <span class="eyebrow">DOMEIN: ${esc(q.domTitle)}</span>
+        <button class="btn ghost" style="font-size:12px;padding:.3rem .6rem" onclick="toggleMark()">${marked?'🔖 Gemarkeerd':'🔖 Markeer'}</button>
+      </div>
+      <div class="q">${q.raw?q.q:esc(q.q)}</div>
       <div class="opts" id="ex-opts"></div>
       <div class="row between" style="margin-top:.4rem">
         <button class="btn" ${exam.i===0?'disabled':''} onclick="exam.i--;renderEindtoets()">‹ Vorige</button>
@@ -747,7 +708,11 @@ function renderEindtoets(){
           ? `<button class="btn primary" onclick="confirmInleveren()">Inleveren ✓</button>`
           : `<button class="btn primary" onclick="exam.i++;renderEindtoets()">Volgende ›</button>`}
       </div>
-      <button class="btn ghost danger" style="margin-top:.6rem;font-size:12px" onclick="confirmInleveren()">Nu inleveren en cijfer bekijken</button>
+      <div class="row between" style="margin-top:.6rem">
+        <button class="btn ghost" style="font-size:12px" onclick="exam.showGrid=!exam.showGrid;renderEindtoets()">${exam.showGrid?'▲ Verberg overzicht':'📋 Vragenoverzicht ('+answeredCount+'/'+n+')'}</button>
+        <button class="btn ghost danger" style="font-size:12px" onclick="confirmInleveren()">Nu inleveren ✓</button>
+      </div>
+      ${grid}
     </div>`;
   const box=$("#ex-opts");
   q.opts.forEach((o,idx)=>{
@@ -758,13 +723,14 @@ function renderEindtoets(){
     box.appendChild(b);
   });
 }
+function toggleMark(){ if(exam.marks.has(exam.i)) exam.marks.delete(exam.i); else exam.marks.add(exam.i); renderEindtoets(); }
 function confirmInleveren(){
   const answeredCount=exam.answers.filter(a=>a!==null).length, n=exam.pool.length;
   if(answeredCount<n && !confirm(`Je hebt ${answeredCount} van de ${n} vragen beantwoord. Weet je zeker dat je wilt inleveren?`)) return;
   clearExamTimer(); finishEindtoets(false);
 }
 function finishEindtoets(auto){
-  clearExamTimer();
+  clearExamTimer(); examInProgress=false;
   const n=exam.pool.length;
   let score=0; const wrong=[]; const perDom={};
   exam.pool.forEach((q,i)=>{
@@ -786,7 +752,7 @@ function finishEindtoets(auto){
     return `<div class="bar-row"><div class="bl" title="${esc(d.title)}">H${d.nr} ${esc(d.title)}</div><div class="bt"><i style="width:${p}%;background:${col(p)}"></i></div><div class="bp" style="color:${col(p)}">${d.c}/${d.t}</div></div>`;
   }).join("");
   const wrongHTML = wrong.length ? `<h3>Fout of niet beantwoord — leer deze na (${wrong.length}):</h3>`+
-     wrong.slice(0,40).map(w=>`<div class="feedback show no" style="margin-bottom:.5rem"><span class="eyebrow">H${w.q.domNr} · ${esc(w.q.domTitle)}</span><br>${w.q.raw?w.q.q:esc(w.q.q)}<br><b>Goed:</b> ${esc(w.q.opts[w.q.ans])}. ${esc(w.q.leg)}</div>`).join("")
+     wrong.map(w=>`<div class="feedback show no" style="margin-bottom:.5rem"><span class="eyebrow">H${w.q.domNr} · ${esc(w.q.domTitle)}</span><br>${w.q.raw?w.q.q:esc(w.q.q)}<br><b>Goed:</b> ${esc(w.q.opts[w.q.ans])}. ${esc(w.q.leg)}</div>`).join("")
      : `<div class="tip ok">🏆 Alles goed! Foutloze eindtoets.</div>`;
   $("#examen-body").innerHTML = `
     <div class="card">

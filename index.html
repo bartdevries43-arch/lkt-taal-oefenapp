@@ -25,7 +25,6 @@
     <button class="tab active" data-go="start">🏠 Start</button>
     <button class="tab" data-go="begrippen">📖 Begrippen</button>
     <button class="tab" data-go="flashcards">🃏 Flashcards</button>
-    <button class="tab" data-go="meerkeuze">✅ Meerkeuze</button>
     <button class="tab" data-go="match">🔗 Combineren</button>
     <button class="tab" data-go="spellen">🎮 Spellen</button>
     <button class="tab" data-go="examen">🎯 Toetsen</button>
@@ -69,9 +68,9 @@
       </div>
       <div class="tiles">
         <button class="tile learn" onclick="go('flashcards')"><span class="ti">🃏</span><span><span class="tt">Flashcards</span><span class="td">Begrip en uitleg rustig herhalen</span></span></button>
-        <button class="tile quiz" onclick="go('meerkeuze')"><span class="ti">✅</span><span><span class="tt">Meerkeuze</span><span class="td">10 vragen met directe feedback</span></span></button>
+        <button class="tile quiz" onclick="go('examen');renderOefenSelect()"><span class="ti">📝</span><span><span class="tt">Oefentoets</span><span class="td">Vragen met directe uitleg</span></span></button>
         <button class="tile match" onclick="go('match')"><span class="ti">🔗</span><span><span class="tt">Combineren</span><span class="td">Koppel 5 begrippen aan hun uitleg</span></span></button>
-        <button class="tile exam" onclick="go('examen')"><span class="ti">🎯</span><span><span class="tt">Toetsen</span><span class="td">Oefentoets & eindtoets met cijfer</span></span></button>
+        <button class="tile exam" onclick="go('examen');renderEindtoetsSelect()"><span class="ti">🎯</span><span><span class="tt">Eindtoets</span><span class="td">Examensimulatie met cijfer</span></span></button>
       </div>
       <div class="game-launch">
         <div class="game-launch-copy"><span class="eyebrow">NIEUW · OEFENSPELLEN</span><h3>Actief ophalen werkt beter dan alleen herlezen.</h3><p>Oefen voorbeelden, onderscheid begrippen en test je snelheid.</p></div>
@@ -89,8 +88,6 @@
   <section class="screen" id="screen-begrippen"><div id="begrippen-body"></div></section>
   <!-- FLASHCARDS -->
   <section class="screen" id="screen-flashcards"><div id="flashcards-body"></div></section>
-  <!-- MEERKEUZE -->
-  <section class="screen" id="screen-meerkeuze"><div id="meerkeuze-body"></div></section>
   <!-- MATCH -->
   <section class="screen" id="screen-match"><div id="match-body"></div></section>
   <!-- SPELLEN -->
