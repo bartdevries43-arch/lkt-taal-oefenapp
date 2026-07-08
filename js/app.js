@@ -534,21 +534,27 @@ function renderToetsHub(){
   $("#examen-body").innerHTML = `
     <div class="hero compact">
       <span class="eyebrow">TOETSEN</span>
-      <h2>Oefentoets en eindtoets.</h2>
-      <p>Oefen gericht mét uitleg, of doe een volledige examensimulatie over alle negen domeinen — net als de echte landelijke kennistoets.</p>
+      <h2>Oefenen, per hoofdstuk toetsen of de hele eindtoets.</h2>
+      <p>Kies hoe je wilt oefenen: rustig mét uitleg, één domein onder examencondities, of de volledige landelijke kennistoets nagebootst.</p>
     </div>
-    <div class="tip">📌 De echte LKT Taal (pabo) is een digitale toets met meerkeuzevragen (3–4 opties). Je cijfer loopt van 1 tot 10 en je bent <b>geslaagd vanaf een 6</b>. Na afloop krijg je <b>domeinscores</b> per domein. <span style="opacity:.75">Bron: 10voordeleraar.</span></div>
-    <div class="game-grid" style="grid-template-columns:1fr 1fr">
+    <div class="tip">📌 De echte LKT Taal (pabo) is een digitale meerkeuzetoets (3–4 opties) van <b>80 vragen in 2 uur</b>. Cijfer 1–10, <b>geslaagd vanaf een 6</b>, met domeinscores. <span style="opacity:.75">Bron: 10voordeleraar.</span></div>
+    <div class="game-grid">
       <button class="game-card example-game" onclick="renderOefenSelect()">
         <span class="game-art"><i>📝</i><em>+</em><i>💡</i></span>
-        <span class="eyebrow">OEFENEN MET FEEDBACK</span><b>Oefentoets</b>
-        <small>Kies één domein of oefen gemengd. 20 vragen met directe uitleg bij elk antwoord en een indicatief cijfer.</small>
-        <strong>Start oefentoets <i>→</i></strong>
+        <span class="eyebrow">LEREN MET FEEDBACK</span><b>Oefentoets</b>
+        <small>Per hoofdstuk of gemengd. 20 vragen met directe uitleg bij elk antwoord en een indicatief cijfer.</small>
+        <strong>Kies <i>→</i></strong>
+      </button>
+      <button class="game-card truth-game" onclick="renderHoofdstukSelect()">
+        <span class="game-art"><i>📚</i><em>→</em><i>⏱️</i></span>
+        <span class="eyebrow">ÉÉN DOMEIN · EXAMENSTIJL</span><b>Hoofdstuktoets</b>
+        <small>Toets één hoofdstuk onder examencondities: met klok, zonder feedback en met cijfer. Zwaardere domeinen krijgen meer vragen.</small>
+        <strong>Kies hoofdstuk <i>→</i></strong>
       </button>
       <button class="game-card sprint-game" onclick="renderEindtoetsSelect()">
-        <span class="game-art"><i>🎯</i><em>1–10</em><i>⏱️</i></span>
-        <span class="eyebrow">EXAMENSIMULATIE</span><b>Eindtoets</b>
-        <small>Alle 9 domeinen door elkaar, mét klok en zónder feedback. Cijfer 1–10, geslaagd vanaf een 6, met domeinscores.</small>
+        <span class="game-art"><i>🎓</i><em>1–10</em><i>⏱️</i></span>
+        <span class="eyebrow">VOLLEDIGE SIMULATIE</span><b>Eindtoets</b>
+        <small>Alle domeinen, 80 vragen volgens de toetsmatrijs. Kies je tijd — óók de echte 2 uur.</small>
         <strong>${e?`Beste: cijfer ${e.bestGrade.toFixed(1)} · opnieuw`:'Start eindtoets'} <i>→</i></strong>
       </button>
     </div>`;
@@ -632,6 +638,25 @@ function oefenDone(){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
+/* ---- Hoofdstuktoets (één domein, examenstijl) ---- */
+function renderHoofdstukSelect(){
+  clearExamTimer();
+  const rows = CHAPTERS.map(ch=>{
+    const n=hoofdstukN(ch);
+    return `<button class="progress-chapter" onclick="startHoofdstuktoets('${ch.id}')">
+      <span class="progress-icon">${ch.icon}</span>
+      <span class="progress-copy"><b>H${ch.nr} · ${esc(ch.title)}</b><small>${n} vragen · ± ${n} min · zonder feedback</small></span>
+      <strong>›</strong></button>`;
+  }).join("");
+  $("#examen-body").innerHTML = `
+    <button class="back" onclick="renderToetsHub()">‹ Terug naar toetsen</button>
+    <div class="card">
+      <h2>📚 Hoofdstuktoets</h2>
+      <p class="sub">Toets één domein onder examencondities: met klok, zónder feedback en met een cijfer aan het eind. Zwaardere domeinen (zoals beginnende geletterdheid en taalbeschouwing & spelling) krijgen meer vragen — net als in de echte toets. Handig om precies dát domein af te toetsen dat je nog wilt oefenen.</p>
+      <div class="progress-list">${rows}</div>
+    </div>`;
+}
+
 /* ---- Eindtoets (examensimulatie: klok, geen feedback, domeinscores) ---- */
 function renderEindtoetsSelect(){
   clearExamTimer();
@@ -646,7 +671,12 @@ function renderEindtoetsSelect(){
       <h2>🎯 Eindtoets — examensimulatie</h2>
       <p class="sub">Vragen door elkaar, <b>geen feedback tijdens de toets</b>. Aan het eind: je cijfer (1–10), je uitslag (geslaagd vanaf een 6) en je domeinscores.</p>
       <div class="tip">⏱️ Er loopt een klok. Je kunt terug- en vooruitbladeren en tussentijds inleveren. Als de tijd om is, wordt automatisch ingeleverd.</div>
-      <button class="btn primary wide" style="margin:.2rem 0 .6rem" onclick="startEindtoetsOfficieel()">🎓 Officiële eindtoets · 80 vragen · 90 min</button>
+      <p class="sub" style="margin:.2rem 0 .35rem"><b>🎓 Officiële eindtoets · 80 vragen</b> — kies je tijd:</p>
+      <div class="row" style="margin-bottom:.6rem">
+        <button class="btn primary" onclick="startEindtoetsOfficieel(120)">⏱️ Echte tijd · 2 uur</button>
+        <button class="btn" onclick="startEindtoetsOfficieel(90)">Vlot · 90 min</button>
+        <button class="btn" onclick="startEindtoetsOfficieel(0)">Zonder tijdslimiet</button>
+      </div>
       <p class="sub">Zelfde verdeling als de echte toetsmatrijs (bron: 10voordeleraar):</p>
       ${rows}
       <div style="height:1px;background:var(--line);margin:1rem 0"></div>
@@ -665,27 +695,36 @@ const MATRIJS = {
   "mondeling":11, "woordenschat":9, "beginnende-geletterdheid":16, "technisch-lezen":6,
   "begrijpend-lezen":8, "stellen":5, "jeugdliteratuur":3, "taalbeschouwing-spelling":22
 };
-function runEindtoets(pool, minutes){
+function runEindtoets(pool, minutes, title, official){
   clearExamTimer();
-  exam={ pool:shuffle(pool), i:0, answers:new Array(pool.length).fill(null), time:minutes*60 };
-  examTimer=setInterval(()=>{
-    if(!exam){ return clearExamTimer(); }
-    exam.time--;
-    const c=$("#exam-clock"); if(c){ c.textContent=fmtTime(Math.max(0,exam.time)); if(exam.time<=30) c.style.color="var(--no)"; }
-    if(exam.time<=0){ clearExamTimer(); finishEindtoets(true); }
-  },1000);
+  exam={ pool:shuffle(pool), i:0, answers:new Array(pool.length).fill(null),
+         time:minutes>0?minutes*60:null, title:title||"Eindtoets", official:!!official };
+  if(minutes>0){
+    examTimer=setInterval(()=>{
+      if(!exam||exam.time==null){ return clearExamTimer(); }
+      exam.time--;
+      const c=$("#exam-clock"); if(c){ c.textContent=fmtTime(Math.max(0,exam.time)); if(exam.time<=30) c.style.color="var(--no)"; }
+      if(exam.time<=0){ clearExamTimer(); finishEindtoets(true); }
+    },1000);
+  }
   renderEindtoets();
 }
 function startEindtoets(total, minutes){
   const perDom=Math.max(1, Math.round(total/CHAPTERS.length));
   let pool=[];
   CHAPTERS.forEach(ch=>{ pool=pool.concat(sample(poolForChapter(ch), perDom)); });
-  runEindtoets(pool, minutes);
+  runEindtoets(pool, minutes, "Eindtoets (gemengd)", false);
 }
-function startEindtoetsOfficieel(){
+function startEindtoetsOfficieel(minutes){
   let pool=[];
   CHAPTERS.forEach(ch=>{ const n=MATRIJS[ch.id]; if(n) pool=pool.concat(sample(poolForChapter(ch), n)); });
-  runEindtoets(pool, 90);
+  runEindtoets(pool, minutes, "Officiële eindtoets", true);
+}
+function hoofdstukN(ch){ return Math.min(poolForChapter(ch).length, Math.max(15, MATRIJS[ch.id]||12)); }
+function startHoofdstuktoets(chId){
+  const ch=CHAPTERS.find(c=>c.id===chId)||CH;
+  const n=hoofdstukN(ch);
+  runEindtoets(sample(poolForChapter(ch), n), n, "Hoofdstuktoets · "+ch.title, false);
 }
 function renderEindtoets(){
   const q=exam.pool[exam.i], K=["A","B","C","D"], n=exam.pool.length;
@@ -693,7 +732,7 @@ function renderEindtoets(){
   const last=exam.i===n-1;
   $("#examen-body").innerHTML = `
     <div class="sprint-hud">
-      <div><span>TIJD</span><b id="exam-clock">${fmtTime(exam.time)}</b></div>
+      <div><span>TIJD</span><b id="exam-clock">${exam.time==null?'∞':fmtTime(exam.time)}</b></div>
       <div><span>VRAAG</span><b>${exam.i+1}/${n}</b></div>
       <div><span>BEANTWOORD</span><b>${answeredCount}/${n}</b></div>
     </div>
@@ -736,8 +775,10 @@ function finishEindtoets(auto){
     const dp=chP(q.dom); dp.mcSeen++; if(ok) dp.mcCorrect++;
   });
   const pct=Math.round(score/n*100), cijfer=grade(pct), geslaagd=cijfer>=6;
-  const prev=P.eindtoets||{attempts:0,bestGrade:0,bestPct:0};
-  P.eindtoets={ attempts:prev.attempts+1, bestGrade:Math.max(prev.bestGrade,cijfer), bestPct:Math.max(prev.bestPct,pct), lastGrade:cijfer, lastPct:pct };
+  if(exam.official){
+    const prev=P.eindtoets||{attempts:0,bestGrade:0,bestPct:0};
+    P.eindtoets={ attempts:prev.attempts+1, bestGrade:Math.max(prev.bestGrade,cijfer), bestPct:Math.max(prev.bestPct,pct), lastGrade:cijfer, lastPct:pct };
+  }
   saveP();
   const col=p=>p>=70?"var(--ok)":p>=50?"var(--accent)":"var(--no)";
   const domBars=Object.values(perDom).sort((a,b)=>a.nr-b.nr).map(d=>{
@@ -749,7 +790,7 @@ function finishEindtoets(auto){
      : `<div class="tip ok">🏆 Alles goed! Foutloze eindtoets.</div>`;
   $("#examen-body").innerHTML = `
     <div class="card">
-      <h2>🎯 Uitslag eindtoets</h2>
+      <h2>🎯 Uitslag · ${esc(exam.title)}</h2>
       ${auto?`<div class="tip">⏱️ De tijd was om — de toets is automatisch ingeleverd.</div>`:''}
       <div class="ring" style="--p:${pct}"><span>${cijfer.toFixed(1)}</span></div>
       <div class="score-box"><div class="big">${score}/${n}</div><div class="lbl">${pct}% goed · cijfer ${cijfer.toFixed(1)} (indicatief)</div></div>
