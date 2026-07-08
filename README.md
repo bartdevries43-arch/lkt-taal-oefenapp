@@ -11,7 +11,7 @@ De app draait volledig in de browser (HTML/CSS/JavaScript, geen server nodig) en
 - 🔗 **Combineren** – koppel elk begrip aan de juiste omschrijving.
 - 🎮 **Oefenspellen** – Voorbeeldkraker, Waar of niet waar? en een Bliksemronde van 60 seconden.
 - 📝 **Oefentoets** – 20 vragen per domein of gemengd, mét directe feedback en uitleg en een indicatief cijfer.
-- 🎯 **Eindtoets** – volledige examensimulatie over alle 9 domeinen, met klok en zónder feedback. Cijfer 1–10, **geslaagd vanaf een 6**, en aan het eind je **domeinscores** per domein — net als bij de echte toets. Keuze uit 90 / 45 / 27 vragen.
+- 🎯 **Eindtoets** – examensimulatie met klok en zónder feedback. Cijfer 1–10, **geslaagd vanaf een 6**, en aan het eind je **domeinscores** per domein — net als bij de echte toets. De **officiële eindtoets telt 80 vragen** met exact de weging van de toetsmatrijs; daarnaast een kortere gelijk-verdeelde ronde (45 / 27).
 - 📊 **Voortgang** – overzicht van wat je al kent, per oefenvorm en per domein.
 
 ## 📖 Inhoud
@@ -43,6 +43,23 @@ De app bereidt voor op de **landelijke kennisbasistoets Taal** van de pabo (lera
 - **Uitslag** – de score wordt omgezet naar een **cijfer van 1 tot 10; je bent geslaagd vanaf een 6**. De cesuur wordt per afname wetenschappelijk bepaald.
 - **Domeinscores** – na afloop zie je per domein hoe je scoorde. De eindtoets in deze app doet dit na.
 - **Voorbereiding** – 10voordeleraar biedt een voorbeeldtoets en per domein oefentoetsen.
+
+**Toetsmatrijs (80 vragen).** De officiële eindtoets in de app volgt deze verdeling:
+
+| Domein | Vragen |
+|--------|:------:|
+| Mondelinge taalvaardigheid | 11 |
+| Woordenschat | 9 |
+| Beginnende geletterdheid | 16 |
+| Voortgezet technisch lezen | 6 |
+| Begrijpend lezen | 8 |
+| Stellen | 5 |
+| Jeugdliteratuur | 3 |
+| Taalbeschouwing | 13 |
+| Spelling | 9 |
+| **Totaal** | **80** |
+
+In de app zijn taalbeschouwing en spelling samengevoegd tot hoofdstuk 9 (samen 22 vragen). Hoofdstuk 1 "Taalonderwijs en taal" is een extra oriëntatiehoofdstuk en telt niet mee in de officiële eindtoets (wel in flashcards, meerkeuze en de oefentoets).
 
 > Let op: de drie meegeleverde pdf's (Toetsgids, Handreiking, Kennisbasis) zijn de **tweedegraads** lerarenopleiding Nederlands (voortgezet onderwijs), niet de pabo. Ze zijn gebruikt voor het **toetsformat** (dat blijkens de OER ook voor de pabo geldt), niet voor de inhoud. De inhoud volgt de pabo-kennisbasis en `SAMENVATTING TAAL.docx`.
 

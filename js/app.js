@@ -635,27 +635,39 @@ function oefenDone(){
 /* ---- Eindtoets (examensimulatie: klok, geen feedback, domeinscores) ---- */
 function renderEindtoetsSelect(){
   clearExamTimer();
+  const maxN=Math.max(...Object.values(MATRIJS));
+  const rows=CHAPTERS.filter(ch=>MATRIJS[ch.id]).sort((a,b)=>MATRIJS[b.id]-MATRIJS[a.id]).map(ch=>{
+    const n=MATRIJS[ch.id];
+    return `<div class="bar-row"><div class="bl" title="${esc(ch.title)}">${ch.icon} ${esc(ch.title)}</div><div class="bt"><i style="width:${n/maxN*100}%;background:linear-gradient(90deg,var(--purple),var(--green))"></i></div><div class="bp">${n}</div></div>`;
+  }).join("");
   $("#examen-body").innerHTML = `
     <button class="back" onclick="renderToetsHub()">‹ Terug naar toetsen</button>
     <div class="card">
       <h2>🎯 Eindtoets — examensimulatie</h2>
-      <p class="sub">Vragen uit alle 9 domeinen door elkaar. <b>Geen feedback tijdens de toets.</b> Aan het eind krijg je je cijfer (1–10), je uitslag (geslaagd vanaf een 6) en je domeinscores.</p>
+      <p class="sub">Vragen door elkaar, <b>geen feedback tijdens de toets</b>. Aan het eind: je cijfer (1–10), je uitslag (geslaagd vanaf een 6) en je domeinscores.</p>
       <div class="tip">⏱️ Er loopt een klok. Je kunt terug- en vooruitbladeren en tussentijds inleveren. Als de tijd om is, wordt automatisch ingeleverd.</div>
+      <button class="btn primary wide" style="margin:.2rem 0 .6rem" onclick="startEindtoetsOfficieel()">🎓 Officiële eindtoets · 80 vragen · 90 min</button>
+      <p class="sub">Zelfde verdeling als de echte toetsmatrijs (bron: 10voordeleraar):</p>
+      ${rows}
+      <div style="height:1px;background:var(--line);margin:1rem 0"></div>
+      <p class="sub">Of een kortere ronde, gelijk verdeeld over alle 9 hoofdstukken:</p>
       <div class="row">
-        <button class="btn primary" onclick="startEindtoets(90,90)">Volledig · 90 vragen · 90 min</button>
         <button class="btn" onclick="startEindtoets(45,45)">Half · 45 vragen · 45 min</button>
         <button class="btn" onclick="startEindtoets(27,25)">Kort · 27 vragen · 25 min</button>
       </div>
-      <p class="sub" style="margin-top:.8rem">De echte toets telt ± 90–110 vragen in 2 uur. De cesuur (het aantal goed voor een 6) wordt per afname bepaald; het cijfer hier is een indicatie.</p>
+      <p class="sub" style="margin-top:.8rem">De echte toets telt 80 vragen in 2 uur. De cesuur (het aantal goed voor een 6) wordt per afname wetenschappelijk bepaald; het cijfer hier is een indicatie.</p>
     </div>`;
 }
-function startEindtoets(total, minutes){
+// Officiële toetsmatrijs van de LKT Taal pabo (10voordeleraar): vragen per domein.
+// De app-hoofdstukken sluiten aan op de domeinen; H9 = taalbeschouwing (13) + spelling (9) = 22.
+// Hoofdstuk 1 (Taalonderwijs) is geen los toetsdomein en zit niet in de officiële eindtoets.
+const MATRIJS = {
+  "mondeling":11, "woordenschat":9, "beginnende-geletterdheid":16, "technisch-lezen":6,
+  "begrijpend-lezen":8, "stellen":5, "jeugdliteratuur":3, "taalbeschouwing-spelling":22
+};
+function runEindtoets(pool, minutes){
   clearExamTimer();
-  const perDom=Math.max(1, Math.round(total/CHAPTERS.length));
-  let pool=[];
-  CHAPTERS.forEach(ch=>{ pool=pool.concat(sample(poolForChapter(ch), perDom)); });
-  pool=shuffle(pool);
-  exam={ pool, i:0, answers:new Array(pool.length).fill(null), time:minutes*60 };
+  exam={ pool:shuffle(pool), i:0, answers:new Array(pool.length).fill(null), time:minutes*60 };
   examTimer=setInterval(()=>{
     if(!exam){ return clearExamTimer(); }
     exam.time--;
@@ -663,6 +675,17 @@ function startEindtoets(total, minutes){
     if(exam.time<=0){ clearExamTimer(); finishEindtoets(true); }
   },1000);
   renderEindtoets();
+}
+function startEindtoets(total, minutes){
+  const perDom=Math.max(1, Math.round(total/CHAPTERS.length));
+  let pool=[];
+  CHAPTERS.forEach(ch=>{ pool=pool.concat(sample(poolForChapter(ch), perDom)); });
+  runEindtoets(pool, minutes);
+}
+function startEindtoetsOfficieel(){
+  let pool=[];
+  CHAPTERS.forEach(ch=>{ const n=MATRIJS[ch.id]; if(n) pool=pool.concat(sample(poolForChapter(ch), n)); });
+  runEindtoets(pool, 90);
 }
 function renderEindtoets(){
   const q=exam.pool[exam.i], K=["A","B","C","D"], n=exam.pool.length;
