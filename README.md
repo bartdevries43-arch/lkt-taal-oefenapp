@@ -16,23 +16,25 @@ De app draait volledig in de browser (HTML/CSS/JavaScript, geen server nodig) en
 
 ## 📖 Inhoud
 
-Alle negen hoofdstukken zijn volledig afgewerkt tot hetzelfde niveau als het proefhoofdstuk Woordenschat.
+Alle negen hoofdstukken zijn volledig afgewerkt. Naast de **vakinhoud** (begrippen) bevat de app nu ook de **vakdidactiek, achtergrond en kaders** uit de kennisbasis — precies wat de toets óók vraagt: modeling, scaffolding, de viertakt en de drie uitjes (woordenschat), didactische modellen begrijpend lezen, de referentieniveaus (1F/1S-2F), kerndoelen/tussendoelen, VVE, differentiatie en het verschil tussen methodegebonden en genormeerde toetsen.
 
 | # | Hoofdstuk | Begrippen | Meerkeuzevragen | Illustraties |
 |---|-----------|:---------:|:---------------:|:------------:|
-| 1 | Taalonderwijs en taal | 26 | 15 | 4 |
-| 2 | Mondelinge taalvaardigheid | 48 | 18 | 4 |
-| 3 | Woordenschat | 28 | 18 | 8 |
-| 4 | Beginnende geletterdheid | 39 | 16 | 3 |
+| 1 | Taalonderwijs, kaders & didactiek | 37 | 23 | 5 |
+| 2 | Mondelinge taalvaardigheid | 51 | 32 | 4 |
+| 3 | Woordenschat | 34 | 24 | 10 |
+| 4 | Beginnende geletterdheid | 39 | 25 | 3 |
 | 5 | Voortgezet technisch lezen | 36 | 16 | 2 |
-| 6 | Begrijpend lezen | 42 | 16 | 2 |
+| 6 | Begrijpend lezen | 45 | 28 | 3 |
 | 7 | Stellen | 30 | 15 | 2 |
-| 8 | Jeugdliteratuur | 43 | 16 | 3 |
-| 9 | Taalbeschouwing en spelling | 83 | 20 | 5 |
+| 8 | Jeugdliteratuur | 43 | 25 | 3 |
+| 9 | Taalbeschouwing en spelling | 83 | 35 | 5 |
 
-Samen: **375 begrippen**, **150 handgeschreven meerkeuzevragen** en **31 illustraties** (inline SVG, werken offline).
+Samen: **398 begrippen**, **223 handgeschreven meerkeuzevragen** en **35 illustraties** (inline SVG, werken offline).
 
-Elk begrip wordt gebruikt voor flashcards en combineeropgaven. De meerkeuze- en examenvragen combineren de handgeschreven toepassingsvragen met automatisch gegenereerde begripsvragen. Elk hoofdstuk heeft een eigen examensimulatie van 15 vragen en een eigen voortgangsoverzicht.
+Elk begrip wordt gebruikt voor flashcards en combineeropgaven. De meerkeuze- en toetsvragen combineren de handgeschreven toepassingsvragen met automatisch gegenereerde begripsvragen. Er zijn drie soorten toetsen: oefentoets (met feedback), hoofdstuktoets (één domein in examenstijl) en eindtoets (volledige simulatie, 80 vragen volgens de matrijs, met domeinscores).
+
+De inhoud is gebaseerd op `SAMENVATTING TAAL.docx` en op de officiële **Uitwerking kennisbasis Nederlands pabo** (10voordeleraar), die per domein vier subdomeinen kent: vakinhoud (X.1), didactiek (X.2), achtergrond (X.3) en differentiatie (X.4).
 
 ## 🎯 Over de LKT Taal-toets (pabo)
 

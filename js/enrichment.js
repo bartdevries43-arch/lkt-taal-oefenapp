@@ -299,6 +299,61 @@ Object.assign(ART, {
       <text x="155" y="48" text-anchor="middle" class="art-b">ko<tspan fill="var(--accent)">ff</tspan>er</text>
       <text x="155" y="76" text-anchor="middle" class="art-s">korte klank → dubbel</text>
       <text x="155" y="88" text-anchor="middle" class="art-s">verdubbelen</text>
+    </svg>`,
+  viertaktCyclus: `
+    <svg viewBox="0 0 210 124" role="img" aria-label="De viertakt woordenschatdidactiek">
+      <g font-size="8.5">
+        <rect x="6"   y="14" width="92" height="22" rx="7" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="1.5"/><text x="52"  y="28" text-anchor="middle" class="art-t">1 voorbewerken</text>
+        <rect x="112" y="14" width="92" height="22" rx="7" fill="var(--tint-b)" stroke="var(--brand)" stroke-width="1.5"/><text x="158" y="28" text-anchor="middle" class="art-t">2 semantiseren</text>
+        <rect x="112" y="78" width="92" height="22" rx="7" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="1.5"/><text x="158" y="92" text-anchor="middle" class="art-t">3 consolideren</text>
+        <rect x="6"   y="78" width="92" height="22" rx="7" fill="var(--tint-b)" stroke="var(--accent)" stroke-width="1.5"/><text x="52"  y="92" text-anchor="middle" class="art-t">4 controleren</text>
+      </g>
+      <g stroke="var(--muted)" stroke-width="1.5" fill="none">
+        <path d="M98 25h10M106 22l4 3-4 3"/>
+        <path d="M158 36v40M155 72l3 4 3-4"/>
+        <path d="M112 89h-10M106 86l-4 3 4 3"/>
+        <path d="M52 78V38M49 42l3-4 3 4"/>
+      </g>
+      <text x="105" y="116" text-anchor="middle" class="art-s">woord pas verankerd na ± 7× aanbieden</text>
+    </svg>`,
+  drieUitjes: `
+    <svg viewBox="0 0 210 104" role="img" aria-label="De drie uitjes van semantiseren">
+      <rect x="6"   y="16" width="60" height="50" rx="9" fill="var(--tint-a)"/>
+      <rect x="75"  y="16" width="60" height="50" rx="9" fill="var(--tint-b)"/>
+      <rect x="144" y="16" width="60" height="50" rx="9" fill="var(--tint-a)"/>
+      <text x="36"  y="44" text-anchor="middle" class="art-e">👐</text>
+      <text x="105" y="44" text-anchor="middle" class="art-e">💬</text>
+      <text x="174" y="44" text-anchor="middle" class="art-e">🕸️</text>
+      <text x="36"  y="80" text-anchor="middle" class="art-s">uitbeelden</text>
+      <text x="105" y="80" text-anchor="middle" class="art-s">uitleggen</text>
+      <text x="174" y="80" text-anchor="middle" class="art-s">uitbreiden</text>
+      <text x="36"  y="92" text-anchor="middle" class="art-s">beeld/gebaar</text>
+      <text x="105" y="92" text-anchor="middle" class="art-s">verbale uitleg</text>
+      <text x="174" y="92" text-anchor="middle" class="art-s">in netwerk</text>
+    </svg>`,
+  directeInstructie: `
+    <svg viewBox="0 0 210 108" role="img" aria-label="Het directe instructiemodel">
+      <polygon points="8,20 202,20 150,54 60,54" fill="var(--tint-b)" opacity="0.5"/>
+      <g font-size="8">
+        <rect x="8"   y="24" width="60" height="22" rx="6" fill="var(--tint-a)"/><text x="38"  y="35" text-anchor="middle" class="art-t">uitleggen</text><text x="38" y="44" text-anchor="middle" class="art-s">&amp; voordoen</text>
+        <rect x="74"  y="24" width="62" height="22" rx="6" fill="var(--tint-b)"/><text x="105" y="35" text-anchor="middle" class="art-t">oefenen</text><text x="105" y="44" text-anchor="middle" class="art-s">&amp; begeleiden</text>
+        <rect x="142" y="24" width="60" height="22" rx="6" fill="var(--tint-a)"/><text x="172" y="35" text-anchor="middle" class="art-t">verwerken</text><text x="172" y="44" text-anchor="middle" class="art-s">/ toepassen</text>
+      </g>
+      <path d="M8 72h194" stroke="var(--muted)" stroke-width="1.5" marker-end=""/>
+      <text x="8" y="86" class="art-s">veel sturing</text>
+      <text x="202" y="86" text-anchor="end" class="art-s">zelfstandig</text>
+      <text x="105" y="100" text-anchor="middle" class="art-s">leerkrachtsturing neemt af →</text>
+    </svg>`,
+  referentieniveaus: `
+    <svg viewBox="0 0 210 100" role="img" aria-label="Referentieniveaus 1F en 1S/2F">
+      <rect x="20" y="52" width="80" height="30" rx="7" fill="var(--tint-a)" stroke="var(--brand)" stroke-width="2"/>
+      <text x="60" y="68" text-anchor="middle" class="art-b">1F</text>
+      <text x="60" y="94" text-anchor="middle" class="art-s">fundamenteel</text>
+      <rect x="110" y="22" width="80" height="30" rx="7" fill="var(--tint-b)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="150" y="38" text-anchor="middle" class="art-b">1S / 2F</text>
+      <text x="150" y="64" text-anchor="middle" class="art-s">streef</text>
+      <path d="M100 60l10-20" stroke="var(--muted)" stroke-width="1.5"/>
+      <text x="14" y="18" class="art-s">niveau ↑</text>
     </svg>`
 });
 
@@ -309,6 +364,43 @@ const ENRICH = {
      HOOFDSTUK 1 · Taalonderwijs en taal
      ========================================================= */
   taalonderwijs: {
+    subtitle: "Taalfuncties, taalniveaus, referentiekader en didactiek",
+    intro: "Leer hoe taalonderwijs is opgebouwd, welke functies en niveaus taal heeft, én de kaders en didactiek die de hele kennisbasis omspannen: het referentiekader (1F/1S-2F), kerndoelen en tussendoelen, VVE, differentiatie, taalontwikkelend vakonderwijs en het verschil tussen methodegebonden en genormeerde toetsen.",
+    addConcepts: [
+      { t:"Startbekwame leerkracht", icon:"🎓",
+        d:"De leraar die net voldoende bekwaam is om zelfstandig les te geven. De kennisbasis beschrijft per domein wat een startbekwame leerkracht moet kennen en kunnen — en dat is precies wat de LKT-toets toetst.",
+        ex:"Elk kennisbasis-begrip begint met 'De startbekwame leerkracht …'." },
+      { t:"Referentiekader Taal", icon:"📏", art:"referentieniveaus",
+        d:"Landelijk kader dat beschrijft wat leerlingen op verschillende momenten aan taal moeten beheersen, verdeeld in fundamentele niveaus en streefniveaus.",
+        ex:"Aan het eind van de basisschool wordt minimaal niveau 1F verwacht." },
+      { t:"Fundamenteel niveau (1F)", icon:"🟦", art:"referentieniveaus",
+        d:"Het basisniveau dat vrijwel alle leerlingen moeten halen. Voor de basisschool is dat 1F aan het eind van groep 8.",
+        ex:"1F lezen: eenvoudige teksten over alledaagse, concrete onderwerpen begrijpen." },
+      { t:"Streefniveau (1S/2F)", icon:"🟨", art:"referentieniveaus",
+        d:"Het hogere niveau waar je naar streeft; voor de basisschool is 1S gelijk aan 2F. Niet elke leerling haalt dit.",
+        ex:"1S/2F: ook omgaan met minder alledaagse onderwerpen en complexere teksten." },
+      { t:"Kerndoelen", icon:"🎯",
+        d:"Door de overheid vastgestelde, globale einddoelen die aangeven wat leerlingen aan het eind van het basisonderwijs minimaal moeten kennen en kunnen.",
+        ex:"Er zijn kerndoelen voor mondeling taalonderwijs, lezen, schrijven en taalbeschouwing." },
+      { t:"Tussendoelen", icon:"📍",
+        d:"Concretere doelen tussen de kerndoelen in, die de doorgaande lijn per periode beschrijven (o.a. van SLO en het Expertisecentrum Nederlands).",
+        ex:"Tussendoelen beginnende geletterdheid beschrijven stap voor stap de weg naar lezen." },
+      { t:"Voor- en vroegschoolse educatie (VVE)", icon:"🧸",
+        d:"Programma's voor peuters en kleuters met (risico op) een taalachterstand, gericht op onder meer woordenschat en beginnende geletterdheid.",
+        ex:"Piramide en Schatkist zijn bekende VVE-programma's." },
+      { t:"Differentiatie", icon:"🪜",
+        d:"Het afstemmen van het onderwijs op verschillen tussen leerlingen, bijvoorbeeld taalzwakke, meertalige en meerbegaafde leerlingen.",
+        ex:"Een meertalige leerling krijgt extra woordenschatsteun; een meerbegaafde leerling verdiepende taaltaken." },
+      { t:"Taalontwikkelend vakonderwijs", icon:"🔬",
+        d:"Bij zaakvakken bewust aandacht geven aan taal (context, interactie en taalsteun), zodat leerlingen de vaktaal leren terwijl ze de vakinhoud leren.",
+        ex:"Bij aardrijkskunde leer je eerst de vaktaalwoorden, zodat de tekst te begrijpen is." },
+      { t:"Methodegebonden toets", icon:"📗",
+        d:"Een toets die bij de lesmethode hoort en na enkele weken de behandelde stof toetst; niet landelijk genormeerd (een deelvaardigheidstoets).",
+        ex:"De toets na een blok van de leesmethode is methodegebonden." },
+      { t:"Methodeonafhankelijke toets", icon:"📊",
+        d:"Een landelijk genormeerde toets (bijv. Cito), onderdeel van het leerlingvolgsysteem (lovs), waarmee je een leerling met het landelijk gemiddelde kunt vergelijken.",
+        ex:"De Cito begrijpend lezen is methodeonafhankelijk; de score (CLIB) komt in het lovs." }
+    ],
     art: {
       "Communicatieve functie": "taalfuncties3",
       "Conceptualiserende functie": "taalfuncties3",
@@ -366,7 +458,31 @@ const ENRICH = {
         ans:0, leg:"Taalonderwijs omvat mondelinge taalvaardigheid (spreken/luisteren), schriftelijke taalvaardigheid (lezen/schrijven) en taalbeschouwing (nadenken over taal)." },
       { q:"Een klas bespreekt samen waarom je 'hij loopt' met een -t schrijft. Welk onderdeel van taalonderwijs is dit?",
         opts:["Mondelinge taalvaardigheid","Schriftelijke taalvaardigheid","Taalbeschouwing","Begrijpend lezen"],
-        ans:2, leg:"Taalbeschouwing is nadenken over taalvorm, taalgebruik en hoe iets verwoord is — precies wat hier gebeurt." }
+        ans:2, leg:"Taalbeschouwing is nadenken over taalvorm, taalgebruik en hoe iets verwoord is — precies wat hier gebeurt." },
+      { q:"Welk taalniveau moet (bijna) elke leerling aan het eind van groep 8 halen?",
+        opts:["Streefniveau 1S","Fundamenteel niveau 1F","Niveau 2F voor iedereen","Niveau 3F"],
+        ans:1, leg:"1F (fundamenteel niveau) is het basisniveau dat vrijwel alle leerlingen moeten halen; 1S/2F is het hogere streefniveau." },
+      { q:"Het streefniveau 1S is voor de basisschool gelijk aan welk niveau?",
+        opts:["1F","2F","3F","4F"],
+        ans:1, leg:"Het streefniveau 1S komt overeen met 2F." },
+      { q:"Wat is het verschil tussen kerndoelen en tussendoelen?",
+        opts:["Kerndoelen zijn globale einddoelen van de overheid; tussendoelen beschrijven concreter de doorgaande lijn ertussenin","Ze zijn hetzelfde","Tussendoelen zijn wettelijk, kerndoelen niet","Kerndoelen gelden alleen voor de eindtoets"],
+        ans:0, leg:"Kerndoelen = globale, wettelijke einddoelen; tussendoelen (o.a. SLO, Expertisecentrum) maken de weg ernaartoe concreter per periode." },
+      { q:"Piramide en Schatkist zijn voorbeelden van ...",
+        opts:["Leesmethoden voor groep 4","VVE-programma's","Cito-toetsen","Spellingmethoden"],
+        ans:1, leg:"Het zijn VVE-programma's (voor- en vroegschoolse educatie) voor peuters en kleuters, gericht op o.a. woordenschat en beginnende geletterdheid." },
+      { q:"Welke toets is landelijk genormeerd en onderdeel van het leerlingvolgsysteem?",
+        opts:["De methodegebonden bloktoets","De Cito-toets (methodeonafhankelijk)","Het dictee van de leerkracht","De observatielijst"],
+        ans:1, leg:"Methodeonafhankelijke (Cito-)toetsen zijn landelijk genormeerd en komen in het lovs; methodegebonden toetsen horen bij de methode en zijn niet genormeerd." },
+      { q:"Een leerkracht geeft een meertalige leerling extra woordenschatsteun en een meerbegaafde leerling verdiepende taken. Hoe heet dit afstemmen op verschillen?",
+        opts:["Modeling","Differentiatie","Scaffolding","Automatiseren"],
+        ans:1, leg:"Differentiatie = het onderwijs afstemmen op verschillen tussen leerlingen (taalzwak, meertalig, meerbegaafd)." },
+      { q:"Bij aardrijkskunde leert de leerkracht eerst de vaktaalwoorden aan vóór de tekst gelezen wordt. Welke aanpak is dit?",
+        opts:["Taalontwikkelend vakonderwijs","Incidenteel woordenschatonderwijs","Voordracht","Differentiatie"],
+        ans:0, leg:"Taalontwikkelend (vak)onderwijs = bij zaakvakken bewust aandacht voor taal, zodat leerlingen de vaktaal én de vakinhoud leren." },
+      { q:"Wat beschrijft het Referentiekader Taal?",
+        opts:["Welke lesmethode je moet gebruiken","Wat leerlingen op verschillende momenten aan taal moeten beheersen (fundamentele en streefniveaus)","De cesuur van de LKT-toets","De volgorde van de schoolvakken"],
+        ans:1, leg:"Het Referentiekader Taal beschrijft de taalniveaus (1F fundamenteel, 1S/2F streef, enzovoort) die leerlingen moeten beheersen." }
     ]
   },
 
@@ -374,6 +490,17 @@ const ENRICH = {
      HOOFDSTUK 2 · Mondelinge taalvaardigheid
      ========================================================= */
   mondeling: {
+    addConcepts: [
+      { t:"Modeling", icon:"🗣️",
+        d:"Leerkrachtvaardigheid waarbij de leerkracht hardop denkend een (denk)proces of strategie voordoet, zodat de onzichtbare vaardigheid zichtbaar wordt. Ook: impliciet het correcte taalmodel geven.",
+        ex:"De leerkracht denkt hardop: 'Waar gaat dit over? Ik luister eerst naar het begin…' Of: een kind zegt 'aangetrekt' en de leerkracht herhaalt 'aangetrokken'." },
+      { t:"Scaffolding", icon:"🪜",
+        d:"Tijdelijke taalsteun die net boven het niveau van de leerling ligt ('een steigertje'), zodat de leerling een hoger niveau bereikt. De steun wordt afgebouwd als de leerling het zelf kan.",
+        ex:"De leerkracht herformuleert de uiting van een leerling net iets rijker en vraagt om de denkstap te verwoorden." },
+      { t:"Taalontwikkelende interactie", icon:"💬",
+        d:"Gesprekken bewust zó inrichten dat leerlingen veel en rijke taal produceren: open vragen stellen, doorvragen en denk-/wachttijd geven.",
+        ex:"De leerkracht stelt een open vraag en geeft wachttijd, zodat kinderen zelf uitgebreid antwoorden." }
+    ],
     art: {
       "Globaal luisteren": "luisterstrategie",
       "Intensief luisteren": "luisterstrategie",
@@ -477,7 +604,16 @@ const ENRICH = {
         ans:1, leg:"Successieve tweetaligheid = de tweede taal wordt geleerd nadat de eerste taal al is verworven." },
       { q:"Werkwoorden goed vervoegen en woorden correct uitspreken hoort bij welke competentie?",
         opts:["Grammaticale competentie","Tekstuele competentie","Strategische competentie","Functionele competentie"],
-        ans:0, leg:"Grammaticale competentie = kennis van grammatica, woordenschat, uitspraak en vervoeging." }
+        ans:0, leg:"Grammaticale competentie = kennis van grammatica, woordenschat, uitspraak en vervoeging." },
+      { q:"De leerkracht doet hardop denkend voor hoe hij een luisterstrategie toepast. Welke leerkrachtvaardigheid is dit?",
+        opts:["Scaffolding","Modeling","Differentiatie","Semantiseren"],
+        ans:1, leg:"Modeling = een (denk)proces of strategie hardop voordoen, zodat de onzichtbare vaardigheid zichtbaar wordt." },
+      { q:"Een kind zegt 'ik heb het aangetrekt'. De leerkracht reageert: 'Oh, je hebt het aangetrokken.' Welke techniek gebruikt de leerkracht?",
+        opts:["Expliciet verbeteren","Modeling (impliciet het correcte model geven)","Scaffolding","Negeren"],
+        ans:1, leg:"Dit is modeling: de leerkracht geeft impliciet het correcte taalmodel door de juiste vorm hardop uit te spreken." },
+      { q:"De leerkracht biedt tijdelijke taalsteun net boven het niveau van de leerling ('een steigertje'), en bouwt die af. Hoe heet dit?",
+        opts:["Modeling","Scaffolding","Differentiatie","Automatiseren"],
+        ans:1, leg:"Scaffolding = tijdelijke steun net boven het huidige niveau, die wordt afgebouwd naarmate de leerling het zelf kan." }
     ]
   },
 
@@ -641,6 +777,17 @@ const ENRICH = {
      HOOFDSTUK 6 · Begrijpend lezen
      ========================================================= */
   "begrijpend-lezen": {
+    addConcepts: [
+      { t:"Didactische modellen begrijpend lezen", icon:"🧩",
+        d:"Benaderingen voor het onderwijzen van begrijpend lezen, van leerlinggestuurd (zelfontdekkend leren) tot leraargestuurd (dialogisch leren). Het Expertisecentrum noemt er drie die het midden houden: directe instructie, elkaar onderwijzen en probleemgestuurd lezen.",
+        ex:"De meeste leesmethoden zijn gebaseerd op het directe instructiemodel." },
+      { t:"Directe instructiemodel", icon:"📐", art:"directeInstructie",
+        d:"Veelgebruikt lesmodel in drie fasen: (1) uitleggen en voordoen, (2) oefening en begeleiding, (3) verwerking of toepassing. De sturing van de leerkracht neemt per fase af.",
+        ex:"De leerkracht doet een leesstrategie hardop voor, laat leerlingen in tweetallen oefenen en daarna zelfstandig toepassen." },
+      { t:"Elkaar onderwijzen", icon:"👥",
+        d:"Didactische aanpak (reciprocal teaching) waarbij leerlingen om de beurt de rol van 'leraar' vervullen en samen leesstrategieën toepassen: voorspellen, vragen stellen, ophelderen en samenvatten.",
+        ex:"In een groepje leidt steeds een andere leerling het gesprek over de tekst." }
+    ],
     art: {
       "Verhalende tekst": "tekstsoorten",
       "Informatieve tekst": "tekstsoorten",
@@ -725,7 +872,16 @@ const ENRICH = {
         ans:1, leg:"Studievaardigheden = technieken om informatie uit bronnen te verwerken en vast te leggen." },
       { q:"Een nieuwsbericht dat je feiten wil geven, heeft als tekstdoel ...",
         opts:["Overtuigen","Informeren","Amuseren","Instrueren"],
-        ans:1, leg:"Tekstdoel informeren = de lezer informatie of kennis geven." }
+        ans:1, leg:"Tekstdoel informeren = de lezer informatie of kennis geven." },
+      { q:"Wat zijn de drie fasen van het directe instructiemodel?",
+        opts:["Voorspellen, lezen, samenvatten","Uitleggen en voordoen, oefening en begeleiding, verwerking of toepassing","Semantiseren, consolideren, controleren","Oriënteren, monitoren, evalueren"],
+        ans:1, leg:"Het directe instructiemodel: 1 uitleggen en voordoen, 2 oefening en begeleiding, 3 verwerking of toepassing — met afnemende sturing van de leerkracht." },
+      { q:"Zelfontdekkend leren is een voorbeeld van ... onderwijs.",
+        opts:["Leraargestuurd","Leerlinggestuurd","Methodegebonden","Klassikaal"],
+        ans:1, leg:"Zelfontdekkend leren is leerlinggestuurd; dialogisch leren is juist leraargestuurd. De drie Expertisecentrum-modellen houden het midden." },
+      { q:"Leerlingen vervullen om de beurt de rol van 'leraar' en passen samen leesstrategieën toe. Welke aanpak is dit?",
+        opts:["Directe instructie","Elkaar onderwijzen (reciprocal teaching)","Probleemgestuurd lezen","Modeling"],
+        ans:1, leg:"Elkaar onderwijzen (reciprocal teaching): leerlingen nemen beurten als gespreksleider en passen strategieën als voorspellen, vragen stellen, ophelderen en samenvatten toe." }
     ]
   },
 
@@ -1011,6 +1167,53 @@ const ENRICH = {
         opts:["Taalvariatie","Metalinguïstisch bewustzijn","Taalverwerving","Register"],
         ans:1, leg:"Metalinguïstisch bewustzijn = bewust kunnen nadenken over de vorm en het gebruik van taal." }
     ]
+  },
+
+  /* =========================================================
+     HOOFDSTUK 3 · Woordenschat — didactiek (viertakt, semantiseren)
+     (Woordenschat zelf staat in data.js; dit verrijkt het.)
+     ========================================================= */
+  woordenschat: {
+    addConcepts: [
+      { t:"Semantiseren", icon:"💡", art:"drieUitjes",
+        d:"De fase in de woordenschatdidactiek waarin de leerkracht de woordbetekenis uitlegt. Hij doet dit zélf (niet terugvragen) via de 'drie uitjes': uitbeelden, uitleggen en uitbreiden.",
+        ex:"Bij 'vulkaan': een foto tonen (uitbeelden), omschrijven wat het is (uitleggen) en koppelen aan lava, uitbarsting, berg (uitbreiden)." },
+      { t:"Drie uitjes", icon:"👐", art:"drieUitjes",
+        d:"De drie manieren van semantiseren (Van den Nulft & Verhallen): uitbeelden (met beeld, gebaar of voorwerp), uitleggen (verbale uitleg en voorbeelden) en uitbreiden (het woord in een netwerk van woorden plaatsen).",
+        ex:"Uitbeelden → uitleggen → uitbreiden." },
+      { t:"Viertakt", icon:"🔄", art:"viertaktCyclus",
+        d:"Didactisch model voor woordenschatonderwijs (Van den Nulft & Verhallen): voorbewerken, semantiseren, consolideren en controleren. Een woord raakt pas verankerd na ongeveer zeven keer aanbieden.",
+        ex:"Voorkennis activeren → betekenis uitleggen → oefenen (woordkast/woordparaplu) → later nagaan of het onthouden is." },
+      { t:"Incidenteel woordenschatonderwijs", icon:"🎲",
+        d:"Woordbetekenissen komen min of meer toevallig aan bod, bijvoorbeeld bij het lezen van een tekst. De kans op blijvende uitbreiding is klein.",
+        ex:"Tijdens het voorlezen legt de leerkracht een woord uit dat een kind niet kent." },
+      { t:"Intentioneel woordenschatonderwijs", icon:"🎯",
+        d:"Doelbewust en planmatig werken aan woordenschat, met woordselectie, thematische opbouw en veel herhaling.",
+        ex:"Een vast programma leert per thema zorgvuldig gekozen woorden aan, met herhaling." },
+      { t:"Woordselectie", icon:"🗳️",
+        d:"Het zorgvuldig kiezen van aan te leren woorden op basis van criteria: woordfrequentie, nut en context. Woorden worden in clusters (woordgroepen) aangeboden.",
+        ex:"Rond het thema ziekenhuis: dokter, verpleegster, injectie en operatie samen aanbieden." }
+    ],
+    mc: [
+      { q:"Wat zijn de 'drie uitjes' van semantiseren?",
+        opts:["Uitbeelden, uitleggen, uitbreiden","Uitknippen, uitspreken, uitschrijven","Horen, zien, doen","Voorbewerken, oefenen, toetsen"],
+        ans:0, leg:"De drie uitjes (Van den Nulft & Verhallen): uitbeelden (beeld/gebaar), uitleggen (verbaal) en uitbreiden (het woord in een woordnetwerk plaatsen)." },
+      { q:"Wat is de juiste volgorde van de viertakt?",
+        opts:["Semantiseren, voorbewerken, controleren, consolideren","Voorbewerken, semantiseren, consolideren, controleren","Controleren, consolideren, semantiseren, voorbewerken","Voorbewerken, consolideren, semantiseren, controleren"],
+        ans:1, leg:"De viertakt: 1 voorbewerken (voorkennis activeren), 2 semantiseren (betekenis uitleggen), 3 consolideren (oefenen), 4 controleren (nagaan of onthouden)." },
+      { q:"In welke fase van de viertakt oefenen leerlingen het woord en de betekenis, bijvoorbeeld met de woordkast of woordparaplu?",
+        opts:["Voorbewerken","Semantiseren","Consolideren","Controleren"],
+        ans:2, leg:"Consolideren = oefenen en inslijpen. Een woord raakt pas verankerd na ongeveer zeven keer aanbieden." },
+      { q:"Wat doet de leerkracht bij semantiseren het best?",
+        opts:["De betekenis terugvragen aan de klas","Zélf de betekenis duidelijk uitleggen","De leerlingen het woord laten opzoeken","Het woord overslaan"],
+        ans:1, leg:"Bij semantiseren legt de leerkracht de betekenis zélf duidelijk uit; de meeste kinderen kennen het woord nog niet of onvolledig." },
+      { q:"Een leerkracht werkt doelbewust en planmatig aan woordenschat, met woordselectie en thematische opbouw. Welke aanpak is dit?",
+        opts:["Incidenteel woordenschatonderwijs","Intentioneel woordenschatonderwijs","Semi-incidenteel onderwijs","Modeling"],
+        ans:1, leg:"Intentioneel = doelbewust en planmatig. Incidenteel = woorden komen toevallig aan bod (bijv. tijdens het lezen)." },
+      { q:"Welke criteria gebruikt een leerkracht om woorden te selecteren voor het woordenschatonderwijs?",
+        opts:["Woordlengte, kleur en klank","Woordfrequentie, nut en context","Alfabetische volgorde","Aantal lettergrepen"],
+        ans:1, leg:"Woorden worden geselecteerd op frequentie, nut en context — en bij voorkeur in clusters (woordgroepen) aangeboden." }
+    ]
   }
 
 };
@@ -1021,6 +1224,9 @@ const ENRICH = {
   CHAPTERS.forEach(ch => {
     const e = ENRICH[ch.id];
     if (!e) return;
+    if (e.intro) ch.intro = e.intro;
+    if (e.subtitle) ch.subtitle = e.subtitle;
+    if (e.addConcepts) e.addConcepts.forEach(c => ch.concepts.push(c));
     if (e.mc) ch.mc = (ch.mc || []).concat(e.mc);
     if (e.tweaks || e.art) {
       ch.concepts.forEach(c => {
