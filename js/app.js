@@ -343,8 +343,8 @@ function renderGamesHub(){
     <div class="hero compact game-hero">
       <span class="eyebrow">ACTIEF OPHALEN · HOOFDSTUK ${CH.nr}</span>
       <h2>Speel met de leerstof.</h2>
-      <p>Drie korte spellen over ${esc(CH.title)}. Elk spel traint een ander onderdeel van je toetskennis.</p>
-      <div class="game-summary"><span>🎮 ${p.gameRounds||0} rondes gespeeld</span><span>🏆 beste ronde ${p.gameBest||0}%</span><span>⚡ sprintrecord ${p.sprintBest||0}</span></div>
+      <p>Vier korte spellen om actief op te halen. De Foutenjacht gebruikt je eigen foutenbak over alle hoofdstukken.</p>
+      <div class="game-summary"><span>🎮 ${p.gameRounds||0} rondes gespeeld</span><span>⚡ sprintrecord ${p.sprintBest||0}</span><span>🎯 ${foutenCount()} in foutenbak</span></div>
     </div>
     <div class="game-grid">
       <button class="game-card example-game" onclick="startExampleGame()">
@@ -361,6 +361,11 @@ function renderGamesHub(){
         <span class="game-art"><i>⚡</i><em>60</em><i>⏱️</i></span>
         <span class="eyebrow">AUTOMATISEREN</span><b>Bliksemronde</b>
         <small>Herken in zestig seconden zo veel mogelijk begrippen.</small><strong>Start sprint <i>→</i></strong>
+      </button>
+      <button class="game-card example-game" onclick="startFoutenGame()">
+        <span class="game-art"><i>🎯</i><em>${foutenCount()}</em><i>🗑️</i></span>
+        <span class="eyebrow">JOUW FOUTENBAK</span><b>Foutenjacht</b>
+        <small>Vang de begrippen die je fout had of 'nog lastig' vond. Elk goed antwoord haalt er één uit je foutenbak — leeg = gewonnen!</small><strong>${foutenCount()?('Jaag op '+foutenCount()):'Bak is leeg'} <i>→</i></strong>
       </button>
     </div>
     <div class="research-note"><span>🔬</span><div><b>Didactisch opgebouwd</b><p>De spellen sluiten rechtstreeks aan op de bestaande begrippen, definities en voorbeelden. Ze voegen geen leerstof buiten de kennisbasis toe.</p></div></div>`;
@@ -499,6 +504,80 @@ function finishKnowledgeGame(title,restart){
   const total=game.pool.length,pct=Math.round(game.score/total*100),p=chP(CH.id);
   if(!game.saved){p.gameRounds++;p.gameBest=Math.max(p.gameBest||0,pct);saveP();game.saved=true;}
   $("#spellen-body").innerHTML=resultCard(title,game.score,total,pct,`<button class="btn primary" onclick="${restart}">Nog een ronde</button><button class="btn" onclick="renderGamesHub()">Alle spellen</button>`);
+  animateActiveScreen();
+}
+
+/* ---- Foutenjacht: spel met je foutenbak-begrippen ---- */
+function startFoutenGame(){
+  clearGameTimer();
+  const list=foutenList();
+  if(!list.length){
+    $("#spellen-body").innerHTML = `
+      <button class="back" onclick="renderGamesHub()">‹ Alle spellen</button>
+      <div class="card">
+        <h2>🎯 Foutenjacht</h2>
+        <div class="tip ok">🎉 Je foutenbak is leeg — niets te jagen! Zet bij de flashcards begrippen op 'Nog lastig', of maak de toets 'Alle begrippen'; foute begrippen verschijnen dan hier.</div>
+        <div class="row"><button class="btn primary" onclick="go('examen');startAlleBegrippen()">Alle begrippen</button><button class="btn" onclick="go('flashcards')">Naar flashcards</button></div>
+      </div>`;
+    return;
+  }
+  const items=shuffle(list).slice(0,12).map(f=>conceptQuestion(f.ch, f.concept, Math.random()<0.4));
+  game={type:"fouten",pool:items,i:0,score:0,caught:0,streak:0,bestStreak:0,locked:false,saved:false};
+  renderFoutenGame();
+}
+function renderFoutenGame(){
+  if(game.i>=game.pool.length) return finishFoutenGame();
+  const q=game.pool[game.i], K=["A","B","C","D"], left=foutenCount();
+  $("#spellen-body").innerHTML = `
+    <button class="back" onclick="renderGamesHub()">‹ Alle spellen</button>
+    <div class="game-status"><span>Jacht ${game.i+1} van ${game.pool.length} · 🔥 streak ${game.streak}</span><b>🎯 ${left} in bak</b></div>
+    <div class="pbar"><i style="width:${game.i/game.pool.length*100}%"></i></div>
+    <div class="card game-play-card">
+      <span class="eyebrow">VANG HET JUISTE BEGRIP · H${q.ch.nr} ${esc(q.ch.title)}</span>
+      <div class="example-prompt"><span>🎯</span><p>${q.q}</p></div>
+      <div class="opts" id="game-opts"></div>
+      <div class="feedback" id="game-feedback" aria-live="polite"></div>
+      <div class="row between"><button class="btn ghost" onclick="renderGamesHub()">Stoppen</button><button class="btn primary hidden" id="game-next" onclick="game.i++;renderFoutenGame()">Volgende ›</button></div>
+    </div>`;
+  const box=$("#game-opts");
+  q.opts.forEach((o,idx)=>{const b=document.createElement("button");b.className="opt";b.innerHTML=`<span class="k">${K[idx]}</span><span>${esc(o)}</span>`;b.onclick=()=>answerFoutenGame(idx);box.appendChild(b);});
+  game.locked=false; animateActiveScreen();
+}
+function answerFoutenGame(idx){
+  if(game.locked) return; game.locked=true;
+  const q=game.pool[game.i], buttons=$$("#game-opts .opt"), fb=$("#game-feedback");
+  buttons.forEach(b=>b.disabled=true);
+  const dp=chP(q.ch.id); dp.mcSeen++;
+  if(idx===q.ans){
+    buttons[idx].classList.add("correct"); game.score++; game.caught++; game.streak++; game.bestStreak=Math.max(game.bestStreak,game.streak); dp.mcCorrect++;
+    removeFout(q.ch.id,q.term);
+    fb.className="feedback show ok"; fb.innerHTML=`🎯 Gevangen! <b>${esc(q.term)}</b> is uit je foutenbak. ${q.leg}`;
+  } else {
+    buttons[idx].classList.add("wrong"); buttons[q.ans].classList.add("correct"); game.streak=0;
+    addFout(q.ch.id,q.term);
+    fb.className="feedback show no"; fb.innerHTML=`✗ Nog niet. ${q.leg}`;
+  }
+  saveP();
+  $("#game-next").classList.remove("hidden");
+  $("#game-next").textContent=game.i+1>=game.pool.length?"Bekijk resultaat ›":"Volgende ›";
+}
+function finishFoutenGame(){
+  clearGameTimer();
+  const p=chP(CH.id), pct=game.pool.length?Math.round(game.score/game.pool.length*100):0;
+  if(!game.saved){p.gameRounds=(p.gameRounds||0)+1;p.gameBest=Math.max(p.gameBest||0,pct);saveP();game.saved=true;}
+  const left=foutenCount();
+  $("#spellen-body").innerHTML = `
+    <div class="card sprint-result">
+      <span class="result-burst">🎯</span>
+      <span class="eyebrow">FOUTENJACHT</span>
+      <h2>${game.caught} begrip${game.caught===1?'':'pen'} gevangen</h2>
+      <p>Langste streak: ${game.bestStreak} · nog ${left} in je foutenbak</p>
+      ${left?'':'<div class="tip ok">🎉 Je foutenbak is helemaal leeg — top gedaan!</div>'}
+      <div class="row">
+        ${left?`<button class="btn primary" onclick="startFoutenGame()">Verder jagen (${left})</button>`:`<button class="btn primary" onclick="renderGamesHub()">Alle spellen</button>`}
+        ${left?'<button class="btn" onclick="renderGamesHub()">Alle spellen</button>':''}
+      </div>
+    </div>`;
   animateActiveScreen();
 }
 
