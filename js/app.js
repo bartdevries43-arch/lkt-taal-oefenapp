@@ -33,6 +33,34 @@ function chapterPct(ch){
   return Math.round(chapterKnown(ch) / ch.concepts.length * 100) || 0;
 }
 
+/* ---------- Tekstgrootte (weergave vergroten) ---------- */
+const TSKEY = "lkt_text_zoom_v1";
+const TS_LEVELS = [0.9, 1, 1.15, 1.3, 1.5];
+function loadTS(){ try{ const v=parseFloat(localStorage.getItem(TSKEY)); return TS_LEVELS.includes(v)?v:1; }catch(e){ return 1; } }
+function applyTextSize(z){
+  try{ document.documentElement.style.zoom = z; }catch(e){}
+  const el = document.getElementById("ts-val"); if(el) el.textContent = Math.round(z*100)+"%";
+}
+function changeTextSize(dir){
+  let i = TS_LEVELS.indexOf(loadTS());
+  i = Math.max(0, Math.min(TS_LEVELS.length-1, i+dir));
+  const z = TS_LEVELS[i];
+  try{ localStorage.setItem(TSKEY, z); }catch(e){}
+  applyTextSize(z);
+}
+
+/* ---------- Foutenbak (begrippen die terugkomen) ---------- */
+function loadFouten(){ if(!P.fouten || typeof P.fouten!=="object") P.fouten={}; return P.fouten; }
+function addFout(chId, term){ const f=loadFouten(); f[chId]=f[chId]||[]; if(!f[chId].includes(term)) f[chId].push(term); saveP(); }
+function removeFout(chId, term){ const f=loadFouten(); if(f[chId]){ f[chId]=f[chId].filter(t=>t!==term); if(!f[chId].length) delete f[chId]; saveP(); } }
+function foutenList(){
+  const f=loadFouten(), out=[];
+  CHAPTERS.forEach(ch=>{ (f[ch.id]||[]).forEach(term=>{ const c=ch.concepts.find(x=>x.t===term); if(c) out.push({ch,concept:c}); }); });
+  return out;
+}
+function foutenCount(){ return foutenList().length; }
+function wisFouten(){ if(confirm("Weet je zeker dat je je foutenbak wilt leegmaken?")){ P.fouten={}; saveP(); renderToetsHub(); } }
+
 /* ---------- Toestand ---------- */
 const savedChapter = (()=>{ try{return localStorage.getItem(CKEY);}catch(e){return null;} })();
 let CH = CHAPTERS.find(ch=>ch.id===savedChapter) || CHAPTERS[0];
@@ -108,12 +136,18 @@ function renderStart(){
     <div class="stat"><b>${CH.concepts.length}</b><span>begrippen in dit hoofdstuk</span></div>
     <div class="stat"><b>${pct===null?"–":pct+"%"}</b><span>toetsvragen goed</span></div>
     <div class="stat"><b>${P.eindtoets?P.eindtoets.lastGrade.toFixed(1):"–"}</b><span>laatste eindtoetscijfer</span></div>`;
+  const fc = foutenCount();
   $("#start-chapter").innerHTML = `
     <button class="study-button" onclick="go('begrippen')">
       <span class="study-icon">${CH.icon}</span>
       <span><span class="eyebrow">EERST DE STOF BEKIJKEN</span><b>Lees alle ${CH.concepts.length} begrippen</b>
       <small>${esc(CH.subtitle)}</small></span><span class="study-arrow">›</span>
-    </button>`;
+    </button>
+    ${fc?`<button class="study-button" style="margin-top:.55rem;background:linear-gradient(135deg,rgba(255,179,64,.18),rgba(255,255,255,.88))" onclick="go('examen');startLeerFouten()">
+      <span class="study-icon">🔁</span>
+      <span><span class="eyebrow">HERHAAL JE FOUTEN</span><b>Oefen de ${fc} begrip${fc===1?'':'pen'} die je nog fout had</b>
+      <small>Foute begrippen komen terug tot je ze kent</small></span><span class="study-arrow">›</span>
+    </button>`:''}`;
 }
 
 /* ================= BEGRIPPEN (leren) ================= */
@@ -196,7 +230,10 @@ function renderFlash(){
 function rateFlash(known){
   const idx = flash.deck[flash.pos];
   const p = chP(CH.id);
-  p.flashKnown[idx] = known; saveP();
+  p.flashKnown[idx] = known;
+  const term = CH.concepts[idx] && CH.concepts[idx].t;
+  if(term){ if(known) removeFout(CH.id, term); else addFout(CH.id, term); }
+  saveP();
   if(!known) flash.hard.push(idx);
   flash.pos++;
   renderFlash();
@@ -478,9 +515,119 @@ let examTimer = null, oefen = null, examInProgress = false;
 function clearExamTimer(){ if(examTimer){ clearInterval(examTimer); examTimer=null; } }
 function grade(pct){ return Math.max(1, Math.min(10, 1 + 9*pct/100)); }
 
+/* ---- Begrippen-quiz: alle begrippen + leer je fouten ---- */
+let cq = null;
+function conceptQuestion(ch, concept, useEx){
+  const others = ch.concepts.filter(x=>x.t!==concept.t);
+  let wrong = sample(others,3).map(x=>x.t);
+  if(wrong.length<3){
+    const all=[]; CHAPTERS.forEach(c=>c.concepts.forEach(x=>{ if(x.t!==concept.t) all.push(x.t); }));
+    wrong = [...new Set([...wrong, ...sample(all,8)])].filter(t=>t!==concept.t).slice(0,3);
+  }
+  const opts = shuffle([concept.t, ...wrong]);
+  const prompt = (useEx && concept.ex)
+    ? `Welk begrip past bij dit <b>voorbeeld</b>?<br><span style="font-weight:500;color:var(--muted)">“${esc(concept.ex)}”</span>`
+    : `Welk begrip hoort bij deze omschrijving?<br><span style="font-weight:500;color:var(--muted)">“${esc(concept.d)}”</span>`;
+  return { q:prompt, opts, ans:opts.indexOf(concept.t),
+           leg:`<b>${esc(concept.t)}</b>: ${esc(concept.d)}`, raw:true, ch, term:concept.t };
+}
+function startAlleBegrippen(){
+  clearExamTimer();
+  const items=[];
+  CHAPTERS.forEach(ch=>ch.concepts.forEach(c=>items.push(conceptQuestion(ch,c, Math.random()<0.45))));
+  cq = { mode:"alle", title:"Alle begrippen", queue:shuffle(items), i:0, score:0, seen:0, answered:false, requeued:{} };
+  renderCQ();
+}
+function startLeerFouten(){
+  clearExamTimer();
+  const list = foutenList();
+  if(!list.length){
+    $("#examen-body").innerHTML = `
+      <button class="back" onclick="renderToetsHub()">‹ Terug naar toetsen</button>
+      <div class="card">
+        <h2>🔁 Leer je fouten</h2>
+        <div class="tip ok">🎉 Je foutenbak is leeg! Begrippen die je bij de flashcards 'nog lastig' vindt of bij 'Alle begrippen' fout hebt, komen hier vanzelf terug.</div>
+        <div class="row"><button class="btn primary" onclick="startAlleBegrippen()">Start Alle begrippen</button></div>
+      </div>`;
+    return;
+  }
+  const items = list.map(f=>conceptQuestion(f.ch, f.concept, Math.random()<0.45));
+  cq = { mode:"fouten", title:"Leer je fouten", queue:shuffle(items), i:0, score:0, seen:0, answered:false, requeued:{} };
+  renderCQ();
+}
+function renderCQ(){
+  if(cq.i>=cq.queue.length) return cqDone();
+  const q=cq.queue[cq.i], K=["A","B","C","D"];
+  $("#examen-body").innerHTML = `
+    <div class="counter">${esc(cq.title)} — vraag ${cq.i+1} van ${cq.queue.length} · <span style="color:var(--green)">H${q.ch.nr} ${esc(q.ch.title)}</span></div>
+    <div class="pbar"><i style="width:${cq.i/cq.queue.length*100}%"></i></div>
+    <div class="card">
+      <div class="q">${q.q}</div>
+      <div class="opts" id="cq-opts"></div>
+      <div class="feedback" id="cq-fb"></div>
+      <div class="row between">
+        <button class="btn ghost" onclick="renderToetsHub()">Stoppen</button>
+        <button class="btn primary hidden" id="cq-next" onclick="cq.i++;renderCQ()">Volgende ›</button>
+      </div>
+    </div>`;
+  const box=$("#cq-opts");
+  q.opts.forEach((o,idx)=>{
+    const b=document.createElement("button");
+    b.className="opt"; b.innerHTML=`<span class="k">${K[idx]}</span><span>${esc(o)}</span>`;
+    b.onclick=()=>answerCQ(idx);
+    box.appendChild(b);
+  });
+  cq.answered=false;
+  animateActiveScreen();
+}
+function answerCQ(idx){
+  if(cq.answered) return; cq.answered=true;
+  const q=cq.queue[cq.i], opts=$$("#cq-opts .opt"), fb=$("#cq-fb");
+  opts.forEach(o=>o.disabled=true);
+  cq.seen++;
+  const dp=chP(q.ch.id); dp.mcSeen++;
+  if(idx===q.ans){
+    opts[idx].classList.add("correct"); cq.score++; dp.mcCorrect++;
+    fb.className="feedback show ok"; fb.innerHTML="✓ Goed! "+q.leg;
+    removeFout(q.ch.id, q.term);
+  } else {
+    opts[idx].classList.add("wrong"); opts[q.ans].classList.add("correct");
+    fb.className="feedback show no"; fb.innerHTML="✗ Helaas. "+q.leg;
+    addFout(q.ch.id, q.term);
+    const key=q.ch.id+"::"+q.term;
+    if(!cq.requeued[key]){
+      cq.requeued[key]=1;
+      const c=q.ch.concepts.find(x=>x.t===q.term);
+      if(c) cq.queue.push(conceptQuestion(q.ch, c, false));
+    }
+  }
+  saveP();
+  const nx=$("#cq-next"); nx.classList.remove("hidden");
+  nx.textContent = cq.i+1>=cq.queue.length ? "Bekijk resultaat ›" : "Volgende ›";
+}
+function cqDone(){
+  const s=cq.score, t=cq.seen, pct=t?Math.round(s/t*100):0, fc=foutenCount();
+  $("#examen-body").innerHTML = `
+    <div class="card">
+      <h2>${cq.mode==="fouten"?"🔁 Fouten herhaald":"📚 Alle begrippen afgerond"}</h2>
+      <div class="ring" style="--p:${pct}"><span>${pct}%</span></div>
+      <div class="score-box"><div class="big">${s}/${t}</div><div class="lbl">${pct}% goed</div></div>
+      ${fc ? `<div class="tip">🔁 Je hebt nog <b>${fc} begrip${fc===1?"":"pen"}</b> in je foutenbak. Herhaal ze tot ze weg zijn.</div>`
+           : `<div class="tip ok">🎉 Je foutenbak is leeg — knap werk!</div>`}
+      <div class="row" style="margin-top:1rem">
+        ${fc?`<button class="btn primary" onclick="startLeerFouten()">🔁 Leer je fouten (${fc})</button>`:""}
+        <button class="btn ${fc?"":"primary"}" onclick="startAlleBegrippen()">Alle begrippen opnieuw</button>
+        <button class="btn" onclick="renderToetsHub()">Terug naar toetsen</button>
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
 function renderToetsHub(){
   clearExamTimer(); examInProgress=false;
   const e = P.eindtoets;
+  const totalConcepts = CHAPTERS.reduce((s,ch)=>s+ch.concepts.length,0);
+  const fc = foutenCount();
   $("#examen-body").innerHTML = `
     <div class="hero compact">
       <span class="eyebrow">TOETSEN</span>
@@ -507,7 +654,20 @@ function renderToetsHub(){
         <small>Alle domeinen, 80 vragen volgens de toetsmatrijs. Kies je tijd — óók de echte 2 uur.</small>
         <strong>${e?`Beste: cijfer ${e.bestGrade.toFixed(1)} · opnieuw`:'Start eindtoets'} <i>→</i></strong>
       </button>
-    </div>`;
+      <button class="game-card example-game" onclick="startAlleBegrippen()">
+        <span class="game-art"><i>📚</i><em>${totalConcepts}</em><i>🧠</i></span>
+        <span class="eyebrow">ALLE HOOFDSTUKKEN</span><b>Alle begrippen</b>
+        <small>Toets álle ${totalConcepts} begrippen uit alle hoofdstukken, met directe uitleg en voorbeelden. Foute begrippen komen vanzelf terug.</small>
+        <strong>Start <i>→</i></strong>
+      </button>
+      <button class="game-card truth-game" onclick="startLeerFouten()">
+        <span class="game-art"><i>🔁</i><em>${fc}</em><i>🎯</i></span>
+        <span class="eyebrow">JE FOUTENBAK</span><b>Leer je fouten</b>
+        <small>Oefen alleen de begrippen die je fout had of 'nog lastig' vond. Goed beantwoord = weg uit je foutenbak.</small>
+        <strong>${fc?('Oefen '+fc+' begrip'+(fc===1?'':'pen')):'Nog geen fouten'} <i>→</i></strong>
+      </button>
+    </div>
+    ${fc?`<div class="row" style="justify-content:flex-end;margin-top:.5rem"><button class="btn ghost danger" style="font-size:12px" onclick="wisFouten()">Foutenbak leegmaken</button></div>`:''}`;
   animateActiveScreen();
 }
 
@@ -847,6 +1007,7 @@ function wisVoortgang(){
 
 /* ---------- Start ---------- */
 document.addEventListener("DOMContentLoaded",()=>{
+  applyTextSize(loadTS());
   $$(".tab").forEach(t=>t.onclick=()=>go(t.dataset.go));
   go("start");
 });

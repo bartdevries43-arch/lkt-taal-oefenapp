@@ -28,7 +28,13 @@ button:focus-visible{outline:3px solid rgba(141,107,232,.35);outline-offset:3px}
 .wrap{max-width:1120px;margin:0 auto;padding:2rem 1.25rem 5rem;position:relative}
 
 /* Kop en hoofdnavigatie */
-header.top{display:flex;align-items:center;gap:.9rem;margin-bottom:1.25rem}
+header.top{display:flex;align-items:center;gap:.9rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.text-size{margin-left:auto;display:flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:14px;padding:.3rem .45rem;box-shadow:0 8px 18px rgba(85,68,121,.07);backdrop-filter:blur(14px)}
+.text-size .ts-ico{font-size:13px;opacity:.7;margin:0 .1rem}
+.ts-btn{border:1px solid var(--line);background:#fff;border-radius:9px;min-width:36px;height:32px;font-weight:850;font-size:14px;cursor:pointer;color:var(--purple-d);transition:.14s;font-family:inherit}
+.ts-btn:hover{background:rgba(205,184,255,.20);transform:translateY(-1px)}
+.ts-btn:active{transform:none}
+.ts-val{font-size:11px;font-weight:850;color:var(--muted);min-width:38px;text-align:center}
 header.top .logo{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;font-size:27px;
   background:linear-gradient(135deg,rgba(205,184,255,.76),rgba(174,233,209,.82));
   border:1px solid rgba(141,107,232,.20);box-shadow:0 12px 24px rgba(80,61,123,.10)}

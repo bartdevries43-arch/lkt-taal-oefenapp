@@ -769,7 +769,25 @@ const ENRICH = {
         ans:1, leg:"Dyslexie = een hardnekkig probleem met accuraat en/of vlot lezen en spellen op woordniveau, vooral door problemen in de automatisering." },
       { q:"Welke van deze is een bekende risicofactor voor dyslexie?",
         opts:["Een grote woordenschat","Moeite met hakken en plakken en met de letter-klankkoppeling","Veel voorleeservaring","Snel kunnen benoemen"],
-        ans:1, leg:"Risicofactoren zijn onder meer moeite met hakken/plakken, met de letter-klankkoppeling en met snel benoemen." }
+        ans:1, leg:"Risicofactoren zijn onder meer moeite met hakken/plakken, met de letter-klankkoppeling en met snel benoemen." },
+      { q:"Vlot, nauwkeurig én met goede intonatie lezen noemen we ook wel ...",
+        opts:["Spellend lezen","Vloeiend (vlot) lezen","Globaal lezen","Kritisch lezen"],
+        ans:1, leg:"Vloeiend (vlot) lezen = vlot, accuraat én met passende expressie/intonatie lezen. Het bouwt voort op automatisering." },
+      { q:"Een leerling leest bij een spannend stuk bewust wat langzamer. Welk voordrachtsaspect past hij toe?",
+        opts:["Volume","Tempo","Articulatie","Klemtoon"],
+        ans:1, leg:"Tempo = de leessnelheid, met afwisseling waar dat past (bijv. rustiger bij spanning)." },
+      { q:"Een lezer herkent '-eeuw' in 'meeuw' meteen als een vast patroon. Welke leesstrategie is dit?",
+        opts:["Een spellingpatroon herkennen","Morfologische analyse","Contextstrategie","Elementaire leeshandeling"],
+        ans:0, leg:"Een spellingpatroon is een veelvoorkomend letterpatroon (zoals -eeuw) dat de lezer in één keer herkent." },
+      { q:"Een leerling herkent zijn eigen naam meteen aan het woordbeeld, zonder te verklanken. Welke strategie is dit?",
+        opts:["Visuele woordvorm herkennen","Klankclusters gebruiken","Elementaire leeshandeling","Morfologische analyse"],
+        ans:0, leg:"Visuele woordvorm = een woord direct herkennen aan het hele woordbeeld." },
+      { q:"Welke indeling kijkt — naast het technische leesniveau — óók naar de leesbeleving?",
+        opts:["AVI","BAVI","CLIB","Foneem"],
+        ans:1, leg:"BAVI voegt aan AVI aandacht voor leesbeleving toe; LeesLAT is een leeservaringsschaal. AVI is puur het technische niveau." },
+      { q:"Waarom is automatisering zo belangrijk voor begrijpend lezen?",
+        opts:["Dan hoef je niet meer te lezen","Omdat je dan aandacht overhoudt voor de betekenis in plaats van voor het ontcijferen","Omdat je dan harder leest","Het heeft geen effect op het begrip"],
+        ans:1, leg:"Als de woordherkenning geautomatiseerd is, komt er ruimte vrij in je werkgeheugen voor het begrijpen van de tekst." }
     ]
   },
 
@@ -943,7 +961,25 @@ const ENRICH = {
         ans:0, leg:"Het publiek bepalen helpt je taal, toon en inhoud af te stemmen op de lezer (bijv. schrijven voor groep 5)." },
       { q:"Je kiest bewust een formele of juist speelse schrijfstijl. Welke stelvaardigheid is dit?",
         opts:["Coderen","Stileren","Structureren","Reviseren"],
-        ans:1, leg:"Stileren = een passende schrijfstijl kiezen (bijv. formeel of speels)." }
+        ans:1, leg:"Stileren = een passende schrijfstijl kiezen (bijv. formeel of speels)." },
+      { q:"Je schrijft een uitnodiging om iets duidelijk te maken aan een lezer. Welke functie van schrijven is dit?",
+        opts:["Expressieve schrijffunctie","Communicatieve schrijffunctie","Conceptualiserende schrijffunctie","Esthetische functie"],
+        ans:1, leg:"De communicatieve schrijffunctie = met schrijven iets overbrengen aan een lezer." },
+      { q:"Wat bepaal je als eerste bij het plannen van een tekst?",
+        opts:["De spelling","Doel, publiek en tekstsoort","De lettergrootte","Het aantal alinea's"],
+        ans:1, leg:"Plannen begint met het bepalen van doel, publiek en tekstsoort; dat stuurt alle volgende keuzes." },
+      { q:"Je kiest uit alle verzamelde informatie welke je écht gaat gebruiken. Welke stelvaardigheid is dit?",
+        opts:["Verzamelen","Selecteren","Structureren","Formuleren"],
+        ans:1, leg:"Selecteren = kiezen welke informatie je wel en niet gebruikt." },
+      { q:"Wat is het verschil tussen reviseren en verzorgen?",
+        opts:["Reviseren = inhoud, structuur en formulering verbeteren; verzorgen = lay-out en netheid","Ze zijn hetzelfde","Reviseren = spelling; verzorgen = inhoud","Verzorgen gaat vooraf aan plannen"],
+        ans:0, leg:"Reviseren = kritisch herzien van inhoud, structuur en formulering; verzorgen = de uiterlijke verzorging (lay-out, alinea's, netheid)." },
+      { q:"Voor een proefje schrijft een leerling een stappenplan. Welke tekstsoort en welk doel horen daarbij?",
+        opts:["Beschouwend / mening geven","Directief / instrueren","Verhalend / amuseren","Argumentatief / overtuigen"],
+        ans:1, leg:"Een stappenplan is een directieve tekst; het doel is instrueren." },
+      { q:"Na het schrijven denk je na over wat de volgende keer beter kan. Welke stap is dit?",
+        opts:["Structureren","Reflecteren op schrijfgedrag","Coderen","Verzamelen"],
+        ans:1, leg:"Reflecteren op schrijfgedrag = terugkijken op je eigen aanpak en resultaat om te verbeteren." }
     ]
   },
 

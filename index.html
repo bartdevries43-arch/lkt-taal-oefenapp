@@ -19,6 +19,12 @@
       <h1>LKT Taal – Oefenapp</h1>
       <p>Oefen doelgericht voor de landelijke kennistoets</p>
     </div>
+    <div class="text-size" role="group" aria-label="Tekstgrootte aanpassen">
+      <span class="ts-ico" aria-hidden="true">🔎</span>
+      <button class="ts-btn" onclick="changeTextSize(-1)" title="Tekst kleiner" aria-label="Tekst kleiner">A–</button>
+      <span class="ts-val" id="ts-val" aria-live="polite">100%</span>
+      <button class="ts-btn" onclick="changeTextSize(1)" title="Tekst groter" aria-label="Tekst groter">A+</button>
+    </div>
   </header>
 
   <nav class="tabs" aria-label="Hoofdnavigatie">
