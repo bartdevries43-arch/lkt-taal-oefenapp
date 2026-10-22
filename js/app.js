@@ -110,6 +110,7 @@ function go(id){
   if(id==="flashcards")startFlash();
   if(id==="match")     startMatch();
   if(id==="spellen")   renderGamesHub();
+  if(id==="themas")    renderThemas();
   if(id==="examen")    renderToetsHub();
   if(id==="voortgang") renderVoortgang();
   animateActiveScreen();
@@ -614,7 +615,9 @@ function startAlleBegrippen(){
   clearExamTimer();
   const items=[];
   CHAPTERS.forEach(ch=>ch.concepts.forEach(c=>items.push(conceptQuestion(ch,c, Math.random()<0.45))));
-  cq = { mode:"alle", title:"Alle begrippen", queue:shuffle(items), i:0, score:0, seen:0, answered:false, requeued:{} };
+  cq = { mode:"alle", title:"Alle begrippen", heading:"📚 Alle begrippen afgerond",
+         bodySel:"#examen-body", backCall:"renderToetsHub()", restartCall:"startAlleBegrippen()", restartLabel:"Alle begrippen opnieuw",
+         queue:shuffle(items), i:0, score:0, seen:0, answered:false, requeued:{} };
   renderCQ();
 }
 function startLeerFouten(){
@@ -631,13 +634,15 @@ function startLeerFouten(){
     return;
   }
   const items = list.map(f=>conceptQuestion(f.ch, f.concept, Math.random()<0.45));
-  cq = { mode:"fouten", title:"Leer je fouten", queue:shuffle(items), i:0, score:0, seen:0, answered:false, requeued:{} };
+  cq = { mode:"fouten", title:"Leer je fouten", heading:"🔁 Fouten herhaald",
+         bodySel:"#examen-body", backCall:"renderToetsHub()", restartCall:"startLeerFouten()", restartLabel:"Nog een ronde",
+         queue:shuffle(items), i:0, score:0, seen:0, answered:false, requeued:{} };
   renderCQ();
 }
 function renderCQ(){
   if(cq.i>=cq.queue.length) return cqDone();
   const q=cq.queue[cq.i], K=["A","B","C","D"];
-  $("#examen-body").innerHTML = `
+  $(cq.bodySel).innerHTML = `
     <div class="counter">${esc(cq.title)} — vraag ${cq.i+1} van ${cq.queue.length} · <span style="color:var(--green)">H${q.ch.nr} ${esc(q.ch.title)}</span></div>
     <div class="pbar"><i style="width:${cq.i/cq.queue.length*100}%"></i></div>
     <div class="card">
@@ -645,7 +650,7 @@ function renderCQ(){
       <div class="opts" id="cq-opts"></div>
       <div class="feedback" id="cq-fb"></div>
       <div class="row between">
-        <button class="btn ghost" onclick="renderToetsHub()">Stoppen</button>
+        <button class="btn ghost" onclick="${cq.backCall}">Stoppen</button>
         <button class="btn primary hidden" id="cq-next" onclick="cq.i++;renderCQ()">Volgende ›</button>
       </div>
     </div>`;
@@ -686,20 +691,109 @@ function answerCQ(idx){
 }
 function cqDone(){
   const s=cq.score, t=cq.seen, pct=t?Math.round(s/t*100):0, fc=foutenCount();
-  $("#examen-body").innerHTML = `
+  $(cq.bodySel).innerHTML = `
     <div class="card">
-      <h2>${cq.mode==="fouten"?"🔁 Fouten herhaald":"📚 Alle begrippen afgerond"}</h2>
+      <h2>${cq.heading||"Afgerond"}</h2>
       <div class="ring" style="--p:${pct}"><span>${pct}%</span></div>
       <div class="score-box"><div class="big">${s}/${t}</div><div class="lbl">${pct}% goed</div></div>
       ${fc ? `<div class="tip">🔁 Je hebt nog <b>${fc} begrip${fc===1?"":"pen"}</b> in je foutenbak. Herhaal ze tot ze weg zijn.</div>`
            : `<div class="tip ok">🎉 Je foutenbak is leeg — knap werk!</div>`}
       <div class="row" style="margin-top:1rem">
-        ${fc?`<button class="btn primary" onclick="startLeerFouten()">🔁 Leer je fouten (${fc})</button>`:""}
-        <button class="btn ${fc?"":"primary"}" onclick="startAlleBegrippen()">Alle begrippen opnieuw</button>
-        <button class="btn" onclick="renderToetsHub()">Terug naar toetsen</button>
+        <button class="btn primary" onclick="${cq.restartCall}">${cq.restartLabel||"Opnieuw"}</button>
+        ${(fc && cq.mode!=="fouten")?`<button class="btn" onclick="go('examen');startLeerFouten()">🔁 Leer je fouten (${fc})</button>`:""}
+        <button class="btn" onclick="${cq.backCall}">Terug</button>
       </div>
     </div>`;
   window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ================= THEMA'S (oefenhubs) ================= */
+const THEMES = [
+  { id:"opbouw", icon:"🏗️", title:"De opbouw van taal", subtitle:"Taalniveaus en taalkundige onderdelen",
+    intro:"Taal kun je op verschillende niveaus bekijken: van klank tot betekenis en gebruik. Hier oefen je de taalkundige onderdelen (fonologie, morfologie, syntaxis, semantiek, pragmatiek, orthografie), de bijbehorende taalniveaus én de bouwstenen van woorden.",
+    refs:[
+      {ch:"taalbeschouwing-spelling",t:"Fonologie"},{ch:"taalbeschouwing-spelling",t:"Foneem"},
+      {ch:"taalbeschouwing-spelling",t:"Morfologie"},{ch:"taalbeschouwing-spelling",t:"Morfeem"},
+      {ch:"taalbeschouwing-spelling",t:"Vrij morfeem"},{ch:"taalbeschouwing-spelling",t:"Gebonden morfeem"},
+      {ch:"taalbeschouwing-spelling",t:"Samenstelling"},{ch:"taalbeschouwing-spelling",t:"Afleiding"},
+      {ch:"taalbeschouwing-spelling",t:"Verbuiging"},{ch:"taalbeschouwing-spelling",t:"Vervoeging"},
+      {ch:"taalbeschouwing-spelling",t:"Syntaxis"},{ch:"taalbeschouwing-spelling",t:"Semantiek"},
+      {ch:"taalbeschouwing-spelling",t:"Pragmatiek"},{ch:"taalbeschouwing-spelling",t:"Orthografie"},
+      {ch:"taalonderwijs",t:"Fonologisch niveau"},{ch:"taalonderwijs",t:"Morfologisch niveau"},
+      {ch:"taalonderwijs",t:"Syntactisch niveau"},{ch:"taalonderwijs",t:"Semantisch niveau"},
+      {ch:"taalonderwijs",t:"Pragmatisch niveau"},{ch:"taalonderwijs",t:"Orthografisch niveau"}
+    ] },
+  { id:"audvis", icon:"👂", title:"Auditieve & visuele strategieën", subtitle:"Horen en zien bij lezen en spellen",
+    intro:"Bij beginnende geletterdheid draait het om vaardigheden met klanken (auditief) en met letters en woordbeelden (visueel). Hier oefen je hakken en plakken, discriminatie, analyse en synthese, en het ordenen van klanken en letters.",
+    refs:[
+      {ch:"beginnende-geletterdheid",t:"Fonologisch bewustzijn"},{ch:"beginnende-geletterdheid",t:"Fonemisch bewustzijn"},
+      {ch:"beginnende-geletterdheid",t:"Auditieve objectivatie"},{ch:"beginnende-geletterdheid",t:"Auditieve discriminatie"},
+      {ch:"beginnende-geletterdheid",t:"Auditieve analyse"},{ch:"beginnende-geletterdheid",t:"Auditieve synthese"},
+      {ch:"beginnende-geletterdheid",t:"Temporeel ordenen"},{ch:"beginnende-geletterdheid",t:"Klankpositie bepalen"},
+      {ch:"beginnende-geletterdheid",t:"Visuele discriminatie"},{ch:"beginnende-geletterdheid",t:"Visuele analyse"},
+      {ch:"beginnende-geletterdheid",t:"Visuele synthese"},{ch:"beginnende-geletterdheid",t:"Spatieel ordenen"},
+      {ch:"beginnende-geletterdheid",t:"Letterpositie bepalen"}
+    ] }
+];
+function themeById(id){ return THEMES.find(t=>t.id===id); }
+function resolveTheme(theme){
+  const out=[];
+  theme.refs.forEach(r=>{ const ch=CHAPTERS.find(c=>c.id===r.ch); if(!ch) return; const c=ch.concepts.find(x=>x.t===r.t); if(c) out.push({ch,concept:c}); });
+  return out;
+}
+function renderThemas(){
+  const cards = THEMES.map(th=>{
+    const n=resolveTheme(th).length;
+    return `<button class="game-card ${th.id==='opbouw'?'example-game':'truth-game'}" onclick="openTheme('${th.id}')">
+      <span class="game-art"><i>${th.icon}</i><em>${n}</em><i>📖</i></span>
+      <span class="eyebrow">OEFENHUB</span><b>${esc(th.title)}</b>
+      <small>${esc(th.subtitle)}. ${n} begrippen om te bekijken en te oefenen.</small>
+      <strong>Open <i>→</i></strong>
+    </button>`;
+  }).join("");
+  $("#themas-body").innerHTML = `
+    <div class="hero compact">
+      <span class="eyebrow">THEMA'S · GERICHT OEFENEN</span>
+      <h2>Oefenhubs rond één onderwerp.</h2>
+      <p>Begrippen uit verschillende hoofdstukken, gegroepeerd per thema. Bekijk ze samen en oefen ze gericht — foute begrippen gaan in je foutenbak.</p>
+    </div>
+    <div class="game-grid" style="grid-template-columns:1fr 1fr">${cards}</div>`;
+  animateActiveScreen();
+}
+function openTheme(id){
+  const th=themeById(id); if(!th) return go('themas');
+  const list=resolveTheme(th);
+  const items=list.map(x=>`
+    <div class="card" style="padding:1rem 1.1rem;margin-bottom:.6rem">
+      <div style="display:flex;gap:.6rem;align-items:center"><span style="font-size:22px">${x.concept.icon||"🔹"}</span>
+        <b style="font-size:15px">${esc(x.concept.t)}</b>
+        <span style="margin-left:auto;font-size:11px;color:var(--green);font-weight:800">H${x.ch.nr}</span></div>
+      ${x.concept.art && ART[x.concept.art] ? `<div class="art" style="margin:.5rem 0">${ART[x.concept.art]}</div>`:""}
+      <p class="lead" style="margin-top:.5rem">${esc(x.concept.d)}</p>
+      <div style="font-size:12.5px;color:var(--muted);border-left:3px solid var(--tint-a);padding:.5rem .7rem;background:#fafcfb;border-radius:0 8px 8px 0;margin-top:.5rem"><b style="color:var(--brand-d)">Voorbeeld:</b> ${esc(x.concept.ex)}</div>
+    </div>`).join("");
+  $("#themas-body").innerHTML = `
+    <button class="back" onclick="go('themas')">‹ Alle thema's</button>
+    <div class="chapter-heading">
+      <div><span class="eyebrow">OEFENHUB</span><h2>${th.icon} ${esc(th.title)}</h2><p>${esc(th.subtitle)}</p></div>
+      <div class="chapter-score"><b>${list.length}</b><span>begrippen</span></div>
+    </div>
+    <div class="card"><p class="sub" style="margin:0">${esc(th.intro)}</p></div>
+    <div class="row" style="margin:.4rem 0 1rem">
+      <button class="btn primary" onclick="startThemeQuiz('${th.id}')">📝 Oefen deze ${list.length} begrippen</button>
+    </div>
+    <span class="eyebrow" style="margin-left:.2rem">DE BEGRIPPEN</span>
+    <div style="margin-top:.5rem">${items}</div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+  animateActiveScreen();
+}
+function startThemeQuiz(id){
+  const th=themeById(id); if(!th) return;
+  const items=resolveTheme(th).map(x=>conceptQuestion(x.ch, x.concept, Math.random()<0.45));
+  cq = { mode:"thema", title:th.title, heading:`${th.icon} ${th.title} — afgerond`,
+         bodySel:"#themas-body", backCall:`openTheme('${id}')`, restartCall:`startThemeQuiz('${id}')`, restartLabel:"Opnieuw oefenen",
+         queue:shuffle(items), i:0, score:0, seen:0, answered:false, requeued:{} };
+  renderCQ();
 }
 
 function renderToetsHub(){
