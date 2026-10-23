@@ -737,11 +737,12 @@ const THEMES = [
     ] }
 ];
 function themeById(id){ return THEMES.find(t=>t.id===id); }
-function resolveTheme(theme){
+function resolveRefs(refs){
   const out=[];
-  theme.refs.forEach(r=>{ const ch=CHAPTERS.find(c=>c.id===r.ch); if(!ch) return; const c=ch.concepts.find(x=>x.t===r.t); if(c) out.push({ch,concept:c}); });
+  refs.forEach(r=>{ const ch=CHAPTERS.find(c=>c.id===r.ch); if(!ch) return; const c=ch.concepts.find(x=>x.t===r.t); if(c) out.push({ch,concept:c}); });
   return out;
 }
+function resolveTheme(theme){ return resolveRefs(theme.refs); }
 function renderThemas(){
   const cards = THEMES.map(th=>{
     const n=resolveTheme(th).length;
@@ -838,18 +839,74 @@ const EZELS = {
   "Visuele analyse":"Zien + uit elkaar halen → de losse letters in een woord onderscheiden.",
   "Visuele synthese":"Zien + samenvoegen → de letters samen lezen tot één woord.",
   "Spatieel ordenen":"Spatieel = ruimte (space) → de lees-/schrijfrichting volgen (‘tak’ niet als ‘kat’ lezen).",
-  "Letterpositie bepalen":"Positie = plaats → wáár staat de letter in het woord?"
+  "Letterpositie bepalen":"Positie = plaats → wáár staat de letter in het woord?",
+  // Spellingprincipes, -regels & -strategieën
+  "Fonologisch principe":"Fono = klank → schrijf zoals je het hoort (maan).",
+  "Morfologisch principe":"Morf = vorm → kijk naar de vórm/bouw, niet alleen de klank (hond, want honden).",
+  "Etymologisch principe":"Etymologie = herkomst → je moet het weten uit de geschiedenis van het woord (ij / ei).",
+  "Syllabisch principe":"Syllabe = klankgroep → verdeel in klankgroepen (ra-men, bak-ker).",
+  "Regel van gelijkvormigheid":"Gelijk-vormig = altijd dezelfde vorm → schrijf een woorddeel steeds hetzelfde (hond, want honden).",
+  "Regel van overeenkomst":"Overeenkomst = lijkt op elkaar → gelijke bouw, gelijke spelling (hij vindt, zoals hij loopt).",
+  "Verenkelingsregel":"Verenkelen = er één van maken → na een lange klank één letter (ra-men → ramen).",
+  "Verdubbelingsregel":"Verdubbelen = dubbel → na een korte klank een dubbele medeklinker (bak → bakker).",
+  "Fonologische strategie":"Fono = klank → hak het woord in klanken en schrijf wat je hoort.",
+  "Woordbeeldstrategie":"Je ziet het woord-beeld voor je → uit je hoofd schrijven (vrouw, thee).",
+  "Regelstrategie":"Je past een régel toe (verdubbelen, verenkelen, 't kofschip).",
+  "Analogiestrategie":"Analogie = vergelijking → schrijf zoals een lijkend woord (dromen zoals bomen).",
+  "Hulpstrategie":"Een hulpje/ezelsbruggetje gebruiken (zoals 't kofschip).",
+  "Klankzuiver woord":"Klank-zuiver = puur de klank → precies schrijven zoals je hoort (maan, vis).",
+  "Weetwoord":"Dat moet je gewoon wéten (vrouw) — er is geen regel voor.",
+  "Regelwoord":"Dat schrijf je met een régel (bomen → verenkelen).",
+  "Werkwoordspelling":"Stam + uitgang; bij -te of -de helpt 't kofschip (of 't fokschaap).",
+  // Rijm- en dichtvormen
+  "Rijm":"Een klank die terugkomt (huis - muis).",
+  "Eindrijm":"Rijm aan het eind van de regels (maan - gaan).",
+  "Beginrijm":"Rijm/klank aan het begin = alliteratie (Liesje leerde lezen).",
+  "Gepaard rijm":"Per paar: A-A-B-B (twee regels naast elkaar rijmen).",
+  "Omarmend rijm":"De buitenste regels 'omarmen' de binnenste: A-B-B-A (ABBA).",
+  "Gekruist rijm":"Kruislings, om en om: A-B-A-B.",
+  "Gebroken rijm":"'Gebroken' = niet alle regels rijmen: A-B-C-B.",
+  "Ritme":"Regelmaat/maat, net als in muziek.",
+  "Elfje":"Elf woorden! Verdeeld als 1-2-3-4-1 over 5 regels.",
+  "Haiku":"3 regels met 5-7-5 lettergrepen (onthoud: haiku = 5-7-5).",
+  "Sonnet":"14 regels (son-net → 'net' 14).",
+  "Kwatrijn":"Kwa- = 4 (kwartet, quattro) → 4 regels.",
+  "Limerick":"5 grappige regels met rijmschema aabba.",
+  "Rondeel":"Rond: regels komen 'in het rond' terug (herhaling).",
+  "Naamgedicht":"De beginletters vormen samen een naam (acrostichon)."
 };
+const EZEL_GROUPS = [
+  { icon:THEMES[0].icon, title:THEMES[0].title, refs:THEMES[0].refs },
+  { icon:THEMES[1].icon, title:THEMES[1].title, refs:THEMES[1].refs },
+  { icon:"✏️", title:"Spellingprincipes, -regels & -strategieën", refs:[
+      {ch:"taalbeschouwing-spelling",t:"Fonologisch principe"},{ch:"taalbeschouwing-spelling",t:"Morfologisch principe"},
+      {ch:"taalbeschouwing-spelling",t:"Etymologisch principe"},{ch:"taalbeschouwing-spelling",t:"Syllabisch principe"},
+      {ch:"taalbeschouwing-spelling",t:"Regel van gelijkvormigheid"},{ch:"taalbeschouwing-spelling",t:"Regel van overeenkomst"},
+      {ch:"taalbeschouwing-spelling",t:"Verenkelingsregel"},{ch:"taalbeschouwing-spelling",t:"Verdubbelingsregel"},
+      {ch:"taalbeschouwing-spelling",t:"Fonologische strategie"},{ch:"taalbeschouwing-spelling",t:"Woordbeeldstrategie"},
+      {ch:"taalbeschouwing-spelling",t:"Regelstrategie"},{ch:"taalbeschouwing-spelling",t:"Analogiestrategie"},
+      {ch:"taalbeschouwing-spelling",t:"Hulpstrategie"},{ch:"taalbeschouwing-spelling",t:"Klankzuiver woord"},
+      {ch:"taalbeschouwing-spelling",t:"Weetwoord"},{ch:"taalbeschouwing-spelling",t:"Regelwoord"},
+      {ch:"taalbeschouwing-spelling",t:"Werkwoordspelling"}
+    ] },
+  { icon:"🎵", title:"Rijm- en dichtvormen", refs:[
+      {ch:"jeugdliteratuur",t:"Rijm"},{ch:"jeugdliteratuur",t:"Eindrijm"},{ch:"jeugdliteratuur",t:"Beginrijm"},
+      {ch:"jeugdliteratuur",t:"Gepaard rijm"},{ch:"jeugdliteratuur",t:"Omarmend rijm"},{ch:"jeugdliteratuur",t:"Gekruist rijm"},
+      {ch:"jeugdliteratuur",t:"Gebroken rijm"},{ch:"jeugdliteratuur",t:"Ritme"},{ch:"jeugdliteratuur",t:"Elfje"},
+      {ch:"jeugdliteratuur",t:"Haiku"},{ch:"jeugdliteratuur",t:"Sonnet"},{ch:"jeugdliteratuur",t:"Kwatrijn"},
+      {ch:"jeugdliteratuur",t:"Limerick"},{ch:"jeugdliteratuur",t:"Rondeel"},{ch:"jeugdliteratuur",t:"Naamgedicht"}
+    ] }
+];
 function renderEzels(){
   let html = `
     <div class="hero compact">
       <span class="eyebrow">EZELSBRUGGETJES</span>
       <h2>Onthoud de begrippen met een geheugensteuntje.</h2>
-      <p>Handige ezelsbruggetjes bij de begrippen uit de twee oefenhubs. Niet om letterlijk te leren, maar om het begrip te laten beklijven.</p>
+      <p>Handige ezelsbruggetjes bij de begrippen uit de oefenhubs, de spellingprincipes en de rijmvormen. Niet om letterlijk te leren, maar om het begrip te laten beklijven.</p>
     </div>`;
-  THEMES.forEach(th=>{
-    html += `<div class="chapter-heading" style="margin:.6rem 0 .5rem"><div><span class="eyebrow">OEFENHUB</span><h2>${th.icon} ${esc(th.title)}</h2></div></div>`;
-    resolveTheme(th).forEach(x=>{
+  EZEL_GROUPS.forEach(g=>{
+    html += `<div class="chapter-heading" style="margin:.6rem 0 .5rem"><div><span class="eyebrow">ONTHOUD DE BEGRIPPEN</span><h2>${g.icon} ${esc(g.title)}</h2></div></div>`;
+    resolveRefs(g.refs).forEach(x=>{
       const ez = EZELS[x.concept.t];
       html += `
         <div class="card" style="padding:.9rem 1.05rem;margin-bottom:.5rem">
