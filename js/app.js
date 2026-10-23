@@ -111,6 +111,7 @@ function go(id){
   if(id==="match")     startMatch();
   if(id==="spellen")   renderGamesHub();
   if(id==="themas")    renderThemas();
+  if(id==="ezels")     renderEzels();
   if(id==="examen")    renderToetsHub();
   if(id==="voortgang") renderVoortgang();
   animateActiveScreen();
@@ -757,7 +758,12 @@ function renderThemas(){
       <h2>Oefenhubs rond één onderwerp.</h2>
       <p>Begrippen uit verschillende hoofdstukken, gegroepeerd per thema. Bekijk ze samen en oefen ze gericht — foute begrippen gaan in je foutenbak.</p>
     </div>
-    <div class="game-grid" style="grid-template-columns:1fr 1fr">${cards}</div>`;
+    <div class="game-grid" style="grid-template-columns:1fr 1fr">${cards}</div>
+    <button class="study-button" style="margin-top:.8rem;background:linear-gradient(135deg,rgba(255,179,64,.18),rgba(255,255,255,.88))" onclick="go('ezels')">
+      <span class="study-icon">💡</span>
+      <span><span class="eyebrow">GEHEUGENSTEUNTJES</span><b>Bekijk de ezelsbruggetjes</b>
+      <small>Korte trucjes om deze begrippen te onthouden</small></span><span class="study-arrow">›</span>
+    </button>`;
   animateActiveScreen();
 }
 function openTheme(id){
@@ -794,6 +800,69 @@ function startThemeQuiz(id){
          bodySel:"#themas-body", backCall:`openTheme('${id}')`, restartCall:`startThemeQuiz('${id}')`, restartLabel:"Opnieuw oefenen",
          queue:shuffle(items), i:0, score:0, seen:0, answered:false, requeued:{} };
   renderCQ();
+}
+
+/* ---- Ezelsbruggetjes bij de twee oefenhubs ---- */
+const EZELS = {
+  // De opbouw van taal
+  "Fonologie":"‘Fono’ klinkt als telefoon → het gaat over klank en uitspraak.",
+  "Foneem":"Foneem = een ‘foon’-klank: de kleinste klank die het woord verandert (bak → dak).",
+  "Morfologie":"Morf = vorm. Morfologie kijkt naar de vórm en bouw van woorden (de woorddelen).",
+  "Morfeem":"Morfeem = het kleinste stukje mét betekenis (on-, -heid).",
+  "Vrij morfeem":"Vrij = mag vrij en alleen staan (huis, boom).",
+  "Gebonden morfeem":"Gebonden = zit vast, kan niet los (-tje, -heid, on-).",
+  "Samenstelling":"Samen stellen = twee héle woorden samen (fiets + bel).",
+  "Afleiding":"Je leidt een nieuw woord áf met een voor- of achtervoegsel (nat → nattig).",
+  "Verbuiging":"Buigen = het bijvoeglijk naamwoord buigt mee (mooi → mooie).",
+  "Vervoeging":"Alleen een wérkwoord vervoeg je (loop, loopt, liep) — werkwoord = vervoegen.",
+  "Syntaxis":"Syntaxis = zinsbouw. Denk aan een ‘zin-taxi’: de woorden in de juiste volgorde door de zin.",
+  "Semantiek":"Semantiek lijkt op het Engelse ‘meaning/semantics’ → het gaat om de betekenis.",
+  "Pragmatiek":"Pragmatisch = Praktisch: hoe je taal in de praktijk/situatie gebruikt.",
+  "Orthografie":"Ortho = recht (orthodontist = rechte tanden) + grafie = schrijven → juist schrijven = spelling.",
+  "Fonologisch niveau":"Het niveau van de klank (fono = klank).",
+  "Morfologisch niveau":"Het niveau van de woordbouw (morf = vorm).",
+  "Syntactisch niveau":"Het niveau van de zinsbouw (syntaxis = zin).",
+  "Semantisch niveau":"Het niveau van de betekenis.",
+  "Pragmatisch niveau":"Het niveau van het gebruik (pragmatisch = praktisch).",
+  "Orthografisch niveau":"Het niveau van de spelling (ortho = juist schrijven).",
+  // Auditieve & visuele strategieën
+  "Fonologisch bewustzijn":"Fono = klank → je bent je bewust van klanken (rijm, klankgroepen).",
+  "Fonemisch bewustzijn":"Foneem = lósse klank → je hoort dat een woord uit losse klanken bestaat (fijnmaziger dan fonologisch).",
+  "Auditieve objectivatie":"Auditief = oren; je bekijkt de klank als ‘object’ los van de betekenis (‘kabouter’ klínkt langer dan ‘reus’).",
+  "Auditieve discriminatie":"Discrimineren = onderscheiden → met je oren het verschil hóren (pan / pen).",
+  "Auditieve analyse":"Analyse = uit elkaar halen → het woord HAKken in klanken (/m/ /aa/ /n/).",
+  "Auditieve synthese":"Synthese = samenvoegen (denk aan een synthesizer!) → de klanken PLAKken tot een woord.",
+  "Temporeel ordenen":"Temporeel = tijd (tempo) → de klanken in de juiste vólgorde zetten.",
+  "Klankpositie bepalen":"Positie = plaats → wáár in het woord hoor je de klank (voor, midden of achter)?",
+  "Visuele discriminatie":"Visueel = ogen; onderscheiden → met je ogen het verschil zíen (b / d).",
+  "Visuele analyse":"Zien + uit elkaar halen → de losse letters in een woord onderscheiden.",
+  "Visuele synthese":"Zien + samenvoegen → de letters samen lezen tot één woord.",
+  "Spatieel ordenen":"Spatieel = ruimte (space) → de lees-/schrijfrichting volgen (‘tak’ niet als ‘kat’ lezen).",
+  "Letterpositie bepalen":"Positie = plaats → wáár staat de letter in het woord?"
+};
+function renderEzels(){
+  let html = `
+    <div class="hero compact">
+      <span class="eyebrow">EZELSBRUGGETJES</span>
+      <h2>Onthoud de begrippen met een geheugensteuntje.</h2>
+      <p>Handige ezelsbruggetjes bij de begrippen uit de twee oefenhubs. Niet om letterlijk te leren, maar om het begrip te laten beklijven.</p>
+    </div>`;
+  THEMES.forEach(th=>{
+    html += `<div class="chapter-heading" style="margin:.6rem 0 .5rem"><div><span class="eyebrow">OEFENHUB</span><h2>${th.icon} ${esc(th.title)}</h2></div></div>`;
+    resolveTheme(th).forEach(x=>{
+      const ez = EZELS[x.concept.t];
+      html += `
+        <div class="card" style="padding:.9rem 1.05rem;margin-bottom:.5rem">
+          <div style="display:flex;gap:.55rem;align-items:center"><span style="font-size:20px">${x.concept.icon||"🔹"}</span><b style="font-size:15px">${esc(x.concept.t)}</b></div>
+          <p class="lead" style="margin:.35rem 0 .5rem">${esc(x.concept.d)}</p>
+          ${ez?`<div style="display:flex;gap:.55rem;align-items:flex-start;background:rgba(255,179,64,.12);border:1px solid rgba(255,159,28,.28);border-radius:12px;padding:.55rem .75rem">
+            <span style="font-size:17px;line-height:1.2">💡</span><div style="font-size:13px;color:#7a4a00;line-height:1.5"><b>Ezelsbruggetje:</b> ${esc(ez)}</div></div>`:""}
+        </div>`;
+    });
+  });
+  html += `<p class="note">💡 Zelf een beter ezelsbruggetje bedacht? Die onthoud je vaak het best van allemaal.</p>`;
+  $("#ezels-body").innerHTML = html;
+  animateActiveScreen();
 }
 
 function renderToetsHub(){
