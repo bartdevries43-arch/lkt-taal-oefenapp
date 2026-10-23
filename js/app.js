@@ -873,7 +873,16 @@ const EZELS = {
   "Kwatrijn":"Kwa- = 4 (kwartet, quattro) → 4 regels.",
   "Limerick":"5 grappige regels met rijmschema aabba.",
   "Rondeel":"Rond: regels komen 'in het rond' terug (herhaling).",
-  "Naamgedicht":"De beginletters vormen samen een naam (acrostichon)."
+  "Naamgedicht":"De beginletters vormen samen een naam (acrostichon).",
+  // Leesstrategieën (begrijpend lezen)
+  "Leesstrategie":"Een plan/aanpak om een tekst beter te begrijpen — vóór, tijdens én ná het lezen.",
+  "Voorspellen":"Vóór het lezen raden waar de tekst over gaat (titel, plaatjes). Voor-spellen = vooraf.",
+  "Vragen stellen":"Bedenk vragen ('wat wil ik weten?') en zoek al lezend de antwoorden.",
+  "Visualiseren":"Maak er een film/plaatje van in je hoofd (visueel = zien).",
+  "Verbinden":"Koppel de tekst aan wat je al weet — verbinden met je voorkennis.",
+  "Samenvatten":"De hoofdzaken kort navertellen — samen-vatten in een paar zinnen.",
+  "Afleiden":"Lees 'tussen de regels': invullen wat er niet letterlijk staat (Maserati → waarschijnlijk rijk).",
+  "Monitoren":"Bewaak jezelf: 'snap ik dit nog?' (monitor = bewaken) en stuur bij waar nodig."
 };
 const EZEL_GROUPS = [
   { icon:THEMES[0].icon, title:THEMES[0].title, refs:THEMES[0].refs },
@@ -895,6 +904,12 @@ const EZEL_GROUPS = [
       {ch:"jeugdliteratuur",t:"Gebroken rijm"},{ch:"jeugdliteratuur",t:"Ritme"},{ch:"jeugdliteratuur",t:"Elfje"},
       {ch:"jeugdliteratuur",t:"Haiku"},{ch:"jeugdliteratuur",t:"Sonnet"},{ch:"jeugdliteratuur",t:"Kwatrijn"},
       {ch:"jeugdliteratuur",t:"Limerick"},{ch:"jeugdliteratuur",t:"Rondeel"},{ch:"jeugdliteratuur",t:"Naamgedicht"}
+    ] },
+  { icon:"🔎", title:"Leesstrategieën (begrijpend lezen)", refs:[
+      {ch:"begrijpend-lezen",t:"Leesstrategie"},{ch:"begrijpend-lezen",t:"Voorspellen"},
+      {ch:"begrijpend-lezen",t:"Vragen stellen"},{ch:"begrijpend-lezen",t:"Visualiseren"},
+      {ch:"begrijpend-lezen",t:"Verbinden"},{ch:"begrijpend-lezen",t:"Samenvatten"},
+      {ch:"begrijpend-lezen",t:"Afleiden"},{ch:"begrijpend-lezen",t:"Monitoren"}
     ] }
 ];
 function renderEzels(){
@@ -902,7 +917,7 @@ function renderEzels(){
     <div class="hero compact">
       <span class="eyebrow">EZELSBRUGGETJES</span>
       <h2>Onthoud de begrippen met een geheugensteuntje.</h2>
-      <p>Handige ezelsbruggetjes bij de begrippen uit de oefenhubs, de spellingprincipes en de rijmvormen. Niet om letterlijk te leren, maar om het begrip te laten beklijven.</p>
+      <p>Handige ezelsbruggetjes bij de begrippen uit de oefenhubs, de spellingprincipes, de rijmvormen en de leesstrategieën. Niet om letterlijk te leren, maar om het begrip te laten beklijven.</p>
     </div>`;
   EZEL_GROUPS.forEach(g=>{
     html += `<div class="chapter-heading" style="margin:.6rem 0 .5rem"><div><span class="eyebrow">ONTHOUD DE BEGRIPPEN</span><h2>${g.icon} ${esc(g.title)}</h2></div></div>`;
