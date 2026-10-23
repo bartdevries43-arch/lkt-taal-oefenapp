@@ -882,7 +882,24 @@ const EZELS = {
   "Verbinden":"Koppel de tekst aan wat je al weet — verbinden met je voorkennis.",
   "Samenvatten":"De hoofdzaken kort navertellen — samen-vatten in een paar zinnen.",
   "Afleiden":"Lees 'tussen de regels': invullen wat er niet letterlijk staat (Maserati → waarschijnlijk rijk).",
-  "Monitoren":"Bewaak jezelf: 'snap ik dit nog?' (monitor = bewaken) en stuur bij waar nodig."
+  "Monitoren":"Bewaak jezelf: 'snap ik dit nog?' (monitor = bewaken) en stuur bij waar nodig.",
+  // Extra dichtvormen
+  "Sms-gedicht":"Kort als een sms → maximaal 160 tekens.",
+  "Nonsensgedicht":"Nonsens = onzin → onmogelijke dingen of verzonnen woorden.",
+  "Klankdicht":"Draait om de klánk: boem, bam, bonk.",
+  "Copla":"Spaans gedicht van 4 regels (copla klinkt als 'couplet').",
+  // Tekstsoorten
+  "Verhalende tekst":"Een verháál → bedoeld om te amuseren (verhaal, dagboek, sprookje).",
+  "Informatieve tekst":"Geeft informátie/feiten → informeren (nieuwsbericht, schoolboek).",
+  "Directieve tekst":"Directief = stuurt je aan → instrueren: doe dit, doe dat (recept, handleiding).",
+  "Beschouwende tekst":"Beschouwen = ergens over nadenken → een mening/visie geven (recensie, column).",
+  "Argumentatieve tekst":"Argumenten → overtuigen (betoog, advertentie).",
+  "Fictie":"Fictie = verzonnen → F van Fictie = F van Fantasie.",
+  "Non-fictie":"Non = niet → niet verzonnen: over de echte werkelijkheid (zakelijke tekst).",
+  "Tekstdoel informeren":"Informeren = de lezer informatie/feiten geven.",
+  "Tekstdoel overtuigen":"Overtuigen = de lezer overhalen tot een mening of standpunt.",
+  "Tekstdoel amuseren":"Amuseren = de lezer vermaken of laten genieten.",
+  "Tekstdoel instrueren":"Instrueren = uitleggen hoe je iets moet doen."
 };
 const EZEL_GROUPS = [
   { icon:THEMES[0].icon, title:THEMES[0].title, refs:THEMES[0].refs },
@@ -898,12 +915,24 @@ const EZEL_GROUPS = [
       {ch:"taalbeschouwing-spelling",t:"Weetwoord"},{ch:"taalbeschouwing-spelling",t:"Regelwoord"},
       {ch:"taalbeschouwing-spelling",t:"Werkwoordspelling"}
     ] },
-  { icon:"🎵", title:"Rijm- en dichtvormen", refs:[
+  { icon:"🎵", title:"Rijmvormen", refs:[
       {ch:"jeugdliteratuur",t:"Rijm"},{ch:"jeugdliteratuur",t:"Eindrijm"},{ch:"jeugdliteratuur",t:"Beginrijm"},
       {ch:"jeugdliteratuur",t:"Gepaard rijm"},{ch:"jeugdliteratuur",t:"Omarmend rijm"},{ch:"jeugdliteratuur",t:"Gekruist rijm"},
-      {ch:"jeugdliteratuur",t:"Gebroken rijm"},{ch:"jeugdliteratuur",t:"Ritme"},{ch:"jeugdliteratuur",t:"Elfje"},
-      {ch:"jeugdliteratuur",t:"Haiku"},{ch:"jeugdliteratuur",t:"Sonnet"},{ch:"jeugdliteratuur",t:"Kwatrijn"},
-      {ch:"jeugdliteratuur",t:"Limerick"},{ch:"jeugdliteratuur",t:"Rondeel"},{ch:"jeugdliteratuur",t:"Naamgedicht"}
+      {ch:"jeugdliteratuur",t:"Gebroken rijm"},{ch:"jeugdliteratuur",t:"Ritme"}
+    ] },
+  { icon:"✒️", title:"Gedichten (dichtvormen)", refs:[
+      {ch:"jeugdliteratuur",t:"Elfje"},{ch:"jeugdliteratuur",t:"Haiku"},{ch:"jeugdliteratuur",t:"Sonnet"},
+      {ch:"jeugdliteratuur",t:"Kwatrijn"},{ch:"jeugdliteratuur",t:"Limerick"},{ch:"jeugdliteratuur",t:"Rondeel"},
+      {ch:"jeugdliteratuur",t:"Naamgedicht"},{ch:"jeugdliteratuur",t:"Sms-gedicht"},{ch:"jeugdliteratuur",t:"Nonsensgedicht"},
+      {ch:"jeugdliteratuur",t:"Klankdicht"},{ch:"jeugdliteratuur",t:"Copla"}
+    ] },
+  { icon:"📰", title:"Tekstsoorten", refs:[
+      {ch:"begrijpend-lezen",t:"Verhalende tekst"},{ch:"begrijpend-lezen",t:"Informatieve tekst"},
+      {ch:"begrijpend-lezen",t:"Directieve tekst"},{ch:"begrijpend-lezen",t:"Beschouwende tekst"},
+      {ch:"begrijpend-lezen",t:"Argumentatieve tekst"},{ch:"begrijpend-lezen",t:"Fictie"},
+      {ch:"begrijpend-lezen",t:"Non-fictie"},{ch:"begrijpend-lezen",t:"Tekstdoel informeren"},
+      {ch:"begrijpend-lezen",t:"Tekstdoel overtuigen"},{ch:"begrijpend-lezen",t:"Tekstdoel amuseren"},
+      {ch:"begrijpend-lezen",t:"Tekstdoel instrueren"}
     ] },
   { icon:"🔎", title:"Leesstrategieën (begrijpend lezen)", refs:[
       {ch:"begrijpend-lezen",t:"Leesstrategie"},{ch:"begrijpend-lezen",t:"Voorspellen"},
@@ -917,7 +946,7 @@ function renderEzels(){
     <div class="hero compact">
       <span class="eyebrow">EZELSBRUGGETJES</span>
       <h2>Onthoud de begrippen met een geheugensteuntje.</h2>
-      <p>Handige ezelsbruggetjes bij de begrippen uit de oefenhubs, de spellingprincipes, de rijmvormen en de leesstrategieën. Niet om letterlijk te leren, maar om het begrip te laten beklijven.</p>
+      <p>Handige ezelsbruggetjes bij de begrippen uit de oefenhubs, de spellingprincipes, de rijm- en dichtvormen, de tekstsoorten en de leesstrategieën. Niet om letterlijk te leren, maar om het begrip te laten beklijven.</p>
     </div>`;
   EZEL_GROUPS.forEach(g=>{
     html += `<div class="chapter-heading" style="margin:.6rem 0 .5rem"><div><span class="eyebrow">ONTHOUD DE BEGRIPPEN</span><h2>${g.icon} ${esc(g.title)}</h2></div></div>`;
