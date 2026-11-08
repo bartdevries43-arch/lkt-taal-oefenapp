@@ -260,10 +260,103 @@ function flashHardOnly(){ const h=flash.hard; flash={deck:shuffle(h),pos:0,hard:
 
 /* ================= VRAAGPOOL ================= */
 // Vraagpool voor één hoofdstuk, getagd met domein (voor oefentoets, hoofdstuktoets en eindtoets).
+/* Categorieën van verwante begrippen → plausibele (moeilijkere) afleiders.
+   Vraag je naar een principe/niveau/strategie, dan komen de foute opties
+   uit dezelfde categorie i.p.v. willekeurige begrippen. */
+const CATEGORIES = [
+  ["Fonologisch niveau","Morfologisch niveau","Syntactisch niveau","Semantisch niveau","Pragmatisch niveau","Orthografisch niveau"],
+  ["Fonologie","Morfologie","Syntaxis","Semantiek","Pragmatiek","Orthografie"],
+  ["Communicatieve functie","Conceptualiserende functie","Expressieve functie"],
+  ["Zelfstandig naamwoord","Bijvoeglijk naamwoord","Werkwoord","Lidwoord","Voornaamwoord","Bijwoord","Voorzetsel","Voegwoord"],
+  ["Onderwerp","Werkwoordelijk gezegde","Naamwoordelijk gezegde","Lijdend voorwerp","Meewerkend voorwerp","Bijwoordelijke bepaling"],
+  ["Samenstelling","Afleiding","Verbuiging","Vervoeging"],
+  ["Vrij morfeem","Gebonden morfeem"],
+  ["Persoonsvorm","Voltooid deelwoord","Infinitief"],
+  ["Synoniem","Antoniem","Hyponiem","Homoniem","Homofoon","Homograaf","Categorie–exemplaar","Betekenisveld"],
+  ["Analyseren","Relateren","Vergelijken","Classificeren","Generaliseren","Herordenen"],
+  ["Zinsontleden","Woordbenoemen"],
+  ["Taalvariatie","Taalvariëteit","Standaardtaal","Dialect","Register","Taalverandering","Autochtone standaardtalen"],
+  ["Fonologisch principe","Morfologisch principe","Etymologisch principe","Syllabisch principe"],
+  ["Fonologische strategie","Woordbeeldstrategie","Regelstrategie","Analogiestrategie","Hulpstrategie","Directe spellingstrategie","Indirecte spellingstrategie"],
+  ["Regel van gelijkvormigheid","Regel van overeenkomst","Verenkelingsregel","Verdubbelingsregel"],
+  ["Weetwoord","Regelwoord","Klankzuiver woord"],
+  ["Gepaard rijm","Omarmend rijm","Gekruist rijm","Gebroken rijm"],
+  ["Rijm","Eindrijm","Beginrijm","Ritme"],
+  ["Elfje","Haiku","Sonnet","Kwatrijn","Limerick","Rondeel","Naamgedicht","Sms-gedicht","Nonsensgedicht","Klankdicht","Copla"],
+  ["Proza","Drama","Poëzie"],
+  ["Thema-indeling","Woord-en-beeld-indeling","Doelstelling","Vorm"],
+  ["Ontspannende functie","Creatieve functie","Emotionele functie","Informatieve functie","Opvoedende functie","Esthetische functie"],
+  ["Literaire criteria","Pedagogische criteria","Ideologische criteria"],
+  ["Fictie","Non-fictie"],
+  ["Verhalende tekst","Informatieve tekst","Directieve tekst","Beschouwende tekst","Argumentatieve tekst"],
+  ["Tekstdoel informeren","Tekstdoel overtuigen","Tekstdoel amuseren","Tekstdoel instrueren"],
+  ["Tekstkenmerk inhoud","Tekstkenmerk vorm","Tekstkenmerk bedoeling"],
+  ["Vraag-antwoordrelatie","Chronologie","Voorbeeldrelatie","Vergelijking","Middel-doelrelatie","Voorwaardelijke structuur"],
+  ["Informatie zoeken","Mening vormen","Ontspannen lezen","Handeling uitvoeren"],
+  ["Voorspellen","Vragen stellen","Visualiseren","Verbinden","Samenvatten","Afleiden","Monitoren"],
+  ["Signaalwoord","Verwijswoord"],
+  ["Perceptie","Cognitie"],
+  ["Directe instructiemodel","Elkaar onderwijzen","Didactische modellen begrijpend lezen"],
+  ["Auditieve objectivatie","Auditieve discriminatie","Auditieve analyse","Auditieve synthese","Temporeel ordenen","Klankpositie bepalen"],
+  ["Visuele discriminatie","Visuele analyse","Visuele synthese","Spatieel ordenen","Letterpositie bepalen"],
+  ["Fonologisch bewustzijn","Fonemisch bewustzijn","Taalbewustzijn"],
+  ["Ontluikende geletterdheid","Beginnende geletterdheid","Gevorderde geletterdheid","Functionele geletterdheid","Functioneel analfabetisme"],
+  ["Pictografisch schrift","Logografisch schrift","Alfabetisch schrift"],
+  ["Foneem","Grafeem","Foneem-grafeemkoppeling"],
+  ["Tekenen","Krabbelen","Ketens letterachtige vormen","Eén of enkele letters gebruiken","Invented spelling"],
+  ["Bottom-upmodel","Top-downmodel","Interactief model","Meervoudige routemodel"],
+  ["Pre-alfabetische fase","Partieel alfabetische fase","Volledig alfabetische fase","Geconsolideerde alfabetische fase","Geautomatiseerde alfabetische fase"],
+  ["Elementaire leeshandeling","Klankclusters","Spellingpatroon","Visuele woordvorm","Morfologische analyse","Contextstrategie","Flexibel strategiegebruik"],
+  ["Uitspraak en articulatie","Klemtoon","Zinsmelodie","Natuurlijkheid en emotionaliteit","Tempo","Volume","Woordgroepen lezen","Interpunctie lezen"],
+  ["AVI","BAVI","LeesLAT","CLIB"],
+  ["Directe woordherkenning","Indirecte woordherkenning"],
+  ["Globaal luisteren","Intensief luisteren","Gericht luisteren","Kritisch luisteren"],
+  ["Informeren","Amuseren","Instrueren","Overtuigen"],
+  ["Zelfhandhaving","Zelfsturing","Sturing van anderen","Structurering van gesprek"],
+  ["Rapporteren","Redeneren","Projecteren"],
+  ["Behaviorisme","Creatieve constructietheorie","Interactionele benadering"],
+  ["Prelinguale periode","Vroeglinguale fase","Differentiatiefase","Voltooiingsfase","Linguale periode"],
+  ["Eenwoordzin","Tweewoordzin","Meerwoordzin"],
+  ["Simultane tweetaligheid","Successieve tweetaligheid","Interferentiefout","Overgeneralisatie"],
+  ["Grammaticale competentie","Tekstuele competentie","Strategische competentie","Functionele competentie"],
+  ["Oriënteren op doel","Oriënteren op onderwerp","Oriënteren op publiek","Monitoren","Reflecteren","Evalueren"],
+  ["Huilen","Vocaliseren","Vocaal spel","Brabbelen"],
+  ["Woord analyseren","Context gebruiken","Bron raadplegen"],
+  ["Labelen","Categoriseren","Netwerkopbouw"],
+  ["Vaktaalwoord","Schooltaalwoord","Signaalwoord","Inhoudswoord","Functiewoord"],
+  ["Concrete betekenis","Abstracte betekenis","Contextuele betekenis"],
+  ["Receptieve woordenschat","Productieve woordenschat"],
+  ["Semantiseren","Viertakt","Incidenteel woordenschatonderwijs","Intentioneel woordenschatonderwijs","Woordselectie"],
+  ["Stapelstructuur","Verhaalstructuur","Betoogstructuur"],
+  ["Communicatieve schrijffunctie","Conceptualiserende schrijffunctie","Expressieve schrijffunctie"],
+  ["Vertellend schrijven","Denkend schrijven"],
+  ["Plannen","Schrijven","Reviseren","Verzorgen","Verzamelen","Selecteren","Ordenen","Structureren","Formuleren","Coderen","Stileren","Reflecteren op schrijfgedrag"],
+  ["Fundamenteel niveau (1F)","Streefniveau (1S/2F)","Kerndoelen","Tussendoelen","Referentiekader Taal"],
+  ["Methodegebonden toets","Methodeonafhankelijke toets"],
+  ["Modeling","Scaffolding","Taalontwikkelende interactie"],
+  ["Schooltaal","Schooltaalwoord","Vaktaalwoord","DAT","CAT"]
+];
+const CAT_OF = (function(){ const m={}; CATEGORIES.forEach(arr=>arr.forEach(t=>{ if(!m[t]) m[t]=arr; })); return m; })();
+function pickDistractors(ch, term, n){
+  n = n||3;
+  let wrong = [];
+  const cat = CAT_OF[term];
+  if(cat) wrong = sample(cat.filter(t=>t!==term), n);
+  if(wrong.length<n){
+    const same = ch.concepts.map(x=>x.t).filter(t=>t!==term && !wrong.includes(t));
+    wrong = wrong.concat(sample(same, n-wrong.length));
+  }
+  if(wrong.length<n){
+    const all=[]; CHAPTERS.forEach(c=>c.concepts.forEach(x=>{ if(x.t!==term && !wrong.includes(x.t)) all.push(x.t); }));
+    wrong = wrong.concat(sample([...new Set(all)], n-wrong.length));
+  }
+  return wrong.slice(0,n);
+}
+
 function poolForChapter(ch){
   const base = (ch.mc || []).map(q=>({q:q.q, opts:q.opts, ans:q.ans, leg:q.leg, raw:false}));
   const gen = ch.concepts.map(c=>{
-    const wrong = sample(ch.concepts.filter(x=>x.t!==c.t),3).map(x=>x.t);
+    const wrong = pickDistractors(ch, c.t, 3);
     const opts = shuffle([c.t, ...wrong]);
     return { q:`Welk begrip hoort bij deze omschrijving?<br><span style="font-weight:500;color:var(--muted)">“${esc(c.d)}”</span>`,
              opts, ans:opts.indexOf(c.t), leg:`${c.t}: ${c.d}`, raw:true };
@@ -376,7 +469,7 @@ function renderGamesHub(){
 
 function makeExampleQuestions(amount=10){
   return sample(CH.concepts,Math.min(amount,CH.concepts.length)).map(concept=>{
-    const wrong=sample(CH.concepts.filter(item=>item.t!==concept.t),3).map(item=>item.t);
+    const wrong=pickDistractors(CH, concept.t, 3);
     const opts=shuffle([concept.t,...wrong]);
     return {concept,opts,ans:opts.indexOf(concept.t)};
   });
@@ -473,7 +566,7 @@ function startSprintGame(){
 }
 
 function nextSprintQuestion(){
-  const concept=sample(CH.concepts,1)[0], wrong=sample(CH.concepts.filter(item=>item.t!==concept.t),3).map(item=>item.t), opts=shuffle([concept.t,...wrong]);
+  const concept=sample(CH.concepts,1)[0], wrong=pickDistractors(CH, concept.t, 3), opts=shuffle([concept.t,...wrong]);
   game.current={concept,opts,ans:opts.indexOf(concept.t)};game.locked=false;
 }
 
@@ -599,12 +692,7 @@ function grade(pct){ return Math.max(1, Math.min(10, 1 + 9*pct/100)); }
 /* ---- Begrippen-quiz: alle begrippen + leer je fouten ---- */
 let cq = null;
 function conceptQuestion(ch, concept, useEx){
-  const others = ch.concepts.filter(x=>x.t!==concept.t);
-  let wrong = sample(others,3).map(x=>x.t);
-  if(wrong.length<3){
-    const all=[]; CHAPTERS.forEach(c=>c.concepts.forEach(x=>{ if(x.t!==concept.t) all.push(x.t); }));
-    wrong = [...new Set([...wrong, ...sample(all,8)])].filter(t=>t!==concept.t).slice(0,3);
-  }
+  const wrong = pickDistractors(ch, concept.t, 3);
   const opts = shuffle([concept.t, ...wrong]);
   const prompt = (useEx && concept.ex)
     ? `Welk begrip past bij dit <b>voorbeeld</b>?<br><span style="font-weight:500;color:var(--muted)">“${esc(concept.ex)}”</span>`
