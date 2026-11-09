@@ -112,6 +112,7 @@ function go(id){
   if(id==="spellen")   renderGamesHub();
   if(id==="themas")    renderThemas();
   if(id==="ezels")     renderEzels();
+  if(id==="spelling")  renderSpellingHub();
   if(id==="examen")    renderToetsHub();
   if(id==="voortgang") renderVoortgang();
   animateActiveScreen();
@@ -791,6 +792,193 @@ function cqDone(){
         <button class="btn primary" onclick="${cq.restartCall}">${cq.restartLabel||"Opnieuw"}</button>
         ${(fc && cq.mode!=="fouten")?`<button class="btn" onclick="go('examen');startLeerFouten()">🔁 Leer je fouten (${fc})</button>`:""}
         <button class="btn" onclick="${cq.backCall}">Terug</button>
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ================= SPELLINGCATEGORIEËN ================= */
+/* De 48 spellingcategorieën (volgorde oplopend in moeilijkheid), met omschrijving
+   en voorbeelden. Bron: overzicht spellingcategorieën pabo (door Bart aangeleverd). */
+const SPELLING_CATS = [
+  {n:1,  d:"mkm-woorden", ex:"mat, boom"},
+  {n:2,  d:"mmkm-woorden en mkmm-woorden", ex:"drop, fiets"},
+  {n:3,  d:"mmkmm-woorden", ex:"klomp, plant"},
+  {n:4,  d:"woorden met een tussenklank die niet geschreven wordt", ex:"park, melk"},
+  {n:5,  d:"woorden met meer dan twee medeklinkers na elkaar", ex:"strik, korst"},
+  {n:6,  d:"woorden met sch- of schr-", ex:"schaal, schrik"},
+  {n:7,  d:"woorden met -ng of -nk", ex:"bang, flink"},
+  {n:8,  d:"woorden met f-, v-, s- of z-", ex:"feest, vel, sok, ziek"},
+  {n:9,  d:"woorden met uitgang -je of -tje", ex:"huisje, stoeltje"},
+  {n:10, d:"woorden met ge-, be-, ver- of met -el, -er, -en", ex:"begin, vlieger"},
+  {n:11, d:"woorden met (-)ei(-) of (-)ij(-)", ex:"trein, rijst"},
+  {n:12, d:"woorden met -aai, -ooi of -oei", ex:"saai, kooi, foei"},
+  {n:13, d:"samengestelde woorden met twee medeklinkers na elkaar", ex:"balpen, voetbal"},
+  {n:14, d:"woorden met klankcombinatie -eer, -oor of -eur", ex:"peer, koor, beurt"},
+  {n:15, d:"woorden met -a, -o of -u", ex:"vla, zo, nu, hoera, auto"},
+  {n:16, d:"woorden met -au, -auw, -ou- of -ouw", ex:"saus, gauw, kou, vrouw"},
+  {n:17, d:"woorden met -ch of -cht", ex:"pech, gracht"},
+  {n:18, d:"woorden met -d", ex:"hond, strand"},
+  {n:19, d:"woorden met -eeuw, -ieuw of -uw", ex:"sneeuw, kieuw, ruw"},
+  {n:20, d:"woorden met open eerste lettergreep", ex:"straten"},
+  {n:21, d:"woorden met gesloten eerste lettergreep", ex:"bruggen"},
+  {n:22, d:"verandering van -f in -v- en -s in -z- bij vervoeging en meervoud", ex:"brave, muizen, brieven"},
+  {n:23, d:"woorden met -em, -elen, -enen of -eren", ex:"stiekem, kinderen"},
+  {n:24, d:"woorden met -lijk en -ig", ex:"lelijk, eerlijk, stevig"},
+  {n:25, d:"woorden waarin /ie/ geschreven wordt als i", ex:"titel, olifant"},
+  {n:26, d:"woorden waarin /s/ geschreven wordt als c", ex:"cel, precies"},
+  {n:27, d:"woorden waarin /k/ geschreven wordt als c", ex:"actie, contant"},
+  {n:28, d:"woorden waarin /zje/ geschreven wordt als ge", ex:"garage, gelei"},
+  {n:29, d:"woorden beginnend met ’s of eindigend op ’s", ex:"diploma’s, ’s middags"},
+  {n:30, d:"woorden met -tie", ex:"reparatie, notitie"},
+  {n:31, d:"woorden met -teit of -heid", ex:"kwaliteit, eenheid"},
+  {n:32, d:"woorden met (-)y(-)", ex:"yoghurt, pony, gymnastiek"},
+  {n:33, d:"woorden met -b", ex:"krab, voetbalclub"},
+  {n:34, d:"tussenletter -n- en -s- in samenstellingen", ex:"pannenkoek, dorpsschool"},
+  {n:35, d:"koppelteken in samenstellingen", ex:"zonne-energie, e-mail"},
+  {n:36, d:"woorden met een trema", ex:"drieëntwintig, ruïne"},
+  {n:37, d:"woorden met een hoofdletter", ex:"Beethoven, Rijn"},
+  {n:38, d:"Franse leenwoorden", ex:"bureau, trottoir, chalet"},
+  {n:39, d:"Engelse leenwoorden", ex:"manager, clinic, laptop"},
+  {n:40, d:"woorden waarin /t/ geschreven wordt als th", ex:"apotheek, thema"},
+  {n:41, d:"woorden met -ische(e)", ex:"historische, racistische"},
+  {n:42, d:"woorden met -iaal, -ieel, -ueel of -eaal", ex:"speciaal, ritueel, ideaal"},
+  {n:43, d:"meervoud van woorden op onbeklemtoonde -es, -ik of -et", ex:"lemmeten, monniken"},
+  {n:44, d:"woorden waarin /ks/ geschreven wordt als x", ex:"examen, excuses"},
+  {n:45, d:"stoffelijke bijvoeglijke naamwoorden", ex:"houten, zilveren, wollen"},
+  {n:46, d:"verkleinwoorden met -aatje, -ootje, -uutje en met de uitgang -nkje", ex:"parapluutje, kettinkje"},
+  {n:47, d:"woorden met open en/of gesloten lettergreep", ex:"bemanning, terras"},
+  {n:48, d:"restwoorden", ex:"vondst, museum, alleszins"},
+];
+
+function renderSpellingHub(){
+  clearExamTimer();
+  const best = P.spellingBest;
+  const rows = SPELLING_CATS.map(c=>`
+    <div class="spcat">
+      <span class="spcat-n">${c.n}</span>
+      <div class="spcat-copy"><b>${esc(c.d)}</b><small>${esc(c.ex)}</small></div>
+    </div>`).join("");
+  $("#spelling-body").innerHTML = `
+    <div class="hero compact">
+      <span class="eyebrow">SPELLINGCATEGORIEËN</span>
+      <h2>Leer alle 48 spellingcategorieën uit je hoofd.</h2>
+      <p>De complete lijst met spellingcategorieën, van makkelijk naar moeilijk. Lees ze eerst rustig door en oefen daarna met de toets — die vraagt beide kanten op: van voorbeeld naar categorie én van categorie naar voorbeeld.</p>
+    </div>
+    <div class="game-grid">
+      <button class="game-card example-game" onclick="startSpellingQuiz('mix')">
+        <span class="game-art"><i>🔤</i><em>48</em><i>🧠</i></span>
+        <span class="eyebrow">GEMENGD · AANRADER</span><b>Oefen alle categorieën</b>
+        <small>Alle 48 categorieën door elkaar, afwisselend van voorbeeld naar categorie en andersom. Fout? Dan komt die categorie verderop terug.</small>
+        <strong>Start ${best?`· beste ${best.pct}%`:''} <i>→</i></strong>
+      </button>
+      <button class="game-card truth-game" onclick="startSpellingQuiz('ex2cat')">
+        <span class="game-art"><i>📝</i><em>→</em><i>🏷️</i></span>
+        <span class="eyebrow">HERKEN DE CATEGORIE</span><b>Voorbeeld → categorie</b>
+        <small>Je ziet voorbeeldwoorden en kiest bij welke spellingcategorie ze horen.</small>
+        <strong>Start <i>→</i></strong>
+      </button>
+      <button class="game-card sprint-game" onclick="startSpellingQuiz('cat2ex')">
+        <span class="game-art"><i>🏷️</i><em>→</em><i>📝</i></span>
+        <span class="eyebrow">WEET JE EEN VOORBEELD?</span><b>Categorie → voorbeeld</b>
+        <small>Je ziet de omschrijving van een categorie en kiest de bijpassende voorbeeldwoorden.</small>
+        <strong>Start <i>→</i></strong>
+      </button>
+    </div>
+    <div class="chapter-heading" style="margin:1.1rem 0 .4rem"><div><span class="eyebrow">OVERZICHT · LEER ZE UIT JE HOOFD</span><h2>📋 Alle 48 categorieën</h2></div></div>
+    <div class="spcat-list">${rows}</div>
+    <p class="note">💡 Tip: de nummers lopen op van de makkelijkste (mkm: mat) naar de lastigste (restwoorden). De volgorde zelf hoef je niet te kennen, de categorieën wél.</p>`;
+  animateActiveScreen();
+}
+
+let sc = null;
+function spellingQuestion(cat, dir){
+  // dir: "ex2cat" (voorbeeld -> omschrijving) of "cat2ex" (omschrijving -> voorbeeld)
+  const others = SPELLING_CATS.filter(c=>c.n!==cat.n);
+  if(dir==="cat2ex"){
+    const wrong = sample(others,3).map(c=>c.ex);
+    const opts = shuffle([cat.ex, ...wrong]);
+    return { q:`Welke voorbeeldwoorden horen bij deze categorie?<br><span style="font-weight:500;color:var(--muted)">“${esc(cat.d)}”</span>`,
+             opts, ans:opts.indexOf(cat.ex),
+             leg:`<b>${esc(cat.d)}</b> → ${esc(cat.ex)}`, n:cat.n };
+  }
+  const wrong = sample(others,3).map(c=>c.d);
+  const opts = shuffle([cat.d, ...wrong]);
+  return { q:`Bij welke spellingcategorie horen deze woorden?<br><span style="font-weight:600;color:var(--purple)">“${esc(cat.ex)}”</span>`,
+           opts, ans:opts.indexOf(cat.d),
+           leg:`<b>${esc(cat.ex)}</b> → ${esc(cat.d)}`, n:cat.n };
+}
+function startSpellingQuiz(dir){
+  clearExamTimer();
+  const q = shuffle(SPELLING_CATS).map(cat=>{
+    const d = dir==="mix" ? (Math.random()<0.5?"ex2cat":"cat2ex") : dir;
+    return spellingQuestion(cat, d);
+  });
+  sc = { dir, queue:q, i:0, score:0, seen:0, answered:false, requeued:{} };
+  renderSC();
+}
+function renderSC(){
+  if(sc.i>=sc.queue.length) return scDone();
+  const q=sc.queue[sc.i], K=["A","B","C","D"];
+  const label = sc.dir==="ex2cat" ? "Voorbeeld → categorie" : sc.dir==="cat2ex" ? "Categorie → voorbeeld" : "Spellingcategorieën";
+  $("#spelling-body").innerHTML = `
+    <div class="counter">${label} — vraag ${sc.i+1} van ${sc.queue.length}</div>
+    <div class="pbar"><i style="width:${sc.i/sc.queue.length*100}%"></i></div>
+    <div class="card">
+      <div class="q">${q.q}</div>
+      <div class="opts" id="sc-opts"></div>
+      <div class="feedback" id="sc-fb"></div>
+      <div class="row between">
+        <button class="btn ghost" onclick="renderSpellingHub()">Stoppen</button>
+        <button class="btn primary hidden" id="sc-next" onclick="sc.i++;renderSC()">Volgende ›</button>
+      </div>
+    </div>`;
+  const box=$("#sc-opts");
+  q.opts.forEach((o,idx)=>{
+    const b=document.createElement("button");
+    b.className="opt"; b.innerHTML=`<span class="k">${K[idx]}</span><span>${esc(o)}</span>`;
+    b.onclick=()=>answerSC(idx);
+    box.appendChild(b);
+  });
+  sc.answered=false;
+  animateActiveScreen();
+}
+function answerSC(idx){
+  if(sc.answered) return; sc.answered=true;
+  const q=sc.queue[sc.i], opts=$$("#sc-opts .opt"), fb=$("#sc-fb");
+  opts.forEach(o=>o.disabled=true);
+  sc.seen++;
+  if(idx===q.ans){
+    opts[idx].classList.add("correct"); sc.score++;
+    fb.className="feedback show ok"; fb.innerHTML="✓ Goed! "+q.leg;
+  } else {
+    opts[idx].classList.add("wrong"); opts[q.ans].classList.add("correct");
+    fb.className="feedback show no"; fb.innerHTML="✗ Helaas. "+q.leg;
+    if(!sc.requeued[q.n]){
+      sc.requeued[q.n]=1;
+      const cat=SPELLING_CATS.find(c=>c.n===q.n);
+      const d = sc.dir==="mix" ? (Math.random()<0.5?"ex2cat":"cat2ex") : sc.dir;
+      if(cat) sc.queue.push(spellingQuestion(cat, d));
+    }
+  }
+  const nx=$("#sc-next"); nx.classList.remove("hidden");
+  nx.textContent = sc.i+1>=sc.queue.length ? "Bekijk resultaat ›" : "Volgende ›";
+}
+function scDone(){
+  const s=sc.score, t=sc.seen, pct=t?Math.round(s/t*100):0;
+  const prev=P.spellingBest;
+  if(!prev || pct>prev.pct){ P.spellingBest={pct, date:Date.now()}; saveP(); }
+  $("#spelling-body").innerHTML = `
+    <div class="card">
+      <h2>🔤 Spellingcategorieën afgerond</h2>
+      <div class="ring" style="--p:${pct}"><span>${pct}%</span></div>
+      <div class="score-box"><div class="big">${s}/${t}</div><div class="lbl">${pct}% goed</div></div>
+      ${pct>=90?`<div class="tip ok">🎉 Top! Je kent de spellingcategorieën bijna uit je hoofd.</div>`
+        :pct>=70?`<div class="tip">💪 Goed op weg. Herhaal de lijst en doe nog een ronde.</div>`
+        :`<div class="tip">📋 Lees het overzicht nog eens rustig door en probeer het opnieuw.</div>`}
+      <div class="row" style="margin-top:1rem">
+        <button class="btn primary" onclick="startSpellingQuiz('${sc.dir}')">Nog een ronde</button>
+        <button class="btn" onclick="renderSpellingHub()">Terug naar overzicht</button>
       </div>
     </div>`;
   window.scrollTo({top:0,behavior:"smooth"});
